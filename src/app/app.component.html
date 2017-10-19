@@ -1,0 +1,30 @@
+<div>
+  <app-nav></app-nav>
+  <div class="app-content">
+    <table class="table-striped grid">
+      <tr>
+        <th>Name</th>
+        <th>Symbol</th>
+        <th>Shares</th>
+        <th>Cost Price</th>
+      </tr>
+      <tr *ngFor="let trans of transactions" [ngClass]="{ odd: odd, even: even }">
+        <td>{{ trans.name }}</td>
+        <td>{{ trans.symbol }}</td>
+        <td>{{ trans.shares }} </td>
+        <td>{{ trans.price }} </td>
+      </tr>
+    </table>
+    <br>
+    <br>
+    <div class="form-inline">
+      <input [(ngModel)]="newTransaction.name" placeholder="Name" class="form-control">
+      <input [(ngModel)]="newTransaction.symbol" placeholder="Symbol" class="form-control">
+      <input [(ngModel)]="newTransaction.shares" class="form-control" placeholder="Shares">
+      <input [(ngModel)]="newTransaction.price" class="form-control" placeholder="Price">
+      <button type="button" class="btn btn-default" (click)="addTransaction()">Add</button>
+      <br>
+      <button type="button" class="btn btn-default" (click)="removeAll()">Clear All</button>
+    </div>
+  </div>
+</div>
