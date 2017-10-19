@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Transaction } from './shared/models/transaction';
 import { FinanceService } from './shared/services/finance.service';
-import { escape } from 'querystring';
+import { saveAs } from 'file-saver/FileSaver';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -39,4 +40,10 @@ export class AppComponent {
       function (p, c, i) { return Number(p) + Number(c.shares) }, 0);
     return Math.round((totalPrice / totalShares) * 1000) / 1000;
   }
+  SaveAsFile(){
+    var text = JSON.stringify(this.financeService.getAllPositions());
+    var filename = "myportfolio";
+    var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, filename+".txt");
+  } 
 }

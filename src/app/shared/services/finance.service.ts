@@ -20,6 +20,7 @@ export class FinanceService {
   }
   addTransction(t:Transaction){
     t.id = this.util.generateGUID();
+    t.date = new Date();
     if(this.positions[t.symbol])
     {
       this.positions[t.symbol].push(t);
