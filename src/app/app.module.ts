@@ -9,12 +9,14 @@ import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { FinanceService } from './shared/services/finance.service';
 import { UtilService } from './shared/services/util.service';
+import { MapToIterablePipe } from './shared/pipes/map-to-iterable.pipe';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavComponent
+    NavComponent,
+    MapToIterablePipe
   ],
   imports: [
     BrowserAnimationsModule,

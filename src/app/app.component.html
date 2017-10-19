@@ -6,14 +6,22 @@
         <th>Name</th>
         <th>Symbol</th>
         <th>Shares</th>
-        <th>Cost Price</th>
+        <th>Avg.Cost</th>
       </tr>
-      <tr *ngFor="let trans of transactions" [ngClass]="{ odd: odd, even: even }">
-        <td>{{ trans.name }}</td>
-        <td>{{ trans.symbol }}</td>
-        <td>{{ trans.shares }} </td>
-        <td>{{ trans.price }} </td>
-      </tr>
+      <ng-container *ngFor="let trans of positions| mapToIterable" >
+        <tr style="background-color:lightgray;">
+          <td>{{ trans.value[0].name }}</td>
+          <td>{{ trans.value[0].symbol }}</td>
+          <td>{{ getSum(trans.value) }} </td>
+          <td>{{ getAvg(trans.value) }} </td>
+        </tr>
+        <tr *ngFor="let t of trans.value" [ngClass]="{ odd: odd, even: even }">
+          <td>{{ t.name }}</td>
+          <td>{{ t.symbol }}</td>
+          <td>{{ t.shares }} </td>
+          <td>{{ t.price }} </td>
+        </tr>
+      </ng-container>
     </table>
     <br>
     <br>
@@ -21,7 +29,8 @@
       <input [(ngModel)]="newTransaction.name" placeholder="Name" class="form-control">
       <input [(ngModel)]="newTransaction.symbol" placeholder="Symbol" class="form-control">
       <input [(ngModel)]="newTransaction.shares" class="form-control" placeholder="Shares">
-      <input [(ngModel)]="newTransaction.price" class="form-control" placeholder="Price">
+      <input [(ngModel)]="newTransaction.price" class="form-control" 
+              placeholder="Price" (keyup.enter)="addTransaction()">
       <button type="button" class="btn btn-default" (click)="addTransaction()">Add</button>
       <br>
       <button type="button" class="btn btn-default" (click)="removeAll()">Clear All</button>

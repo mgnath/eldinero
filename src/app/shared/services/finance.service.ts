@@ -4,19 +4,31 @@ import { UtilService } from './util.service';
 
 @Injectable()
 export class FinanceService {
-  positions:Transaction[];
-
+  positions:Map<string,Transaction[]>;
   constructor(private util:UtilService) { 
-    this.positions = JSON.parse(localStorage.getItem("eldinero")) || [];
+    this.positions = JSON.parse(localStorage.getItem("eldinero")) 
+                  || new Map<string,Transaction[]>();
   }
-  importPositions(positions:Transaction[]){
+  importPositions(positions:Map<string,Transaction[]>){
     this.positions = positions;
   }
-  getAllPositions():Transaction[]{return this.positions}
-  removeAllPositions(){this.positions=[]; localStorage.clear(); return this;}
-  addTransction(transaction:Transaction){
-    transaction.id = this.util.generateGUID();
-    this.positions.push(transaction);
+  getAllPositions():Map<string,Transaction[]>{return this.positions}
+  removeAllPositions(){
+    this.positions=new Map<string,Transaction[]>();
+    localStorage.clear(); 
+    return this;
+  }
+  addTransction(t:Transaction){
+    t.id = this.util.generateGUID();
+    if(this.positions[t.symbol])
+    {
+      this.positions[t.symbol].push(t);
+    }
+    else{
+      var trans:Transaction[] =[];
+      trans.push(t);
+      this.positions[t.symbol]=trans;
+    }
     localStorage.setItem("eldinero",JSON.stringify(this.positions));
     return this;
   }
