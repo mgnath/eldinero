@@ -4,8 +4,6 @@ import { FormsModule } from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
 
-import {OAuth} from 'node-oauth-1.0a-ts';
-
 
 import {EdMaterialModule} from './edmaterial-module/edMaterial.module';
 
@@ -16,7 +14,6 @@ import { UtilService } from './shared/services/util.service';
 import { MapToIterablePipe } from './shared/pipes/map-to-iterable.pipe';
 import { TickerComponent } from './ticker/ticker.component';
 import { StockService } from './shared/services/stock.service';
-
  
 @NgModule({
   declarations: [
