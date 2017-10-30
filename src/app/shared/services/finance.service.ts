@@ -1,36 +1,42 @@
 import { Injectable } from '@angular/core';
-import { Transaction,TransactionType } from '../models/transaction';
+import { Transaction, TransactionType, StockPosition } from '../models/transaction';
 import { UtilService } from './util.service';
+
 
 @Injectable()
 export class FinanceService {
-  positions:Map<string,Transaction[]>;
-  constructor(private util:UtilService) { 
-    this.positions = JSON.parse(localStorage.getItem("eldinero")) 
-                  || new Map<string,Transaction[]>();
+  positions: StockPosition[];
+  constructor(private util: UtilService) {
+    this.positions = JSON.parse(localStorage.getItem("eldinero"))
+      || [];
   }
-  importPositions(positions:Map<string,Transaction[]>){
+  importPositions(positions: StockPosition[]) {
     this.positions = positions;
   }
-  getAllPositions():Map<string,Transaction[]>{return this.positions}
-  removeAllPositions(){
-    this.positions=new Map<string,Transaction[]>();
-    localStorage.clear(); 
+  getAllPositions(): StockPosition[] { return this.positions }
+  removeAllPositions() {
+    this.positions = [];
+    localStorage.clear();
     return this;
   }
-  addTransction(t:Transaction){
+  addTransction(t: Transaction) {
     t.id = this.util.generateGUID();
     t.date = new Date();
-    if(this.positions[t.symbol])
-    {
-      this.positions[t.symbol].push(t);
+    this.positions = this.positions || [];
+    if (this.positions.find(e => e.symbol === t.symbol)) {
+      this.positions.find(e => e.symbol === t.symbol).transactions =
+        this.positions.find(e => e.symbol === t.symbol).transactions || [];
+      this.positions.find(e => e.symbol === t.symbol).transactions.push(t);
     }
-    else{
-      var trans:Transaction[] =[];
-      trans.push(t);
-      this.positions[t.symbol]=trans;
+    else {
+      var stockPos: StockPosition = new StockPosition();
+      stockPos.name = t.name;
+      stockPos.symbol = t.symbol;
+      stockPos.transactions = [];
+      stockPos.transactions.push(t);
+      this.positions.push(stockPos);
     }
-    localStorage.setItem("eldinero",JSON.stringify(this.positions));
+    localStorage.setItem("eldinero", JSON.stringify(this.positions));
     return this;
   }
 }

@@ -1,42 +1,66 @@
 <div>
   <app-nav></app-nav>
   <div class="app-content">
-    <table class="table-striped grid">
-      <tr>
-        <th>Name</th>
-        <th>Symbol</th>
-        <th>Shares</th>
-        <th>Avg.Cost</th>
-      </tr>
-      <ng-container *ngFor="let trans of positions| mapToIterable" >
-        <tr style="background-color:lightgray;">
-          <td>{{ trans.value[0].name }}</td>
-          <td>{{ trans.value[0].symbol }}</td>
-          <td>{{ getSum(trans.value) }} </td>
-          <td>{{ getAvg(trans.value) }} </td>
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Symbol</th>
+          <th>Shares</th>
+          <th>Avg.Cost</th>
+          <th>Price</th>
+          <th>Market Value</th>
+          <th>Total Gain</th>
         </tr>
-        <tr *ngFor="let t of trans.value" [ngClass]="{ odd: odd, even: even }">
-          <td>{{ t.name }}</td>
-          <td>{{ t.symbol }}</td>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let p of positions">
+          <tr [ngClass]="{ odd: odd, even: even }">
+            <td>{{ p.name }}</td>
+            <td>{{ p.symbol }}</td>
+            <td>{{ getSum(p.transactions) }} </td>
+            <td>{{ getAvg(p.transactions) }} </td>
+            <td>{{ p.quote | number:'3.1-5'}}</td>
+            <td>{{ (p.quote*getSum(p.transactions)) | number:'3.1-5' }} </td>
+            <td *ngIf=" getTotalGain(p) > 0" style="color:green;"> {{ getTotalGain(p) | number:'1.1-5' }} </td>
+            <td *ngIf=" getTotalGain(p) <= 0" style="color:red;"> {{ getTotalGain(p) | number:'1.1-5' }} </td>
+          </tr>
+          <!-- <tr *ngFor="let t of p.transactions" [ngClass]="{ odd: odd, even: even }">
+          <td></td>
+          <td></td>
           <td>{{ t.shares }} </td>
-          <td>{{ t.price }} </td>
+          <td>{{ t.price }}</td>
+          </tr> -->
+        </ng-container>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th>{{getGrandTotalGain()| number:'3.1-5' }}</th>
         </tr>
-      </ng-container>
+      </tfoot>
     </table>
     <br>
     <br>
     <div class="form-inline">
-      <input [(ngModel)]="newTransaction.name" placeholder="Name" class="form-control">
-      <input [(ngModel)]="newTransaction.symbol" placeholder="Symbol" class="form-control">
-      <input [(ngModel)]="newTransaction.shares" class="form-control" placeholder="Shares">
-      <input [(ngModel)]="newTransaction.price" class="form-control" 
-              placeholder="Price" (keyup.enter)="addTransaction()">
-      <button type="button" class="btn btn-default" (click)="addTransaction()">Add</button>
-      <br>
-      <button type="button" class="btn btn-default" (click)="removeAll()">Clear All</button>
-      <br>
-      <button type="button" class="btn btn-default" (click)="SaveAsFile()">Save</button>
-    
+        <input [(ngModel)]="newTransaction.name" placeholder="Name" class="form-control">
+        <input [(ngModel)]="newTransaction.symbol" placeholder="Symbol" class="form-control">
+        <input [(ngModel)]="newTransaction.shares" class="form-control" placeholder="Shares">
+        <input [(ngModel)]="newTransaction.price" class="form-control" placeholder="Purchase Price" (keyup.enter)="addTransaction()">
+        <button type="button" class="btn btn-primary" (click)="addTransaction()">Add</button>
     </div>
+    <br/>
+    <div class="form-group">
+        <textarea class="form-control" rows="5" placeholder="Import Text" [(ngModel)]="importText" ></textarea>
+        <button type="button" class="btn btn-info" (click)="importTransactions()">Import</button>
+      </div>
+    <br/>
+    <button type="button" class="btn btn-danger" (click)="removeAll()">CLear Local Storage</button>
+    <button type="button" class="btn btn-success" (click)="SaveAsFile()">Save</button>
   </div>
 </div>

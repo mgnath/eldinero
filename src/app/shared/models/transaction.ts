@@ -1,3 +1,11 @@
+export class StockPosition{
+    id:string;
+    name:string;
+    symbol:string;
+    quote:number;
+    transactions:Transaction[];
+    constructor(){}
+}
 
 export class Transaction {
     id:string;
@@ -8,7 +16,7 @@ export class Transaction {
     shares:number;
     price:number;
     isDrip:boolean;
- 
+    quote:number;
     constructor(
         name:string,
         symbol:string,
