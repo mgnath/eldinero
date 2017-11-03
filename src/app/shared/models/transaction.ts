@@ -3,6 +3,7 @@ export class StockPosition{
     name:string;
     symbol:string;
     quote:number;
+    adjusted_previous_close:number;
     transactions:Transaction[];
     constructor(){}
 }

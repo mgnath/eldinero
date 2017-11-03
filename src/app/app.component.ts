@@ -5,6 +5,7 @@ import { FinanceService } from './shared/services/finance.service';
 import { saveAs } from 'file-saver/FileSaver';
 import { StockService } from './shared/services/stock.service';
 import { IntervalObservable } from "rxjs/observable/IntervalObservable";
+import { UtilService } from './shared/services/util.service';
 
 @Component({
   selector: 'app-root',
@@ -14,18 +15,18 @@ import { IntervalObservable } from "rxjs/observable/IntervalObservable";
 export class AppComponent {
   @Input() newTransaction: Transaction;
   @Input() importText: string;
-  @Input() symbol: string;
-  @Input() rawData: string;
+  @Input() importJson:string;
+  @Input() showAll:boolean;
   positions: StockPosition[];
   alive = true;
 
-  constructor(private financeService: FinanceService, private stockService: StockService) {
+  constructor(private financeService: FinanceService, private stockService: StockService, private utilService: UtilService) {
     this.newTransaction = new Transaction("", "", null, null, null, false, null);
     this.InitPositions();
     // get our data every subsequent 10 seconds
     IntervalObservable.create(10000)
       .subscribe(() => {
-        if(this.alive){
+        if (this.alive) {
           this.getCurrentPrice();
         }
       });
@@ -40,39 +41,42 @@ export class AppComponent {
     this.stockService.GetTradingAPI(syms).subscribe(data => {
       data.results.forEach(k => {
         this.positions.find(e => e.symbol === k.symbol).quote = k.last_trade_price;
+        this.positions.find(e => e.symbol === k.symbol).adjusted_previous_close = k.adjusted_previous_close;
       });
     });
   }
   updateTickers() { }
 
   importTransactions() {
-    var transactions = this.CSVToArray(this.importText,null);
-    transactions.forEach(trans=>{
-        let currTrans:Transaction = new Transaction("", "", null, null, 0, false, 0);
-        currTrans.symbol  = trans[0];
-        currTrans.name = trans[1];
-        currTrans.date = new Date(trans[3]);
-        currTrans.shares =  <number>(trans[4]);
-        currTrans.price =  <number>(trans[5]);
-        this.addTrans(currTrans);
+    var transactions = this.utilService.CSVToArray(this.importText, null);
+    transactions.forEach(trans => {
+      let currTrans: Transaction = new Transaction(trans[1], trans[0], new Date(trans[3]), TransactionType.BUY, <number>(trans[4]), false, <number>(trans[5]));
+      this.addTrans(currTrans);
+      this.positions = this.financeService.getAllPositions();
     });
   }
-  addTransaction() {
+  importJsonTrans(){
+    var transactions = JSON.parse(this.importJson);
+    transactions.forEach(trans => {      
+      this.addTrans(trans);
+      this.positions = this.financeService.getAllPositions();
+    });
+  }
+  addTransaction(trans: Transaction) {
     this.newTransaction.type = TransactionType.BUY;
-    this.positions = this.financeService.addTransction(this.newTransaction).getAllPositions();
+    this.positions = this.financeService.addTransction(trans).getAllPositions();
     this.newTransaction = new Transaction("", "", null, null, 0, false, 0);
   }
-  addTrans(trans:Transaction){
+  addTrans(trans: Transaction) {
     this.positions = this.financeService.addTransction(trans).getAllPositions();
   }
   removeAll() {
     this.positions = this.financeService.removeAllPositions().getAllPositions();
   }
-  SaveAsFile() {
-    var text = JSON.stringify(this.financeService.getAllPositions());
-    var filename = "myportfolio";
-    var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    saveAs(blob, filename + ".txt");
+  SaveAsFile(textToBeSaved: string) {
+    var allTrans = [];
+    this.financeService.getAllPositions().forEach( e => e.transactions.forEach(t=>allTrans.push(t)));   
+    this.utilService.SaveAsFile(JSON.stringify(allTrans), "myportfolio.json");
   }
   //helper functions
   getSum(trans: Transaction[]) {
@@ -81,14 +85,14 @@ export class AppComponent {
   }
   getAvg(trans: Transaction[]) {
     var totalPrice = trans.reduce(function (p, c, i) {
-      return Number(p) + (Number(c.price) * Number(c.shares))
+      return Number(p) + (Number(c.price) * Number(c.shares));
     }, 0);
     var totalShares = trans.reduce(
       function (p, c, i) { return Number(p) + Number(c.shares) }, 0);
     return Math.round((totalPrice / totalShares) * 1000) / 1000;
   }
-  getTotalGain(p:StockPosition){
-    return (p.quote*this.getSum(p.transactions) - (this.getAvg(p.transactions) * this.getSum(p.transactions)))
+  getTotalGain(p: StockPosition) {
+    return (p.quote * this.getSum(p.transactions) - (this.getAvg(p.transactions) * this.getSum(p.transactions)))
   }
   getGrandTotalGain() {
     var totSum: number = 0;
@@ -100,40 +104,4 @@ export class AppComponent {
     );
     return totSum;
   }
-
-  CSVToArray(strData, strDelimiter) {
-    strDelimiter = (strDelimiter || ",");
-    var objPattern = new RegExp(
-      (
-        "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
-        // Quoted fields.
-        "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
-        // Standard fields.
-        "([^\"\\" + strDelimiter + "\\r\\n]*))"
-      ),
-      "gi"
-    );
-    var arrData = [[]];
-    var arrMatches = null;
-    while (arrMatches = objPattern.exec(strData)) {
-      var strMatchedDelimiter = arrMatches[1];
-      if (
-        strMatchedDelimiter.length &&
-        (strMatchedDelimiter != strDelimiter)
-      ) {
-        arrData.push([]);
-      }
-      if (arrMatches[2]) {
-        var strMatchedValue = arrMatches[2].replace(
-          new RegExp("\"\"", "g"),
-          "\""
-        );
-      } else {
-        var strMatchedValue = arrMatches[3];
-      }
-      arrData[arrData.length - 1].push(strMatchedValue);
-    }
-    return (arrData);
-  }
-
 }

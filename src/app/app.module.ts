@@ -14,13 +14,17 @@ import { UtilService } from './shared/services/util.service';
 import { MapToIterablePipe } from './shared/pipes/map-to-iterable.pipe';
 import { TickerComponent } from './ticker/ticker.component';
 import { StockService } from './shared/services/stock.service';
+import { ChangecolorPipe } from './shared/pipes/changecolor.pipe';
+import { ColoredTextComponent } from './shared/components/colored-text/colored-text.component';
  
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     MapToIterablePipe,
-    TickerComponent
+    TickerComponent,
+    ChangecolorPipe,
+    ColoredTextComponent
   ], 
   imports: [
     BrowserAnimationsModule,
