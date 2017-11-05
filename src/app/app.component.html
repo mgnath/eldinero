@@ -3,35 +3,39 @@
   <div class="app-content">
     <div class="checkbox">
         <label><input type="checkbox" [(ngModel)]="showAll">Show All Transactions</label>
+        <span style="font-size:large; float:right; margin-right:20px;">Total Gain:  <ed-colored-text [num]="getGrandTotalGain()"></ed-colored-text></span>
     </div>
     <table class="table table-hovered table-center">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Symbol</th>
-          <th class="right">Shares</th>
-          <th class="right">Avg.Cost</th>
-          <th class="right">Price</th>
-          <th class="right">Day Change</th>
-          <th class="right">Day Change %</th>
-          <th class="right">Market Value</th>
-          <th class="right">Total Gain</th>
+          <th></th>
+          <th [ngClass]="{'sorted':sCol == 'name'}" (click)="sortData('name')">{{getTitle('name')}}</th>
+          <th [ngClass]="{'sorted':sCol == 'symbol'}" (click)="sortData('symbol')">{{getTitle('symbol')}}</th>
+          <th [ngClass]="{'sorted':sCol == 'shares'}" (click)="sortData('shares')" class="right">{{getTitle('shares')}}</th>
+          <th [ngClass]="{'sorted':sCol == 'avgcost'}" (click)="sortData('avgcost')" class="right">{{getTitle('avgcost')}}</th>
+          <th [ngClass]="{'sorted':sCol == 'quote'}" (click)="sortData('quote')"  class="right">{{getTitle('quote')}}</th>
+          <th [ngClass]="{'sorted':sCol == 'daychange'}" (click)="sortData('daychange')"  class="right">{{getTitle('daychange')}}</th>
+          <th [ngClass]="{'sorted':sCol == 'daychangeper'}" (click)="sortData('daychangeper')" class="right">{{getTitle('daychangeper')}}</th>
+          <th [ngClass]="{'sorted':sCol == 'mktval'}" (click)="sortData('mktval')" class="right">{{getTitle('mktval')}}</th>
+          <th [ngClass]="{'sorted':sCol == 'totgain'}" (click)="sortData('totgain')" class="right">{{getTitle('totgain')}}</th>
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let p of positions">
+        <ng-container *ngFor="let p of positions;let i = index">
           <tr>
+            <td>{{i+1}}</td>
             <td>{{ p.name }}</td>
             <td>{{ p.symbol }}</td>
             <td  class="right">{{ getSum(p.transactions) }} </td>
             <td class="right">{{ getAvg(p.transactions) }} </td>
-            <td class="right">{{ p.quote | number:'1.1-5'}}</td>
+            <td class="right">{{ p.quote | number:'1.2-2'}}</td>
             <td class="right"><ed-colored-text [num]="(p.quote-p.adjusted_previous_close)"></ed-colored-text></td>
             <td class="right"><ed-colored-text [num]="((p.quote-p.adjusted_previous_close)/p.adjusted_previous_close)*100 "></ed-colored-text></td>
-            <td class="right">{{ (p.quote*getSum(p.transactions)) | number:'3.1-3' }}</td>
+            <td class="right">{{ (p.quote*getSum(p.transactions)) | number:'1.2-2' }}</td>
             <td class="right"><ed-colored-text [num]="getTotalGain(p)"></ed-colored-text></td></tr>
           <ng-container *ngIf="p.transactions.length > 1 && showAll">
-            <tr *ngFor="let t of p.transactions" [ngClass]="{ odd: odd, even: even }">
+            <tr *ngFor="let t of p.transactions">
+              <td></td>
               <td></td>
               <td></td>
               <td class="right">{{ t.shares }} </td>
@@ -42,7 +46,7 @@
       </tbody>
       <tfoot>
         <tr>
-          <th colspan=9 class="right">{{getGrandTotalGain()| number:'3.1-3' }}</th>
+          <th colspan=10 class="right">{{getGrandTotalGain()| number:'1.2-2' }}</th>
         </tr>
       </tfoot>
     </table>
@@ -56,7 +60,7 @@
       <input [(ngModel)]="newTransaction.name" placeholder="Name" class="form-control">
       <input [(ngModel)]="newTransaction.symbol" placeholder="Symbol" class="form-control">
       <input [(ngModel)]="newTransaction.shares" class="form-control" placeholder="Shares">
-      <input [(ngModel)]="newTransaction.price" class="form-control" placeholder="Purchase Price" (keyup.enter)="addTransaction()">
+      <input [(ngModel)]="newTransaction.price" class="form-control" placeholder="Purchase Price" (keyup.enter)="addTransaction(newTransaction)">
       <button type="button" class="btn btn-primary" (click)="addTransaction(newTransaction)">Add</button>
     </div>
     <br/>

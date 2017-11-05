@@ -2,8 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
-
 
 import {EdMaterialModule} from './edmaterial-module/edMaterial.module';
 
@@ -16,6 +16,7 @@ import { TickerComponent } from './ticker/ticker.component';
 import { StockService } from './shared/services/stock.service';
 import { ChangecolorPipe } from './shared/pipes/changecolor.pipe';
 import { ColoredTextComponent } from './shared/components/colored-text/colored-text.component';
+
  
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { ColoredTextComponent } from './shared/components/colored-text/colored-t
     BrowserModule,
     EdMaterialModule,
     FormsModule,
+    HttpClientModule,
     HttpModule
   ],
   providers: [FinanceService, UtilService, StockService],

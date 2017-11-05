@@ -12,7 +12,7 @@ export class StockService {
   }
   GetNYSEStatus(){
     return this.http.
-    get("https://api.robinhood.com/markets/XNYS/hours/"+this.getFormattedDate(new Date())+"/").
+    get("https://cors-anywhere.herokuapp.com/https://api.robinhood.com/markets/XNYS/hours/"+this.getFormattedDate(new Date())+"/").
     map((res:Response)=>res.json());
 }
  getFormattedDate(date) {

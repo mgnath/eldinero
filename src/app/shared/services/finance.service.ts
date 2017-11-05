@@ -13,7 +13,8 @@ export class FinanceService {
   importPositions(positions: StockPosition[]) {
     this.positions = positions;
   }
-  getAllPositions(): StockPosition[] { return this.positions }
+  getAllPositions(): StockPosition[] { return this.positions.sort((a,b)=>{
+                return a.name.localeCompare(b.name);}) }
   removeAllPositions() {
     this.positions = [];
     localStorage.clear();
