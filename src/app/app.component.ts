@@ -65,6 +65,12 @@ export class AppComponent {
         );
       })
     }
+    else if(sortingCol=='daygain'){
+      this.positions.sort((a, b) => {
+      return this.sortDir * ((a.quote-a.adj_prev_close)*(this.utilService.getSum(a.transactions,'shares'))
+                              - (b.quote-b.adj_prev_close)*(this.utilService.getSum(b.transactions,'shares')))
+                          });
+    }
     else if (sortingCol == 'mktval') {
       this.positions.sort((a, b) => {
         return this.sortDir * ((a.quote * this.utilService.getSum(a.transactions, "shares")) -
@@ -116,8 +122,10 @@ export class AppComponent {
     else if (colName == 'quote') { retStr = "Price"; }
     else if (colName == 'daychange') { retStr = "Day Change"; }
     else if (colName == 'daychangeper') { retStr = "Day Change %"; }
+    else if (colName == 'daygain') { retStr = "Day Gain"; }
     else if (colName == 'mktval') { retStr = "Market Value"; }
     else if (colName == 'totgain') { retStr = "Gain/Loss"; }
+    
 
     if (colName == this.sCol) {
       retStr += (this.sortDir == 1) ? "↓" : "↑";
@@ -147,6 +155,16 @@ export class AppComponent {
         totSum +=
         pos.quote * this.utilService.getSum(pos.transactions, "shares") -
         (this.getAvg(pos.transactions) * this.utilService.getSum(pos.transactions, "shares")))
+    );
+    return totSum;
+  }
+  getGrandTotalDayGain() {
+    var totSum: number = 0;
+    this.positions.forEach(
+      pos => (
+        totSum +=
+        pos.quote * this.utilService.getSum(pos.transactions, "shares") -
+        pos.adj_prev_close * this.utilService.getSum(pos.transactions, "shares"))
     );
     return totSum;
   }
