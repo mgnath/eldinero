@@ -15,28 +15,28 @@ import { UtilService } from './shared/services/util.service';
 export class AppComponent {
   @Input() newTransaction: Transaction;
   @Input() importText: string;
-  @Input() importJson:string;
-  @Input() showAll:boolean;
+  @Input() importJson: string;
+  @Input() showAll: boolean;
   positions: StockPosition[];
   alive = true;
-  sCol:string = 'name';
-  sortDir:number =1;
+  sCol: string = 'name';
+  sortDir: number = 1;
 
   constructor(private financeService: FinanceService, private stockService: StockService, private utilService: UtilService) {
     this.newTransaction = new Transaction("", "", null, null, null, false, null);
     this.InitPositions();
-    // get our data every subsequent 10 seconds
-    IntervalObservable.create(10000)
+    IntervalObservable.create(10000)// get our data every subsequent 10 seconds
       .subscribe(() => {
         if (this.alive) {
           this.getCurrentPrice();
         }
-        else{
-          console.log('market closed'+new Date(Date.now()).toLocaleString());}
+        else {
+          console.log('market closed' + new Date(Date.now()).toLocaleString());
+        }
       });
   }
   private InitPositions() {
-    this.stockService.GetNYSEStatus().subscribe(d=>{this.alive = d.is_open;})
+    this.stockService.GetNYSEStatus().subscribe(d => { this.alive = d.is_open; })
     this.positions = this.financeService.getAllPositions();
     this.getCurrentPrice();
   }
@@ -45,34 +45,40 @@ export class AppComponent {
     this.positions.forEach(e => syms.push(e.symbol));
     this.stockService.GetTradingAPI(syms).subscribe(data => {
       data.results.forEach(k => {
-        this.positions.find(e => e.symbol === k.symbol).quote = k.last_trade_price;
-        this.positions.find(e => e.symbol === k.symbol).adjusted_previous_close = k.adjusted_previous_close;
+        this.positions.find(e => e.symbol === k.symbol).quote = k.last_extended_hours_trade_price || k.last_trade_price;
+        this.positions.find(e => e.symbol === k.symbol).adj_prev_close = k.adjusted_previous_close;
       });
     });
   }
-  sortData(sortingCol:string){
-    if(sortingCol === this.sCol) this.sortDir *= -1;
-    if(sortingCol == 'name' || sortingCol == 'symbol'){this.positions.sort((a,b)=>{return this.sortDir*a[sortingCol].localeCompare(b[sortingCol]);})}
-    else if(sortingCol == 'shares'){this.positions.sort((a,b)=>{return  this.sortDir*(this.getSum(a.transactions)-this.getSum(b.transactions));})}
-    else if(sortingCol == 'avgcost'){this.positions.sort((a,b)=>{return  this.sortDir*(this.getAvg(a.transactions)-this.getAvg(b.transactions));})}
-    else if(sortingCol == 'daychange'){
-      this.positions.sort((a,b)=>{return  this.sortDir*((a.quote-a.adjusted_previous_close)-(b.quote-b.adjusted_previous_close));})
+  sortData(sortingCol: string) {
+    if (sortingCol === this.sCol) this.sortDir *= -1;
+    if (sortingCol == 'name' || sortingCol == 'symbol') { this.positions.sort((a, b) => { return this.sortDir * a[sortingCol].localeCompare(b[sortingCol]); }) }
+    else if (sortingCol == 'shares') { this.positions.sort((a, b) => { return this.sortDir * (this.utilService.getSum(a.transactions, "shares") - this.utilService.getSum(b.transactions, "shares")); }) }
+    else if (sortingCol == 'avgcost') { this.positions.sort((a, b) => { return this.sortDir * (this.getAvg(a.transactions) - this.getAvg(b.transactions)); }) }
+    else if (sortingCol == 'daychange') {
+      this.positions.sort((a, b) => { return this.sortDir * ((a.quote - a.adj_prev_close) - (b.quote - b.adj_prev_close)); })
     }
-    else if(sortingCol == 'daychangeper'){
-      this.positions.sort((a,b)=>{
-        return  this.sortDir*(  (((a.quote-a.adjusted_previous_close)/a.adjusted_previous_close)*100 )-
-                                  ((b.quote-b.adjusted_previous_close)/b.adjusted_previous_close)*100
-                            );
+    else if (sortingCol == 'daychangeper') {
+      this.positions.sort((a, b) => {
+        return this.sortDir * ((((a.quote - a.adj_prev_close) / a.adj_prev_close) * 100) -
+          ((b.quote - b.adj_prev_close) / b.adj_prev_close) * 100
+        );
       })
-    } 
-    else if(sortingCol == 'mktval'){this.positions.sort((a,b)=>{return  this.sortDir*((a.quote*this.getSum(a.transactions))-
-                                                                          (b.quote*this.getSum(b.transactions)));})}
-    else if(sortingCol == 'avgcost'){this.positions.sort((a,b)=>{return  this.sortDir*(this.getAvg(a.transactions)-this.getAvg(b.transactions));})}
-    else if(sortingCol == 'quote'){this.positions.sort((a,b)=>{return  this.sortDir*(a.quote-b.quote);})}
-    else if(sortingCol == 'totgain'){this.positions.sort((a,b)=>{return  this.sortDir*(this.getTotalGain(a)-this.getTotalGain(b));})}
+    }
+    else if (sortingCol == 'mktval') {
+      this.positions.sort((a, b) => {
+        return this.sortDir * ((a.quote * this.utilService.getSum(a.transactions, "shares")) -
+          (b.quote * this.utilService.getSum(b.transactions, "shares")));
+      })
+    }
+    else if (sortingCol == 'avgcost') { this.positions.sort((a, b) => { return this.sortDir * (this.getAvg(a.transactions) - this.getAvg(b.transactions)); }) }
+    else if (sortingCol == 'quote') { this.positions.sort((a, b) => { return this.sortDir * (a.quote - b.quote); }) }
+    else if (sortingCol == 'totgain') { this.positions.sort((a, b) => { return this.sortDir * (this.getTotalGain(a) - this.getTotalGain(b)); }) }
     this.sCol = sortingCol;
   }
-
+  removeAll() {
+    this.positions = this.financeService.removeAllPositions().getAllPositions();
+  }
   importTransactions() {
     var transactions = this.utilService.CSVToArray(this.importText, null);
     transactions.forEach(trans => {
@@ -81,9 +87,9 @@ export class AppComponent {
       this.positions = this.financeService.getAllPositions();
     });
   }
-  importJsonTrans(){
+  importJsonTrans() {
     var transactions = JSON.parse(this.importJson);
-    transactions.forEach(trans => {      
+    transactions.forEach(trans => {
       this.addTrans(trans);
       this.positions = this.financeService.getAllPositions();
     });
@@ -96,54 +102,51 @@ export class AppComponent {
   addTrans(trans: Transaction) {
     this.positions = this.financeService.addTransction(trans).getAllPositions();
   }
-  removeAll() {
-    this.positions = this.financeService.removeAllPositions().getAllPositions();
-  }
   SaveAsFile() {
     var allTrans = [];
-    this.financeService.getAllPositions().forEach( e => e.transactions.forEach(t=>allTrans.push(t)));   
+    this.financeService.getAllPositions().forEach(e => e.transactions.forEach(t => allTrans.push(t)));
     this.utilService.SaveAsFile(JSON.stringify(allTrans), "myportfolio.json");
   }
-  getTitle(colName:string){
+  getTitle(colName: string) {
     let retStr = "";
-    if(colName == 'name'){retStr = "Name";}
-    else if(colName == 'symbol'){retStr = "Symbol";}
-    else if(colName == 'shares'){retStr = "Shares";}
-    else if(colName == 'avgcost'){retStr = "Avg.Cost";}
-    else if(colName == 'quote'){retStr = "Price";}
-    else if(colName == 'daychange'){retStr = "Day Change";}
-    else if(colName == 'daychangeper'){retStr = "Day Change %";}
-    else if(colName == 'mktval'){retStr = "Market Value";}
-    else if(colName == 'totgain'){retStr = "Gain/Loss";}
+    if (colName == 'name') { retStr = "Name"; }
+    else if (colName == 'symbol') { retStr = "Symbol"; }
+    else if (colName == 'shares') { retStr = "Shares"; }
+    else if (colName == 'avgcost') { retStr = "Avg.Cost"; }
+    else if (colName == 'quote') { retStr = "Price"; }
+    else if (colName == 'daychange') { retStr = "Day Change"; }
+    else if (colName == 'daychangeper') { retStr = "Day Change %"; }
+    else if (colName == 'mktval') { retStr = "Market Value"; }
+    else if (colName == 'totgain') { retStr = "Gain/Loss"; }
 
-    if(colName == this.sCol){
-      retStr += (this.sortDir == 1)? "↓" : "↑";
-    } 
+    if (colName == this.sCol) {
+      retStr += (this.sortDir == 1) ? "↓" : "↑";
+    }
     return retStr;
   }
   //helper functions
-  getSum(trans: Transaction[]) {
-    var sum = trans.reduce(function (p, c, i) { return Number(p) + Number(c.shares) }, 0);
-    return sum;
-  }
   getAvg(trans: Transaction[]) {
     var totalPrice = trans.reduce(function (p, c, i) {
       return Number(p) + (Number(c.price) * Number(c.shares));
     }, 0);
-    var totalShares = trans.reduce(
-      function (p, c, i) { return Number(p) + Number(c.shares) }, 0);
+    var totalShares = this.utilService.getSum(trans, "shares");
     return Math.round((totalPrice / totalShares) * 1000) / 1000;
   }
   getTotalGain(p: StockPosition) {
-    return (p.quote * this.getSum(p.transactions) - (this.getAvg(p.transactions) * this.getSum(p.transactions)))
+    return (p.quote * this.utilService.getSum(p.transactions, "shares") - (this.getAvg(p.transactions) * this.utilService.getSum(p.transactions, "shares")))
+  }
+  getTotalGainPer(p: StockPosition){
+    var mktVal = p.quote * this.utilService.getSum(p.transactions, "shares");
+    var origCos = this.getAvg(p.transactions) * this.utilService.getSum(p.transactions, "shares");
+    return  ((mktVal-origCos)/origCos)*100;
   }
   getGrandTotalGain() {
     var totSum: number = 0;
     this.positions.forEach(
       pos => (
         totSum +=
-        pos.quote * this.getSum(pos.transactions) -
-        (this.getAvg(pos.transactions) * this.getSum(pos.transactions)))
+        pos.quote * this.utilService.getSum(pos.transactions, "shares") -
+        (this.getAvg(pos.transactions) * this.utilService.getSum(pos.transactions, "shares")))
     );
     return totSum;
   }

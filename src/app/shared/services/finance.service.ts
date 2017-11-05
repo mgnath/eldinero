@@ -7,7 +7,7 @@ import { UtilService } from './util.service';
 export class FinanceService {
   positions: StockPosition[];
   constructor(private util: UtilService) {
-    this.positions = JSON.parse(localStorage.getItem("eldinero"))
+    this.positions = JSON.parse(localStorage.getItem("eldinero")) as StockPosition[]
       || [];
   }
   importPositions(positions: StockPosition[]) {
@@ -30,7 +30,7 @@ export class FinanceService {
       this.positions.find(e => e.symbol === t.symbol).transactions.push(t);
     }
     else {
-      var stockPos: StockPosition = new StockPosition();
+      var stockPos: StockPosition = new StockPosition(this.util);
       stockPos.name = t.name;
       stockPos.symbol = t.symbol;
       stockPos.transactions = [];

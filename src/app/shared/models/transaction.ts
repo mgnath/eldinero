@@ -1,11 +1,16 @@
+import { UtilService } from "../services/util.service";
+
 export class StockPosition{
     id:string;
     name:string;
     symbol:string;
     quote:number;
-    adjusted_previous_close:number;
+    adj_prev_close:number;
     transactions:Transaction[];
-    constructor(){}
+    shares():number{
+        return this.utilService.getSum(this.transactions, "shares");
+    }
+    constructor(private utilService:UtilService){}
 }
 
 export class Transaction {
@@ -29,7 +34,7 @@ export class Transaction {
             this.name = name; this.symbol = symbol; this.date=date; 
             this.type = type; this.shares = shares; this.isDrip = isDrip;
             this.price = price;
-        }
+    }
 }
 export enum TransactionType {
     BUY,

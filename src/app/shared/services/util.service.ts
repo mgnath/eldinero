@@ -9,6 +9,12 @@ export class UtilService {
     return (this.S4() + this.S4() + "-" + this.S4() + "-4" + this.S4().substr(0, 3) + "-" + this.S4() + "-"
       + this.S4() + this.S4() + this.S4()).toLowerCase();
   }
+
+  getSum(objArr:any[],propName:string){
+    return objArr.reduce(
+      function (p, c, i) { return Number(p) + Number(c[propName]) }, 0);
+  }
+
   SaveAsFile(textToBeSaved:string,filename:string) {
     var blob = new Blob([textToBeSaved], { type: "text/plain;charset=utf-8" });
     saveAs(blob,filename);

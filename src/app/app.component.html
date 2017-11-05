@@ -3,16 +3,16 @@
   <div class="app-content">
     <div class="checkbox">
         <label><input type="checkbox" [(ngModel)]="showAll">Show All Transactions</label>
-        <span style="font-size:large; float:right; margin-right:20px;">Total Gain:  <ed-colored-text [num]="getGrandTotalGain()"></ed-colored-text></span>
+        <span style="font-size:x-large; float:right; margin-right:20px;">Total Gain:  <ed-colored-text [num]="getGrandTotalGain()"></ed-colored-text></span>
     </div>
     <table class="table table-hovered table-center">
       <thead>
         <tr>
           <th></th>
           <th [ngClass]="{'sorted':sCol == 'name'}" (click)="sortData('name')">{{getTitle('name')}}</th>
-          <th [ngClass]="{'sorted':sCol == 'symbol'}" (click)="sortData('symbol')">{{getTitle('symbol')}}</th>
-          <th [ngClass]="{'sorted':sCol == 'shares'}" (click)="sortData('shares')" class="right">{{getTitle('shares')}}</th>
-          <th [ngClass]="{'sorted':sCol == 'avgcost'}" (click)="sortData('avgcost')" class="right">{{getTitle('avgcost')}}</th>
+          <th [ngClass]="{'light':true,'sorted':sCol == 'symbol'}" (click)="sortData('symbol')">{{getTitle('symbol')}}</th>
+          <th [ngClass]="{'light':true,'sorted':sCol == 'shares'}" (click)="sortData('shares')" class="right">{{getTitle('shares')}}</th>
+          <th [ngClass]="{'light':true,'sorted':sCol == 'avgcost'}" (click)="sortData('avgcost')" class="right">{{getTitle('avgcost')}}</th>
           <th [ngClass]="{'sorted':sCol == 'quote'}" (click)="sortData('quote')"  class="right">{{getTitle('quote')}}</th>
           <th [ngClass]="{'sorted':sCol == 'daychange'}" (click)="sortData('daychange')"  class="right">{{getTitle('daychange')}}</th>
           <th [ngClass]="{'sorted':sCol == 'daychangeper'}" (click)="sortData('daychangeper')" class="right">{{getTitle('daychangeper')}}</th>
@@ -25,14 +25,14 @@
           <tr>
             <td>{{i+1}}</td>
             <td>{{ p.name }}</td>
-            <td>{{ p.symbol }}</td>
-            <td  class="right">{{ getSum(p.transactions) }} </td>
-            <td class="right">{{ getAvg(p.transactions) }} </td>
+            <td class="light">{{ p.symbol }}</td>
+            <td  class="right light">{{ utilService.getSum(p.transactions,"shares")}} </td>
+            <td class="right light">{{ getAvg(p.transactions) }} </td>
             <td class="right">{{ p.quote | number:'1.2-2'}}</td>
-            <td class="right"><ed-colored-text [num]="(p.quote-p.adjusted_previous_close)"></ed-colored-text></td>
-            <td class="right"><ed-colored-text [num]="((p.quote-p.adjusted_previous_close)/p.adjusted_previous_close)*100 "></ed-colored-text></td>
-            <td class="right">{{ (p.quote*getSum(p.transactions)) | number:'1.2-2' }}</td>
-            <td class="right"><ed-colored-text [num]="getTotalGain(p)"></ed-colored-text></td></tr>
+            <td class="right"><ed-colored-text [num]="(p.quote-p.adj_prev_close)"></ed-colored-text></td>
+            <td class="right"><ed-colored-text [num]="((p.quote-p.adj_prev_close)/p.adj_prev_close)*100 "></ed-colored-text></td>
+            <td class="right">{{ (p.quote*utilService.getSum(p.transactions,"shares")) | number:'1.2-2' }}</td>
+            <td class="right"><ed-colored-text [num]="getTotalGain(p)"></ed-colored-text>  (<ed-colored-text [num]="getTotalGainPer(p)"></ed-colored-text>%)</td></tr>
           <ng-container *ngIf="p.transactions.length > 1 && showAll">
             <tr *ngFor="let t of p.transactions">
               <td></td>

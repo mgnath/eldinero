@@ -22,4 +22,5 @@
 .red {color:red;font-weight:bold; }
 .green{color:green;font-weight:bold;}
 .right{text-align:right;}
-.sorted{color: purple;}
+.sorted{color: #c2185b;}
+.light{opacity: .50}
