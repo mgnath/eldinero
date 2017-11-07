@@ -31,6 +31,7 @@
     "node-oauth-1.0a-ts": "^4.0.5",
     "node-requirejs": "^0.1.1",
     "rxjs": "^5.5.2",
+    "visibilityjs": "^1.2.5",
     "yahoo-finance": "^0.3.4",
     "zone.js": "^0.8.14"
   },

@@ -2,11 +2,15 @@
   <app-nav></app-nav>
   <div class="app-content">
     <div class="checkbox">
-        <label><input type="checkbox" [(ngModel)]="showAll">Show All Transactions</label>
-        <span style="font-size:x-large; float:right; margin-right:20px;">Total Gain:  
-          <ed-colored-text [num]="getGrandTotalGain()"></ed-colored-text>
-          (<ed-colored-text [num]="getGrandTotalDayGain()"></ed-colored-text>)
+      <label>
+        <input type="checkbox" [(ngModel)]="showAll">Show All Transactions</label>
+      <span style="font-size:large; float:right; margin-right:20px;">
+        <ed-colored-text [num]="getGrandTotalGain()" title="Unrealized Gain/Loss"></ed-colored-text>
+        (<ed-colored-text [num]="getGrandTotalDayGain()" title="Day Gain/Loss"></ed-colored-text>)
+        <span style="font-size:xx-large;">
+            $<ed-colored-text [num]="getGrandTotal()" [noColor]="true" title="Total Market Value"></ed-colored-text>
         </span>
+      </span>
     </div>
     <table class="table table-hovered table-center">
       <thead>
@@ -16,8 +20,8 @@
           <th [ngClass]="{'light':true,'sorted':sCol == 'symbol'}" (click)="sortData('symbol')">{{getTitle('symbol')}}</th>
           <th [ngClass]="{'light':true,'sorted':sCol == 'shares'}" (click)="sortData('shares')" class="right">{{getTitle('shares')}}</th>
           <th [ngClass]="{'light':true,'sorted':sCol == 'avgcost'}" (click)="sortData('avgcost')" class="right">{{getTitle('avgcost')}}</th>
-          <th [ngClass]="{'sorted':sCol == 'quote'}" (click)="sortData('quote')"  class="right">{{getTitle('quote')}}</th>
-          <th [ngClass]="{'sorted':sCol == 'daychange'}" (click)="sortData('daychange')"  class="right">{{getTitle('daychange')}}</th>
+          <th [ngClass]="{'sorted':sCol == 'quote'}" (click)="sortData('quote')" class="right">{{getTitle('quote')}}</th>
+          <th [ngClass]="{'sorted':sCol == 'daychange'}" (click)="sortData('daychange')" class="right">{{getTitle('daychange')}}</th>
           <th [ngClass]="{'sorted':sCol == 'daychangeper'}" (click)="sortData('daychangeper')" class="right">{{getTitle('daychangeper')}}</th>
           <th [ngClass]="{'sorted':sCol == 'daygain'}" (click)="sortData('daygain')" class="right">{{getTitle('daygain')}}</th>
           <th [ngClass]="{'sorted':sCol == 'mktval'}" (click)="sortData('mktval')" class="right">{{getTitle('mktval')}}</th>
@@ -30,7 +34,7 @@
             <td>{{i+1}}</td>
             <td>{{ p.name }}</td>
             <td class="light">{{ p.symbol }}</td>
-            <td  class="right light">{{ utilService.getSum(p.transactions,"shares")}} </td>
+            <td class="right light">{{ utilService.getSum(p.transactions,"shares")}} </td>
             <td class="right light">{{ getAvg(p.transactions) }} </td>
             <td class="right">{{ p.quote | number:'1.2-2'}}</td>
             <td class="right">
@@ -39,9 +43,14 @@
             <td class="right">
               <ed-colored-text [num]="((p.quote-p.adj_prev_close)/p.adj_prev_close)*100 "></ed-colored-text>
             </td>
-            <td class="right"><ed-colored-text [num]="(p.quote-p.adj_prev_close)*(utilService.getSum(p.transactions,'shares'))"></ed-colored-text></td>
+            <td class="right">
+              <ed-colored-text [num]="(p.quote-p.adj_prev_close)*(utilService.getSum(p.transactions,'shares'))"></ed-colored-text>
+            </td>
             <td class="right">{{ (p.quote*utilService.getSum(p.transactions,"shares")) | number:'1.2-2' }}</td>
-            <td class="right"><ed-colored-text [num]="getTotalGain(p)"></ed-colored-text>  (<ed-colored-text [num]="getTotalGainPer(p)"></ed-colored-text>%)</td></tr>
+            <td class="right">
+              <ed-colored-text [num]="getTotalGain(p)"></ed-colored-text> (
+              <ed-colored-text [num]="getTotalGainPer(p)"></ed-colored-text>%)</td>
+          </tr>
           <ng-container *ngIf="p.transactions.length > 1 && showAll">
             <tr *ngFor="let t of p.transactions">
               <td></td>
@@ -53,15 +62,8 @@
           </ng-container>
         </ng-container>
       </tbody>
-      <tfoot>
-        <tr>
-          <th colspan=11 class="right">{{getGrandTotalGain()| number:'1.2-2' }}</th>
-        </tr>
-      </tfoot>
     </table>
     <br>
-    <button type="button" class="btn btn-danger" (click)="removeAll()">CLear Local Storage</button>
-    <button type="button" class="btn btn-success" (click)="SaveAsFile()">Save</button>
     <br>
     <br>
     <br>
@@ -73,6 +75,12 @@
       <button type="button" class="btn btn-primary" (click)="addTransaction(newTransaction)">Add</button>
     </div>
     <br/>
+    <br/>
+    <button type="button" class="btn btn-danger" (click)="removeAll()">CLear Local Storage</button>
+    <button type="button" class="btn btn-success" (click)="SaveAsFile()">Save</button>
+    <br/>
+    <br/>
+    <br/>
     <div class="form-inline">
       <textarea class="form-control" rows="5" placeholder="Import CVS" [(ngModel)]="importText"></textarea>
       <button type="button" class="btn btn-warning" (click)="importTransactions()">Import CVS</button>
@@ -80,6 +88,6 @@
       <button type="button" class="btn btn-warning" (click)="importJsonTrans()">Import JSON</button>
     </div>
     <br/>
-    
+
   </div>
 </div>

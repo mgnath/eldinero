@@ -6,6 +6,7 @@ import { saveAs } from 'file-saver/FileSaver';
 import { StockService } from './shared/services/stock.service';
 import { IntervalObservable } from "rxjs/observable/IntervalObservable";
 import { UtilService } from './shared/services/util.service';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-root',
@@ -25,13 +26,14 @@ export class AppComponent {
   constructor(private financeService: FinanceService, private stockService: StockService, private utilService: UtilService) {
     this.newTransaction = new Transaction("", "", null, null, null, false, null);
     this.InitPositions();
-    IntervalObservable.create(10000)// get our data every subsequent 10 seconds
+
+    IntervalObservable.create(20000)// get our data every subsequent 10 seconds
       .subscribe(() => {
-        if (this.alive) {
+        if (this.alive && (document.visibilityState != "hidden")) {
           this.getCurrentPrice();
         }
         else {
-          console.log('market closed' + new Date(Date.now()).toLocaleString());
+          //console.log('market closed or window not visible' + new Date(Date.now()).toLocaleString());
         }
       });
   }
@@ -65,11 +67,11 @@ export class AppComponent {
         );
       })
     }
-    else if(sortingCol=='daygain'){
+    else if (sortingCol == 'daygain') {
       this.positions.sort((a, b) => {
-      return this.sortDir * ((a.quote-a.adj_prev_close)*(this.utilService.getSum(a.transactions,'shares'))
-                              - (b.quote-b.adj_prev_close)*(this.utilService.getSum(b.transactions,'shares')))
-                          });
+        return this.sortDir * ((a.quote - a.adj_prev_close) * (this.utilService.getSum(a.transactions, 'shares'))
+          - (b.quote - b.adj_prev_close) * (this.utilService.getSum(b.transactions, 'shares')))
+      });
     }
     else if (sortingCol == 'mktval') {
       this.positions.sort((a, b) => {
@@ -125,10 +127,10 @@ export class AppComponent {
     else if (colName == 'daygain') { retStr = "Day Gain"; }
     else if (colName == 'mktval') { retStr = "Market Value"; }
     else if (colName == 'totgain') { retStr = "Gain/Loss"; }
-    
+
 
     if (colName == this.sCol) {
-      retStr += (this.sortDir == 1) ? "↓" : "↑";
+      retStr += (this.sortDir == 1) ? "▲" : "▼";
     }
     return retStr;
   }
@@ -143,10 +145,10 @@ export class AppComponent {
   getTotalGain(p: StockPosition) {
     return (p.quote * this.utilService.getSum(p.transactions, "shares") - (this.getAvg(p.transactions) * this.utilService.getSum(p.transactions, "shares")))
   }
-  getTotalGainPer(p: StockPosition){
+  getTotalGainPer(p: StockPosition) {
     var mktVal = p.quote * this.utilService.getSum(p.transactions, "shares");
     var origCos = this.getAvg(p.transactions) * this.utilService.getSum(p.transactions, "shares");
-    return  ((mktVal-origCos)/origCos)*100;
+    return ((mktVal - origCos) / origCos) * 100;
   }
   getGrandTotalGain() {
     var totSum: number = 0;
@@ -155,6 +157,16 @@ export class AppComponent {
         totSum +=
         pos.quote * this.utilService.getSum(pos.transactions, "shares") -
         (this.getAvg(pos.transactions) * this.utilService.getSum(pos.transactions, "shares")))
+    );
+    return totSum;
+  }
+  getGrandTotal() {
+    var totSum: number = 0;
+    this.positions.forEach(
+      pos => (
+        totSum +=
+        pos.quote * this.utilService.getSum(pos.transactions, "shares")
+      )
     );
     return totSum;
   }

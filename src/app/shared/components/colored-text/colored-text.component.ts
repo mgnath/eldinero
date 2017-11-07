@@ -7,6 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ColoredTextComponent implements OnInit {
   @Input() num: number;
+  @Input() noColor: boolean = false;
   constructor() { }
   
   ngOnInit() {

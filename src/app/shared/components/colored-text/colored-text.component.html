@@ -1,1 +1,1 @@
-<span  [ngClass]="{'right':true,'green':(num>0) , 'red':(num<0)}">{{num | number:'1.2-2'}}</span>
+<span  [ngClass]="{'right':true,'green':(num>0)&&!noColor , 'red':(num<0)&&!noColor}">{{num | number:'1.2-2'}}</span>
