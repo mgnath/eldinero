@@ -22,7 +22,7 @@ export class AppComponent {
   alive = true;
   sCol: string = 'name';
   sortDir: number = 1;
-  firstLoad:boolean = true;
+  firstLoad: boolean = true;
 
   constructor(private financeService: FinanceService, private stockService: StockService, private utilService: UtilService) {
     this.newTransaction = new Transaction("", "", null, null, null, false, null);
@@ -34,14 +34,14 @@ export class AppComponent {
           this.getCurrentPrice();
         }
         else {
-          if(this.firstLoad) {this.getCurrentPrice(); this.firstLoad=false;}
+          if (this.firstLoad) { this.getCurrentPrice(); this.firstLoad = false; }
         }
       });
   }
   private InitPositions() {
-    this.stockService.GetNYSEStatus().subscribe(d => { 
-      this.alive = d.is_open && (new Date(d.closes_at).valueOf() > new Date().valueOf()); 
-      (this.alive)?console.log('Open'):console.log('Closed');
+    this.stockService.GetNYSEStatus().subscribe(d => {
+      this.alive = d.is_open && (new Date(d.closes_at).valueOf() > new Date().valueOf());
+      (this.alive) ? console.log('Open') : console.log('Closed');
     })
     this.positions = this.financeService.getAllPositions();
     this.getCurrentPrice();
@@ -102,14 +102,14 @@ export class AppComponent {
   openFile(event) {
     let input = event.target;
     for (var index = 0; index < input.files.length; index++) {
-        let reader = new FileReader();
-        reader.onload = () => {
-            this.importJsonTrans(reader.result);
-        }
-        reader.readAsText(input.files[index]);
+      let reader = new FileReader();
+      reader.onload = () => {
+        this.importJsonTrans(reader.result);
+      }
+      reader.readAsText(input.files[index]);
     };
   }
-  importJsonTrans(jsonText:string) {
+  importJsonTrans(jsonText: string) {
     var transactions = JSON.parse(jsonText);
     transactions.forEach(trans => {
       this.addTrans(trans);
@@ -119,7 +119,9 @@ export class AppComponent {
   }
   addTransaction(trans: Transaction) {
     this.newTransaction.type = TransactionType.BUY;
+    this.newTransaction.symbol = this.newTransaction.symbol.toUpperCase();
     this.positions = this.financeService.addTransction(trans).getAllPositions();
+    this.firstLoad=true;
     this.newTransaction = new Transaction("", "", null, null, 0, false, 0);
   }
   addTrans(trans: Transaction) {
@@ -130,7 +132,7 @@ export class AppComponent {
     this.financeService.getAllPositions().forEach(e => e.transactions.forEach(t => allTrans.push(t)));
     this.utilService.SaveAsFile(JSON.stringify(allTrans), "myportfolio.json");
   }
-  
+
   getTitle(colName: string) {
     let retStr = "";
     if (colName == 'name') { retStr = "Name"; }
@@ -150,9 +152,16 @@ export class AppComponent {
     }
     return retStr;
   }
-  validateSymbol(){
-    this.stockService.GetTradingAPI(new Array(this.newTransaction.symbol)).subscribe(d=>{
-      console.log(d);
+  validateSymbol() {
+    this.newTransaction.name ="";
+    this.newTransaction.symbol = this.newTransaction.symbol .toUpperCase();
+    this.stockService.GetTradingAPI(new Array(this.newTransaction.symbol.toUpperCase())).subscribe(d => {
+      if (d.results.length > 0) {
+        this.stockService.GetSymbolName(d.results[0].instrument).subscribe(r => {
+          this.newTransaction.name = r.simple_name;
+        })
+      }
+      else{ alert('Not a valid symbol');}
     });
   }
   //helper functions
