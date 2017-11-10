@@ -1,14 +1,24 @@
 <div>
   <app-nav></app-nav>
   <div class="app-content">
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" [(ngModel)]="showAll">Show All Transactions</label>
+    <div>
+      <button mat-button color="primary" (click)="showAll=!showAll">
+        {{ showAll?"Collapse All":"Show All"}}
+      </button>
+      <button mat-mini-fab color="danger" (click)="removeAll()">
+        <mat-icon (click)="removeAll()">delete</mat-icon>
+      </button>
+      <button mat-mini-fab color="primary" (click)="SaveAsFile()">
+        <mat-icon>save</mat-icon>
+      </button>&nbsp; &nbsp;&nbsp;Market Status:
+      <label [ngClass]="{'green':alive, 'red':!alive}">{{ alive?"Online":"Offline" }}</label>
       <span style="font-size:large; float:right; margin-right:20px;">
         <ed-colored-text [num]="getGrandTotalGain()" title="Unrealized Gain/Loss"></ed-colored-text>
-        (<ed-colored-text [num]="getGrandTotalDayGain()" title="Day Gain/Loss"></ed-colored-text>)
+        (
+        <ed-colored-text [num]="getGrandTotalDayGain()" title="Day Gain/Loss"></ed-colored-text>)
         <span style="font-size:xx-large;">
-            $<ed-colored-text [num]="getGrandTotal()" [noColor]="true" title="Total Market Value"></ed-colored-text>
+          $
+          <ed-colored-text [num]="getGrandTotal()" [noColor]="true" title="Total Market Value"></ed-colored-text>
         </span>
       </span>
     </div>
@@ -17,9 +27,9 @@
         <tr>
           <th></th>
           <th [ngClass]="{'sorted':sCol == 'name'}" (click)="sortData('name')">{{getTitle('name')}}</th>
-          <th [ngClass]="{'light':true,'sorted':sCol == 'symbol'}" (click)="sortData('symbol')">{{getTitle('symbol')}}</th>
-          <th [ngClass]="{'light':true,'sorted':sCol == 'shares'}" (click)="sortData('shares')" class="right">{{getTitle('shares')}}</th>
-          <th [ngClass]="{'light':true,'sorted':sCol == 'avgcost'}" (click)="sortData('avgcost')" class="right">{{getTitle('avgcost')}}</th>
+          <th [ngClass]="{'sorted':sCol == 'symbol','light':true}" (click)="sortData('symbol')">{{getTitle('symbol')}}</th>
+          <th [ngClass]="{'sorted':sCol == 'shares','light':true}" (click)="sortData('shares')" class="right">{{getTitle('shares')}}</th>
+          <th [ngClass]="{'sorted':sCol == 'avgcost','light':true}" (click)="sortData('avgcost')" class="right">{{getTitle('avgcost')}}</th>
           <th [ngClass]="{'sorted':sCol == 'quote'}" (click)="sortData('quote')" class="right">{{getTitle('quote')}}</th>
           <th [ngClass]="{'sorted':sCol == 'daychange'}" (click)="sortData('daychange')" class="right">{{getTitle('daychange')}}</th>
           <th [ngClass]="{'sorted':sCol == 'daychangeper'}" (click)="sortData('daychangeper')" class="right">{{getTitle('daychangeper')}}</th>
@@ -63,31 +73,20 @@
         </ng-container>
       </tbody>
     </table>
-    <br>
-    <br>
-    <br>
+
     <br>
     <div class="form-inline">
       <input [(ngModel)]="newTransaction.name" placeholder="Name" class="form-control">
-      <input [(ngModel)]="newTransaction.symbol" placeholder="Symbol" class="form-control">
+      <input [(ngModel)]="newTransaction.symbol" placeholder="Symbol" (blur)="validateSymbol()" class="form-control">
       <input [(ngModel)]="newTransaction.shares" class="form-control" placeholder="Shares">
       <input [(ngModel)]="newTransaction.price" class="form-control" placeholder="Purchase Price" (keyup.enter)="addTransaction(newTransaction)">
       <button type="button" class="btn btn-primary" (click)="addTransaction(newTransaction)">Add</button>
+      <br/>
+      <br/>
+      <span class="btn btn-primary btn-file">
+        Import Transactions
+        <input class="btn btn-primary" type="file" accept='application/json' (change)='openFile($event)'>
+      </span>
     </div>
-    <br/>
-    <br/>
-    <button type="button" class="btn btn-danger" (click)="removeAll()">CLear Local Storage</button>
-    <button type="button" class="btn btn-success" (click)="SaveAsFile()">Save</button>
-    <br/>
-    <br/>
-    <br/>
-    <div class="form-inline">
-      <textarea class="form-control" rows="5" placeholder="Import CVS" [(ngModel)]="importText"></textarea>
-      <button type="button" class="btn btn-warning" (click)="importTransactions()">Import CVS</button>
-      <textarea class="form-control" rows="5" placeholder="Import Json" [(ngModel)]="importJson"></textarea>
-      <button type="button" class="btn btn-warning" (click)="importJsonTrans()">Import JSON</button>
-    </div>
-    <br/>
-
   </div>
 </div>

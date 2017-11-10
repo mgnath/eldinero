@@ -22,23 +22,27 @@ export class AppComponent {
   alive = true;
   sCol: string = 'name';
   sortDir: number = 1;
+  firstLoad:boolean = true;
 
   constructor(private financeService: FinanceService, private stockService: StockService, private utilService: UtilService) {
     this.newTransaction = new Transaction("", "", null, null, null, false, null);
     this.InitPositions();
 
-    IntervalObservable.create(20000)// get our data every subsequent 10 seconds
+    IntervalObservable.create(3000)// get our data every subsequent 10 seconds
       .subscribe(() => {
         if (this.alive && (document.visibilityState != "hidden")) {
           this.getCurrentPrice();
         }
         else {
-          //console.log('market closed or window not visible' + new Date(Date.now()).toLocaleString());
+          if(this.firstLoad) {this.getCurrentPrice(); this.firstLoad=false;}
         }
       });
   }
   private InitPositions() {
-    this.stockService.GetNYSEStatus().subscribe(d => { this.alive = d.is_open; })
+    this.stockService.GetNYSEStatus().subscribe(d => { 
+      this.alive = d.is_open && (new Date(d.closes_at).valueOf() > new Date().valueOf()); 
+      (this.alive)?console.log('Open'):console.log('Closed');
+    })
     this.positions = this.financeService.getAllPositions();
     this.getCurrentPrice();
   }
@@ -95,12 +99,23 @@ export class AppComponent {
       this.positions = this.financeService.getAllPositions();
     });
   }
-  importJsonTrans() {
-    var transactions = JSON.parse(this.importJson);
+  openFile(event) {
+    let input = event.target;
+    for (var index = 0; index < input.files.length; index++) {
+        let reader = new FileReader();
+        reader.onload = () => {
+            this.importJsonTrans(reader.result);
+        }
+        reader.readAsText(input.files[index]);
+    };
+  }
+  importJsonTrans(jsonText:string) {
+    var transactions = JSON.parse(jsonText);
     transactions.forEach(trans => {
       this.addTrans(trans);
       this.positions = this.financeService.getAllPositions();
     });
+    this.firstLoad = true;
   }
   addTransaction(trans: Transaction) {
     this.newTransaction.type = TransactionType.BUY;
@@ -115,6 +130,7 @@ export class AppComponent {
     this.financeService.getAllPositions().forEach(e => e.transactions.forEach(t => allTrans.push(t)));
     this.utilService.SaveAsFile(JSON.stringify(allTrans), "myportfolio.json");
   }
+  
   getTitle(colName: string) {
     let retStr = "";
     if (colName == 'name') { retStr = "Name"; }
@@ -133,6 +149,11 @@ export class AppComponent {
       retStr += (this.sortDir == 1) ? "▲" : "▼";
     }
     return retStr;
+  }
+  validateSymbol(){
+    this.stockService.GetTradingAPI(new Array(this.newTransaction.symbol)).subscribe(d=>{
+      console.log(d);
+    });
   }
   //helper functions
   getAvg(trans: Transaction[]) {
