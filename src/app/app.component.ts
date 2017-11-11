@@ -59,8 +59,8 @@ export class AppComponent {
   sortData(sortingCol: string) {
     if (sortingCol === this.sCol) this.sortDir *= -1;
     if (sortingCol == 'name' || sortingCol == 'symbol') { this.positions.sort((a, b) => { return this.sortDir * a[sortingCol].localeCompare(b[sortingCol]); }) }
-    else if (sortingCol == 'shares') { this.positions.sort((a, b) => { return this.sortDir * (this.utilService.getSum(a.transactions, "shares") - this.utilService.getSum(b.transactions, "shares")); }) }
-    else if (sortingCol == 'avgcost') { this.positions.sort((a, b) => { return this.sortDir * (this.getAvg(a.transactions) - this.getAvg(b.transactions)); }) }
+    else if (sortingCol == 'shares') { this.positions.sort((a, b) => { return this.sortDir * a.shares() - b.shares(); }) }
+    else if (sortingCol == 'avgcost') { this.positions.sort((a, b) => { return this.sortDir * (a.avgPrice() - b.avgPrice()); }) }
     else if (sortingCol == 'daychange') {
       this.positions.sort((a, b) => { return this.sortDir * ((a.quote - a.adj_prev_close) - (b.quote - b.adj_prev_close)); })
     }
@@ -73,19 +73,23 @@ export class AppComponent {
     }
     else if (sortingCol == 'daygain') {
       this.positions.sort((a, b) => {
-        return this.sortDir * ((a.quote - a.adj_prev_close) * (this.utilService.getSum(a.transactions, 'shares'))
-          - (b.quote - b.adj_prev_close) * (this.utilService.getSum(b.transactions, 'shares')))
+        return this.sortDir * ((a.quote - a.adj_prev_close) * (a.shares())
+          - (b.quote - b.adj_prev_close) * (b.shares()))
       });
     }
     else if (sortingCol == 'mktval') {
       this.positions.sort((a, b) => {
-        return this.sortDir * ((a.quote * this.utilService.getSum(a.transactions, "shares")) -
-          (b.quote * this.utilService.getSum(b.transactions, "shares")));
+        return this.sortDir * ((a.quote * a.shares()) -
+          (b.quote * b.shares()));
       })
     }
-    else if (sortingCol == 'avgcost') { this.positions.sort((a, b) => { return this.sortDir * (this.getAvg(a.transactions) - this.getAvg(b.transactions)); }) }
+    else if (sortingCol == 'avgcost') { this.positions.sort((a, b) => { return this.sortDir * (a.avgPrice() - b.avgPrice()); }) }
     else if (sortingCol == 'quote') { this.positions.sort((a, b) => { return this.sortDir * (a.quote - b.quote); }) }
-    else if (sortingCol == 'totgain') { this.positions.sort((a, b) => { return this.sortDir * (this.getTotalGain(a) - this.getTotalGain(b)); }) }
+    else if (sortingCol == 'totgain') {
+      this.positions.sort((a, b) => {
+        return this.sortDir * (a.unrealizedGainLoss() - b.unrealizedGainLoss());
+      })
+    }
     this.sCol = sortingCol;
   }
   removeAll() {
@@ -121,7 +125,7 @@ export class AppComponent {
     this.newTransaction.type = TransactionType.BUY;
     this.newTransaction.symbol = this.newTransaction.symbol.toUpperCase();
     this.positions = this.financeService.addTransction(trans).getAllPositions();
-    this.firstLoad=true;
+    this.firstLoad = true;
     this.newTransaction = new Transaction("", "", null, null, 0, false, 0);
   }
   addTrans(trans: Transaction) {
@@ -145,48 +149,31 @@ export class AppComponent {
     else if (colName == 'daygain') { retStr = "Day Gain"; }
     else if (colName == 'mktval') { retStr = "Market Value"; }
     else if (colName == 'totgain') { retStr = "Gain/Loss"; }
-
-
     if (colName == this.sCol) {
       retStr += (this.sortDir == 1) ? "▲" : "▼";
     }
     return retStr;
   }
   validateSymbol() {
-    this.newTransaction.name ="";
-    this.newTransaction.symbol = this.newTransaction.symbol .toUpperCase();
-    this.stockService.GetTradingAPI(new Array(this.newTransaction.symbol.toUpperCase())).subscribe(d => {
-      if (d.results.length > 0) {
-        this.stockService.GetSymbolName(d.results[0].instrument).subscribe(r => {
-          this.newTransaction.name = r.simple_name;
-        })
-      }
-      else{ alert('Not a valid symbol');}
-    });
+    this.newTransaction.name = "";
+    this.newTransaction.symbol = this.newTransaction.symbol.toUpperCase();
+    if (this.newTransaction.symbol.length > 0) {
+      this.stockService.GetTradingAPI(new Array(this.newTransaction.symbol.toUpperCase())).subscribe(d => {
+        if (d.results.length > 0) {
+          this.stockService.GetSymbolName(d.results[0].instrument).subscribe(r => {
+            this.newTransaction.name = r.simple_name;
+          })
+        }
+        else { alert('Not a valid symbol'); }
+      }, err => { alert('Not a valid symbol'); });
+    }
   }
   //helper functions
-  getAvg(trans: Transaction[]) {
-    var totalPrice = trans.reduce(function (p, c, i) {
-      return Number(p) + (Number(c.price) * Number(c.shares));
-    }, 0);
-    var totalShares = this.utilService.getSum(trans, "shares");
-    return Math.round((totalPrice / totalShares) * 1000) / 1000;
-  }
-  getTotalGain(p: StockPosition) {
-    return (p.quote * this.utilService.getSum(p.transactions, "shares") - (this.getAvg(p.transactions) * this.utilService.getSum(p.transactions, "shares")))
-  }
-  getTotalGainPer(p: StockPosition) {
-    var mktVal = p.quote * this.utilService.getSum(p.transactions, "shares");
-    var origCos = this.getAvg(p.transactions) * this.utilService.getSum(p.transactions, "shares");
-    return ((mktVal - origCos) / origCos) * 100;
-  }
   getGrandTotalGain() {
     var totSum: number = 0;
     this.positions.forEach(
       pos => (
-        totSum +=
-        pos.quote * this.utilService.getSum(pos.transactions, "shares") -
-        (this.getAvg(pos.transactions) * this.utilService.getSum(pos.transactions, "shares")))
+        totSum += pos.unrealizedGainLoss())
     );
     return totSum;
   }
@@ -194,8 +181,7 @@ export class AppComponent {
     var totSum: number = 0;
     this.positions.forEach(
       pos => (
-        totSum +=
-        pos.quote * this.utilService.getSum(pos.transactions, "shares")
+        totSum += pos.marketValue()
       )
     );
     return totSum;
@@ -205,8 +191,8 @@ export class AppComponent {
     this.positions.forEach(
       pos => (
         totSum +=
-        pos.quote * this.utilService.getSum(pos.transactions, "shares") -
-        pos.adj_prev_close * this.utilService.getSum(pos.transactions, "shares"))
+        pos.marketValue() - pos.adj_prev_close * pos.shares()
+      )
     );
     return totSum;
   }

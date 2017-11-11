@@ -7,8 +7,15 @@ import { UtilService } from './util.service';
 export class FinanceService {
   positions: StockPosition[];
   constructor(private util: UtilService) {
-    this.positions = JSON.parse(localStorage.getItem("eldinero")) as StockPosition[]
-      || [];
+    this.loadData();
+    
+  }
+  loadData(){
+    this.positions =  new Array<StockPosition>();
+    var jsonObj:StockPosition[] = JSON.parse(localStorage.getItem("eldinero")) as StockPosition[] || [];
+    jsonObj.forEach(e=>{
+      this.positions.push(Object.assign(new StockPosition(), e));
+    });
   }
   importPositions(positions: StockPosition[]) {
     this.positions = positions;
@@ -30,7 +37,7 @@ export class FinanceService {
       this.positions.find(e => e.symbol === t.symbol).transactions.push(t);
     }
     else {
-      var stockPos: StockPosition = new StockPosition(this.util);
+      var stockPos: StockPosition = new StockPosition();
       stockPos.name = t.name;
       stockPos.symbol = t.symbol;
       stockPos.transactions = [];

@@ -44,8 +44,8 @@
             <td>{{i+1}}</td>
             <td>{{ p.name }}</td>
             <td class="light">{{ p.symbol }}</td>
-            <td class="right light">{{ utilService.getSum(p.transactions,"shares")}} </td>
-            <td class="right light">{{ getAvg(p.transactions) }} </td>
+            <td class="right light">{{ p.shares()}} </td>
+            <td class="right light">{{ p.avgPrice() }} </td>
             <td class="right">{{ p.quote | number:'1.2-2'}}</td>
             <td class="right">
               <ed-colored-text [num]="(p.quote-p.adj_prev_close)"></ed-colored-text>
@@ -54,12 +54,12 @@
               <ed-colored-text [num]="((p.quote-p.adj_prev_close)/p.adj_prev_close)*100 "></ed-colored-text>
             </td>
             <td class="right">
-              <ed-colored-text [num]="(p.quote-p.adj_prev_close)*(utilService.getSum(p.transactions,'shares'))"></ed-colored-text>
+              <ed-colored-text [num]="(p.quote-p.adj_prev_close)*(p.shares())"></ed-colored-text>
             </td>
-            <td class="right">{{ (p.quote*utilService.getSum(p.transactions,"shares")) | number:'1.2-2' }}</td>
+            <td class="right">{{ p.marketValue() | number:'1.2-2' }}</td>
             <td class="right">
-              <ed-colored-text [num]="getTotalGain(p)"></ed-colored-text> (
-              <ed-colored-text [num]="getTotalGainPer(p)"></ed-colored-text>%)</td>
+              <ed-colored-text [num]="p.unrealizedGainLoss()"></ed-colored-text> (
+              <ed-colored-text [num]="p.gainLossPer()"></ed-colored-text>%)</td>
           </tr>
           <ng-container *ngIf="p.transactions.length > 1 && showAll">
             <tr *ngFor="let t of p.transactions">
