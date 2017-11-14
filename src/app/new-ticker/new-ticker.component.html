@@ -1,8 +1,7 @@
-{{newTransaction.name}}&nbsp;
+{{newTransaction.name}}
 <div class="form-inline">
   <input [(ngModel)]="newTransaction.symbol" placeholder="Symbol" (blur)="validateSymbol()" class="form-control">
-  <input [(ngModel)]="newTransaction.shares" class="form-control" placeholder="Shares">
-  <input [(ngModel)]="newTransaction.price" class="form-control" placeholder="Purchase Price" (keyup.enter)="addTransaction(newTransaction)">
-  <button type="button" class="btn btn-primary" (click)="addTransaction(newTransaction)">Add</button>
-  
+  <input [(ngModel)]="newTransaction.shares" type="number" class="form-control" placeholder="Shares">
+  <input [(ngModel)]="newTransaction.price"  type="number" class="form-control" placeholder="Purchase Price" (keyup.enter)="addTransaction(newTransaction)">
+  <button (click)="addTransaction(newTransaction)" class="btn btn-primary" [disabled]="newTransaction.name.length<1">Add</button>
 </div>

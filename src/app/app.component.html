@@ -13,9 +13,14 @@
       </button>&nbsp; &nbsp;&nbsp;Market Status:
       <label [ngClass]="{'green':alive, 'red':!alive}">{{ alive?"Online":"Offline" }}</label>
       <span style="font-size:large; float:right; margin-right:20px;">
+        <span style="font-size:x-large;">
+          <ed-colored-text [num]="getGrandTotalDayGain()" title="Day Gain/Loss"></ed-colored-text>
+        </span>
         <ed-colored-text [num]="getGrandTotalGain()" title="Unrealized Gain/Loss"></ed-colored-text>
+        <span style="font-size:small;">
         (
-        <ed-colored-text [num]="getGrandTotalDayGain()" title="Day Gain/Loss"></ed-colored-text>)
+        <ed-colored-text [num]="getGrandTotalGainPer()"  title="Unrealized Gain/Loss Percentage"></ed-colored-text>%)
+      </span>
         <span style="font-size:xx-large;">
           $
           <ed-colored-text [num]="getGrandTotal()" [noColor]="true" title="Total Market Value"></ed-colored-text>
@@ -74,12 +79,12 @@
       </tbody>
     </table>
 
-  <ed-new-ticker (add)="handleAddTrans($event)"></ed-new-ticker>
+    <ed-new-ticker (add)="handleAddTrans($event)"></ed-new-ticker>
     <div class="form-inline">
-       <br/>
+      <br/>
       <span class="btn btn-primary btn-file">
         Import Transactions
-        <input class="btn btn-primary" type="file" accept='application/json' (change)='openFile($event)'>
+        <input class="btn btn-warning" type="file" accept='application/json' (change)='openFile($event)'>
       </span>
     </div>
   </div>

@@ -155,11 +155,24 @@ export class AppComponent {
     );
     return totSum;
   }
+  getGrandTotalGainPer(){
+    var origCos = this.getGrandCostBasis();
+    return ((this.getGrandTotal() - origCos) / origCos) * 100;
+  }
   getGrandTotal() {
     var totSum: number = 0;
     this.positions.forEach(
       pos => (
         totSum += pos.marketValue()
+      )
+    );
+    return totSum;
+  }
+  getGrandCostBasis() {
+    var totSum: number = 0;
+    this.positions.forEach(
+      pos => (
+        totSum += pos.totalCostBasis()
       )
     );
     return totSum;
