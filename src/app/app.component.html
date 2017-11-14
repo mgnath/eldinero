@@ -73,15 +73,10 @@
         </ng-container>
       </tbody>
     </table>
-    <br>
-    {{newTransaction.name}}&nbsp;
+
+  <ed-new-ticker (add)="handleAddTrans($event)"></ed-new-ticker>
     <div class="form-inline">
-      <input [(ngModel)]="newTransaction.symbol" placeholder="Symbol" (blur)="validateSymbol()" class="form-control">
-      <input [(ngModel)]="newTransaction.shares" class="form-control" placeholder="Shares">
-      <input [(ngModel)]="newTransaction.price" class="form-control" placeholder="Purchase Price" (keyup.enter)="addTransaction(newTransaction)">
-      <button type="button" class="btn btn-primary" (click)="addTransaction(newTransaction)">Add</button>
-      <br/>
-      <br/>
+       <br/>
       <span class="btn btn-primary btn-file">
         Import Transactions
         <input class="btn btn-primary" type="file" accept='application/json' (change)='openFile($event)'>

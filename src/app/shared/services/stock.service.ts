@@ -7,9 +7,9 @@ import * as $ from 'jquery';
 export class StockService {
   constructor(private http: Http) { }
   GetTradingAPI(symbols: string[]) {
-    return this.http.
-      get("https://api.robinhood.com/quotes/?symbols=" + symbols.join(",")).
-      map((res: Response) => res.json());
+      return this.http.
+        get("https://api.robinhood.com/quotes/?symbols=" + symbols.join(",")).
+        map((res: Response) => res.json());
   }
   GetNYSEStatus() {
     return this.http.

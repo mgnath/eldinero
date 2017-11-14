@@ -14,7 +14,6 @@ import * as $ from 'jquery';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  @Input() newTransaction: Transaction;
   @Input() importText: string;
   @Input() importJson: string;
   @Input() showAll: boolean;
@@ -25,10 +24,9 @@ export class AppComponent {
   firstLoad: boolean = true;
 
   constructor(private financeService: FinanceService, private stockService: StockService, private utilService: UtilService) {
-    this.newTransaction = new Transaction("", "", null, null, null, false, null);
     this.InitPositions();
 
-    IntervalObservable.create(3000)// get our data every subsequent 10 seconds
+    IntervalObservable.create(30000)// get our data every subsequent 10 seconds
       .subscribe(() => {
         if (this.alive && (document.visibilityState != "hidden")) {
           this.getCurrentPrice();
@@ -46,15 +44,24 @@ export class AppComponent {
     this.positions = this.financeService.getAllPositions();
     this.getCurrentPrice();
   }
+  handleAddTrans(newTrans:Transaction){
+    this.positions = this.financeService.getAllPositions();
+    this.firstLoad = true;
+  }
   getCurrentPrice() {
     var syms = [];
     this.positions.forEach(e => syms.push(e.symbol));
-    this.stockService.GetTradingAPI(syms).subscribe(data => {
-      data.results.forEach(k => {
-        this.positions.find(e => e.symbol === k.symbol).quote = k.last_extended_hours_trade_price || k.last_trade_price;
-        this.positions.find(e => e.symbol === k.symbol).adj_prev_close = k.adjusted_previous_close;
-      });
-    });
+    if(syms.length > 0){
+      this.stockService.GetTradingAPI(syms).subscribe(data => {
+        data.results.forEach(k => {
+          this.positions.find(e => e.symbol === k.symbol).quote = k.last_extended_hours_trade_price || k.last_trade_price;
+          this.positions.find(e => e.symbol === k.symbol).adj_prev_close = k.adjusted_previous_close;
+        });
+      }, e=>{console.log('error occured in getting quotes');});
+    }
+    else{
+      console.log('no symbols');
+    }
   }
   sortData(sortingCol: string) {
     if (sortingCol === this.sCol) this.sortDir *= -1;
@@ -95,14 +102,6 @@ export class AppComponent {
   removeAll() {
     this.positions = this.financeService.removeAllPositions().getAllPositions();
   }
-  importTransactions() {
-    var transactions = this.utilService.CSVToArray(this.importText, null);
-    transactions.forEach(trans => {
-      let currTrans: Transaction = new Transaction(trans[1], trans[0], new Date(trans[3]), TransactionType.BUY, <number>(trans[4]), false, <number>(trans[5]));
-      this.addTrans(currTrans);
-      this.positions = this.financeService.getAllPositions();
-    });
-  }
   openFile(event) {
     let input = event.target;
     for (var index = 0; index < input.files.length; index++) {
@@ -120,13 +119,6 @@ export class AppComponent {
       this.positions = this.financeService.getAllPositions();
     });
     this.firstLoad = true;
-  }
-  addTransaction(trans: Transaction) {
-    this.newTransaction.type = TransactionType.BUY;
-    this.newTransaction.symbol = this.newTransaction.symbol.toUpperCase();
-    this.positions = this.financeService.addTransction(trans).getAllPositions();
-    this.firstLoad = true;
-    this.newTransaction = new Transaction("", "", null, null, 0, false, 0);
   }
   addTrans(trans: Transaction) {
     this.positions = this.financeService.addTransction(trans).getAllPositions();
@@ -153,20 +145,6 @@ export class AppComponent {
       retStr += (this.sortDir == 1) ? "▲" : "▼";
     }
     return retStr;
-  }
-  validateSymbol() {
-    this.newTransaction.name = "";
-    this.newTransaction.symbol = this.newTransaction.symbol.toUpperCase();
-    if (this.newTransaction.symbol.length > 0) {
-      this.stockService.GetTradingAPI(new Array(this.newTransaction.symbol.toUpperCase())).subscribe(d => {
-        if (d.results.length > 0) {
-          this.stockService.GetSymbolName(d.results[0].instrument).subscribe(r => {
-            this.newTransaction.name = r.simple_name;
-          })
-        }
-        else { alert('Not a valid symbol'); }
-      }, err => { alert('Not a valid symbol'); });
-    }
   }
   //helper functions
   getGrandTotalGain() {

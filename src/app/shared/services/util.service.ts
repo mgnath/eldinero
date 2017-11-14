@@ -22,6 +22,14 @@ export class UtilService {
     var blob = new Blob([textToBeSaved], { type: "text/plain;charset=utf-8" });
     saveAs(blob,filename);
   }
+  /* importTransactions() { /// csv parsing function
+    var transactions = this.utilService.CSVToArray(this.importText, null);
+    transactions.forEach(trans => {
+      let currTrans: Transaction = new Transaction(trans[1], trans[0], new Date(trans[3]), TransactionType.BUY, <number>(trans[4]), false, <number>(trans[5]));
+      this.addTrans(currTrans);
+      this.positions = this.financeService.getAllPositions();
+    });
+  } */
   CSVToArray(strData, strDelimiter) {
     strDelimiter = (strDelimiter || ",");
     var objPattern = new RegExp(

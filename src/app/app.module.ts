@@ -16,6 +16,8 @@ import { TickerComponent } from './ticker/ticker.component';
 import { StockService } from './shared/services/stock.service';
 import { ChangecolorPipe } from './shared/pipes/changecolor.pipe';
 import { ColoredTextComponent } from './shared/components/colored-text/colored-text.component';
+import { NewTickerComponent } from './new-ticker/new-ticker.component';
+import { MAT_PLACEHOLDER_GLOBAL_OPTIONS } from '@angular/material';
 
  
 @NgModule({
@@ -25,7 +27,8 @@ import { ColoredTextComponent } from './shared/components/colored-text/colored-t
     MapToIterablePipe,
     TickerComponent,
     ChangecolorPipe,
-    ColoredTextComponent
+    ColoredTextComponent,
+    NewTickerComponent
   ], 
   imports: [
     BrowserAnimationsModule,
@@ -35,7 +38,8 @@ import { ColoredTextComponent } from './shared/components/colored-text/colored-t
     HttpClientModule,
     HttpModule
   ],
-  providers: [FinanceService, UtilService, StockService],
+  providers: [FinanceService, UtilService, StockService,
+    {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'auto'}}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
