@@ -12,11 +12,12 @@ import { NavComponent } from './nav/nav.component';
 import { FinanceService } from './shared/services/finance.service';
 import { UtilService } from './shared/services/util.service';
 import { MapToIterablePipe } from './shared/pipes/map-to-iterable.pipe';
-import { StockService } from './shared/services/stock.service';
+import { RobinhoodService } from './shared/services/robinhood.service';
 import { ChangecolorPipe } from './shared/pipes/changecolor.pipe';
 import { ColoredTextComponent } from './shared/components/colored-text/colored-text.component';
 import { NewTickerComponent } from './new-ticker/new-ticker.component';
 import { MAT_PLACEHOLDER_GLOBAL_OPTIONS } from '@angular/material';
+import { AlphavantageService } from './shared/services/alphavantage.service';
 
  
 @NgModule({
@@ -36,7 +37,7 @@ import { MAT_PLACEHOLDER_GLOBAL_OPTIONS } from '@angular/material';
     HttpClientModule,
     HttpModule
   ],
-  providers: [FinanceService, UtilService, StockService,
+  providers: [FinanceService, UtilService, RobinhoodService,AlphavantageService,
     {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'auto'}}],
   bootstrap: [AppComponent]
 })

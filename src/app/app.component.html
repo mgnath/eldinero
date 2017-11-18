@@ -6,7 +6,7 @@
         {{ showAll?"Collapse All":"Show All"}}
       </button>
       <button mat-mini-fab color="danger" (click)="removeAll()">
-        <mat-icon (click)="removeAll()">delete</mat-icon>
+        <mat-icon>delete</mat-icon>
       </button>
       <button mat-mini-fab color="primary" (click)="SaveAsFile()">
         <mat-icon>save</mat-icon>
@@ -21,7 +21,7 @@
         (
         <ed-colored-text [num]="getGrandTotalGainPer()"  title="Unrealized Gain/Loss Percentage"></ed-colored-text>%)
       </span>
-        <span style="font-size:xx-large;">
+        <span style="font-size:xx-large;white-space: nowrap;">
           $
           <ed-colored-text [num]="getGrandTotal()" [noColor]="true" title="Total Market Value"></ed-colored-text>
         </span>

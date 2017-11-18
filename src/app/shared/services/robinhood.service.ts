@@ -4,9 +4,9 @@ import { mergeMap } from 'rxjs/operators';
 import 'rxjs/add/operator/map';
 import * as $ from 'jquery';
 @Injectable()
-export class StockService {
+export class RobinhoodService {
   constructor(private http: Http) { }
-  GetTradingAPI(symbols: string[]) {
+  GetStockQuotes(symbols: string[]) {
       return this.http.
         get("https://api.robinhood.com/quotes/?symbols=" + symbols.join(",")).
         map((res: Response) => res.json());

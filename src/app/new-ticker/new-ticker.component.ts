@@ -3,7 +3,7 @@ import {MatFormFieldModule} from '@angular/material';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import { Transaction, TransactionType, StockPosition } from '../shared/models/transaction';
 import { FinanceService } from '../shared/services/finance.service';
-import { StockService } from '../shared/services/stock.service';
+import { RobinhoodService } from '../shared/services/robinhood.service';
 
 @Component({
   selector: 'ed-new-ticker',
@@ -14,7 +14,7 @@ export class NewTickerComponent implements OnInit {
   newTransaction: Transaction;
   add: EventEmitter<Transaction> = new EventEmitter<Transaction>();
   
-  constructor(private financeService: FinanceService, private stockService:StockService ){
+  constructor(private financeService: FinanceService, private stockService:RobinhoodService ){
     this.newTransaction = new Transaction("", "", null, null, null, false, null);
   }
   ngOnInit() {
@@ -30,7 +30,7 @@ export class NewTickerComponent implements OnInit {
     this.newTransaction.name = "";
     this.newTransaction.symbol = this.newTransaction.symbol.toUpperCase();
     if (this.newTransaction.symbol.length > 0) {
-      this.stockService.GetTradingAPI(new Array(this.newTransaction.symbol.toUpperCase())).subscribe(d => {
+      this.stockService.GetStockQuotes(new Array(this.newTransaction.symbol.toUpperCase())).subscribe(d => {
         if (d.results.length > 0) {
           this.stockService.GetSymbolName(d.results[0].instrument).subscribe(r => {
             this.newTransaction.name = r.simple_name;
