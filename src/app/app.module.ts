@@ -18,8 +18,6 @@ import { ColoredTextComponent } from './shared/components/colored-text/colored-t
 import { NewTickerComponent } from './new-ticker/new-ticker.component';
 import { MAT_PLACEHOLDER_GLOBAL_OPTIONS } from '@angular/material';
 import { AlphavantageService } from './shared/services/alphavantage.service';
-import { TickerListComponent } from './ticker-list/ticker-list.component';
-
  
 @NgModule({
   declarations: [
@@ -28,8 +26,7 @@ import { TickerListComponent } from './ticker-list/ticker-list.component';
     MapToIterablePipe,
     ChangecolorPipe,
     ColoredTextComponent,
-    NewTickerComponent,
-    TickerListComponent
+    NewTickerComponent
   ], 
   imports: [
     BrowserAnimationsModule,
