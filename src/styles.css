@@ -39,6 +39,20 @@
   display: block;
 }
 .red {color:red;font-weight:bold; }
+.redborder {
+  background: rgb(255, 250, 250);
+  background: -webkit-linear-gradient(-90deg,white,rgb(255, 200, 200)); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(-90deg,white,rgb(255, 200, 200)); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(-90deg,white,rgb(255, 200, 200)); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(-90deg,white,rgb(255, 200, 200)); /* Standard syntax */
+}
+.greenborder {
+  background: rgb(250, 255, 250);
+  background: -webkit-linear-gradient(-90deg,white,rgb(200, 255, 200)); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(-90deg,white,rgb(200, 255, 200)); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(-90deg,white,rgb(200, 255, 200)); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(-90deg,white,rgb(200, 255, 200)); /* Standard syntax */
+}
 .green{color:green;font-weight:bold;}
 .right{text-align:right;}
 .sorted{color: #c2185b;}

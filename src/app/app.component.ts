@@ -9,6 +9,7 @@ import { UtilService } from './shared/services/util.service';
 import * as $ from 'jquery';
 import { AlphavantageService } from './shared/services/alphavantage.service';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -18,6 +19,7 @@ export class AppComponent {
   @Input() importText: string;
   @Input() importJson: string;
   @Input() showAll: boolean;
+  @Input() extTrades:boolean;
   positions: StockPosition[];
   alive = true;
   sCol: string = 'name';
@@ -57,24 +59,19 @@ export class AppComponent {
     this.positions = this.financeService.getAllPositions();
     this.firstLoad = true;
   }
-  getSMEData(){
-    this.positions.forEach((e,i) => 
-    {
-      setTimeout(()=>{ 
-        if (this.alive && (document.visibilityState != "hidden")) {
-          this.avService.getStockSME(e.symbol).subscribe(dat=>console.log(dat["Technical Analysis: SMA"]));
-        }
-      },5000*i);
-    });
-  }
   getCurrentPrice() {
     var syms = [];
     this.positions.forEach(e => syms.push(e.symbol));
     if (syms.length > 0) {
       this.stockService.GetStockQuotes(syms).subscribe(data => {
         data.results.forEach(k => {
-          this.positions.find(e => e.symbol === k.symbol).quote = k.last_trade_price;   // k.last_extended_hours_trade_price || k.last_trade_price;
-          this.positions.find(e => e.symbol === k.symbol).adj_prev_close = k.adjusted_previous_close;
+          if(this.extTrades && !this.alive){
+            this.positions.find(e => e.symbol === k.symbol).quote = k.last_extended_hours_trade_price || k.last_trade_price;
+            this.positions.find(e => e.symbol === k.symbol).adj_prev_close = k.last_trade_price;
+          }else{
+            this.positions.find(e => e.symbol === k.symbol).quote = k.last_trade_price;   // k.last_extended_hours_trade_price || k.last_trade_price;
+            this.positions.find(e => e.symbol === k.symbol).adj_prev_close = k.adjusted_previous_close;
+          }
         });
       }, e => { console.log('error occured in getting quotes'); });
     }

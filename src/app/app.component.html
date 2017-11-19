@@ -1,91 +1,94 @@
-<div>
-  <app-nav></app-nav>
-  <div class="app-content">
-    <div>
-      <button mat-button color="primary" (click)="showAll=!showAll">
-        {{ showAll?"Collapse All":"Show All"}}
-      </button>
-      <button mat-mini-fab color="danger" (click)="removeAll()">
-        <mat-icon>delete</mat-icon>
-      </button>
-      <button mat-mini-fab color="primary" (click)="SaveAsFile()">
-        <mat-icon>save</mat-icon>
+<app-nav>
+</app-nav>
+<div class="app-content">
+  <div *ngIf="positions.length > 0">
+    <button mat-mini-fab color="danger" (click)="removeAll()">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-mini-fab color="primary" (click)="SaveAsFile()">
+      <mat-icon>save</mat-icon>
+    </button>
+    <button mat-button color="primary" (click)="showAll=!showAll" title="Show All Transactions">
+      {{ showAll?"Collapse All":"Show All"}}
+    </button>
+    <button mat-button color="primary" (click)="extTrades=!extTrades;getCurrentPrice();" title="Show All Transactions">
+        {{ extTrades?"Hide Ext. trades":"Show Ext. Trades"}}
       </button>&nbsp; &nbsp;&nbsp;Market Status:
-      <label [ngClass]="{'green':alive, 'red':!alive}">{{ alive?"Online":"Offline" }}</label>
-      <span style="font-size:large; float:right; margin-right:20px;">
-        <span style="font-size:x-large;">
-          <ed-colored-text [num]="getGrandTotalDayGain()" title="Day Gain/Loss"></ed-colored-text>
-        </span>
-        <ed-colored-text [num]="getGrandTotalGain()" title="Unrealized Gain/Loss"></ed-colored-text>
-        <span style="font-size:small;">
+    <label [ngClass]="{'green':alive, 'red':!alive}">{{ alive?"Online":"Offline" }}</label>
+    <span style="font-size:large; float:right; margin-right:20px;">
+      <span style="font-size:x-large;">
+        <ed-colored-text [num]="getGrandTotalDayGain()" title="Day Gain/Loss"></ed-colored-text>
+      </span>
+      <ed-colored-text [num]="getGrandTotalGain()" title="Unrealized Gain/Loss"></ed-colored-text>
+      <span style="font-size:small;">
         (
-        <ed-colored-text [num]="getGrandTotalGainPer()"  title="Unrealized Gain/Loss Percentage"></ed-colored-text>%)
+        <ed-colored-text [num]="getGrandTotalGainPer()" title="Unrealized Gain/Loss Percentage"></ed-colored-text>%)
       </span>
-        <span style="font-size:xx-large;white-space: nowrap;">
-          $
-          <ed-colored-text [num]="getGrandTotal()" [noColor]="true" title="Total Market Value"></ed-colored-text>
-        </span>
+      <span style="font-size:xx-large;white-space: nowrap;">
+        $
+        <ed-colored-text [num]="getGrandTotal()" [noColor]="true" title="Total Market Value"></ed-colored-text>
       </span>
-    </div>
-    <table class="table table-hovered table-center">
-      <thead>
-        <tr>
-          <th></th>
-          <th [ngClass]="{'sorted':sCol == 'name'}" (click)="sortData('name')">{{getTitle('name')}}</th>
-          <th [ngClass]="{'sorted':sCol == 'symbol','light':true}" (click)="sortData('symbol')">{{getTitle('symbol')}}</th>
-          <th [ngClass]="{'sorted':sCol == 'shares','light':true}" (click)="sortData('shares')" class="right">{{getTitle('shares')}}</th>
-          <th [ngClass]="{'sorted':sCol == 'avgcost','light':true}" (click)="sortData('avgcost')" class="right">{{getTitle('avgcost')}}</th>
-          <th [ngClass]="{'sorted':sCol == 'quote'}" (click)="sortData('quote')" class="right">{{getTitle('quote')}}</th>
-          <th [ngClass]="{'sorted':sCol == 'daychange'}" (click)="sortData('daychange')" class="right">{{getTitle('daychange')}}</th>
-          <th [ngClass]="{'sorted':sCol == 'daychangeper'}" (click)="sortData('daychangeper')" class="right">{{getTitle('daychangeper')}}</th>
-          <th [ngClass]="{'sorted':sCol == 'daygain'}" (click)="sortData('daygain')" class="right">{{getTitle('daygain')}}</th>
-          <th [ngClass]="{'sorted':sCol == 'mktval'}" (click)="sortData('mktval')" class="right">{{getTitle('mktval')}}</th>
-          <th [ngClass]="{'sorted':sCol == 'totgain'}" (click)="sortData('totgain')" class="right">{{getTitle('totgain')}}</th>
+    </span>
+  </div>
+  <table *ngIf="positions.length > 0" class="table table-hovered table-center" style="overflow-x:auto;">
+    <thead>
+      <tr>
+        <th></th>
+        <th [ngClass]="{'sorted':sCol == 'name'}" (click)="sortData('name')">{{getTitle('name')}}</th>
+        <th [ngClass]="{'sorted':sCol == 'symbol','light':true}" (click)="sortData('symbol')">{{getTitle('symbol')}}</th>
+        <th [ngClass]="{'sorted':sCol == 'shares','light':true}" (click)="sortData('shares')" class="right">{{getTitle('shares')}}</th>
+        <th [ngClass]="{'sorted':sCol == 'avgcost','light':true}" (click)="sortData('avgcost')" class="right">{{getTitle('avgcost')}}</th>
+        <th [ngClass]="{'sorted':sCol == 'quote'}" (click)="sortData('quote')" class="right">{{getTitle('quote')}}</th>
+        <th [ngClass]="{'sorted':sCol == 'daychange'}" (click)="sortData('daychange')" class="right">{{getTitle('daychange')}}</th>
+        <th [ngClass]="{'sorted':sCol == 'daychangeper'}" (click)="sortData('daychangeper')" class="right">{{getTitle('daychangeper')}}</th>
+        <th [ngClass]="{'sorted':sCol == 'daygain'}" (click)="sortData('daygain')" class="right">{{getTitle('daygain')}}</th>
+        <th [ngClass]="{'sorted':sCol == 'mktval'}" (click)="sortData('mktval')" class="right">{{getTitle('mktval')}}</th>
+        <th [ngClass]="{'sorted':sCol == 'totgain'}" (click)="sortData('totgain')" class="right">{{getTitle('totgain')}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let p of positions;let i = index">
+        <tr [ngClass]="{'greenborder':((p.quote-p.adj_prev_close)>0) , 'redborder':((p.quote-p.adj_prev_close)<0)}" >
+          <td>{{i+1}}</td>
+          <td>{{ p.name }}</td>
+          <td class="light">{{ p.symbol }}</td>
+          <td class="right light">{{ p.shares()}} </td>
+          <td class="right light">{{ p.avgPrice() }} </td>
+          <td class="right">{{ p.quote | number:'1.2-2'}}</td>
+          <td class="right">
+            <ed-colored-text [num]="(p.quote-p.adj_prev_close)"></ed-colored-text>
+          </td>
+          <td class="right">
+            <ed-colored-text [num]="((p.quote-p.adj_prev_close)/p.adj_prev_close)*100 "></ed-colored-text>
+          </td>
+          <td class="right">
+            <ed-colored-text [num]="(p.quote-p.adj_prev_close)*(p.shares())"></ed-colored-text>
+          </td>
+          <td class="right">{{ p.marketValue() | number:'1.2-2' }}</td>
+          <td class="right">
+            <ed-colored-text [num]="p.unrealizedGainLoss()"></ed-colored-text> (
+            <ed-colored-text [num]="p.gainLossPer()"></ed-colored-text>%)</td>
         </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let p of positions;let i = index">
-          <tr>
-            <td>{{i+1}}</td>
-            <td>{{ p.name }}</td>
-            <td class="light">{{ p.symbol }}</td>
-            <td class="right light">{{ p.shares()}} </td>
-            <td class="right light">{{ p.avgPrice() }} </td>
-            <td class="right">{{ p.quote | number:'1.2-2'}}</td>
-            <td class="right">
-              <ed-colored-text [num]="(p.quote-p.adj_prev_close)"></ed-colored-text>
-            </td>
-            <td class="right">
-              <ed-colored-text [num]="((p.quote-p.adj_prev_close)/p.adj_prev_close)*100 "></ed-colored-text>
-            </td>
-            <td class="right">
-              <ed-colored-text [num]="(p.quote-p.adj_prev_close)*(p.shares())"></ed-colored-text>
-            </td>
-            <td class="right">{{ p.marketValue() | number:'1.2-2' }}</td>
-            <td class="right">
-              <ed-colored-text [num]="p.unrealizedGainLoss()"></ed-colored-text> (
-              <ed-colored-text [num]="p.gainLossPer()"></ed-colored-text>%)</td>
+        <ng-container *ngIf="p.transactions.length > 1 && showAll">
+          <tr *ngFor="let t of p.transactions">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="right">{{ t.shares }} </td>
+            <td class="right">{{ t.price }}</td>
           </tr>
-          <ng-container *ngIf="p.transactions.length > 1 && showAll">
-            <tr *ngFor="let t of p.transactions">
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="right">{{ t.shares }} </td>
-              <td class="right">{{ t.price }}</td>
-            </tr>
-          </ng-container>
         </ng-container>
-      </tbody>
-    </table>
+      </ng-container>
+    </tbody>
+  </table>
 
-    <ed-new-ticker (add)="handleAddTrans($event)"></ed-new-ticker>
-    <div class="form-inline">
-      <br/>
-      <span class="btn btn-primary btn-file">
-        Import Transactions
-        <input class="btn btn-warning" type="file" accept='application/json' (change)='openFile($event)'>
-      </span>
-    </div>
+  <ed-new-ticker (add)="handleAddTrans($event)"></ed-new-ticker>
+  <div class="form-inline">
+    <br/>
+    <span class="btn btn-primary btn-file">
+      Import Transactions
+      <input class="btn btn-warning" type="file" accept='application/json' (change)='openFile($event)'>
+    </span>
   </div>
 </div>
+<app-ticker-list></app-ticker-list>

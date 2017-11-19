@@ -11,29 +11,29 @@ import { RobinhoodService } from '../shared/services/robinhood.service';
   styleUrls: ['./new-ticker.component.css']
 })
 export class NewTickerComponent implements OnInit {
-  newTransaction: Transaction;
+  newT: Transaction;
   add: EventEmitter<Transaction> = new EventEmitter<Transaction>();
   
   constructor(private financeService: FinanceService, private stockService:RobinhoodService ){
-    this.newTransaction = new Transaction("", "", null, null, null, false, null);
+    this.newT = new Transaction("", "", null, null, null, false, null);
   }
   ngOnInit() {
   }
   addTransaction(trans: Transaction) {
-    this.newTransaction.type = TransactionType.BUY;
-    this.newTransaction.symbol = this.newTransaction.symbol.toUpperCase();
+    this.newT.type = TransactionType.BUY;
+    this.newT.symbol = this.newT.symbol.toUpperCase();
     this.financeService.addTransction(trans).getAllPositions();
-    this.newTransaction = new Transaction("", "", null, null, 0, false, 0);
-    this.add.emit(this.newTransaction);
+    this.newT = new Transaction("", "", null, null, 0, false, 0);
+    this.add.emit(this.newT);
   }
   validateSymbol() {
-    this.newTransaction.name = "";
-    this.newTransaction.symbol = this.newTransaction.symbol.toUpperCase();
-    if (this.newTransaction.symbol.length > 0) {
-      this.stockService.GetStockQuotes(new Array(this.newTransaction.symbol.toUpperCase())).subscribe(d => {
+    this.newT.name = "";
+    this.newT.symbol = this.newT.symbol.toUpperCase();
+    if (this.newT.symbol.length > 0) {
+      this.stockService.GetStockQuotes(new Array(this.newT.symbol.toUpperCase())).subscribe(d => {
         if (d.results.length > 0) {
           this.stockService.GetSymbolName(d.results[0].instrument).subscribe(r => {
-            this.newTransaction.name = r.simple_name;
+            this.newT.name = r.simple_name;
           })
         }
         else { alert('Not a valid symbol'); }
