@@ -1,5 +1,10 @@
 import { UtilService } from "../services/util.service";
-
+export class Portfolio {
+    id: string;
+    name: string;
+    positions: StockPosition[];
+    version: string;
+}
 export class StockPosition {
     id: string;
     name: string;
@@ -7,6 +12,7 @@ export class StockPosition {
     quote: number;
     adj_prev_close: number;
     transactions: Transaction[];
+    constructor() { }
     shares(): number {
         return UtilService.getSum(this.transactions, "shares");
     }
@@ -18,13 +24,20 @@ export class StockPosition {
             return p + (c.price * c.shares);
         }, 0);
     }
-    marketValue():number{ return this.shares()*this.quote;}
-    unrealizedGainLoss():number{ return this.marketValue()-this.totalCostBasis();}
+    marketValue(): number { return this.shares() * this.quote; }
+    unrealizedGainLoss(): number { return this.marketValue() - this.totalCostBasis(); }
     gainLossPer() {
         var origCos = this.totalCostBasis();
         return ((this.marketValue() - origCos) / origCos) * 100;
     }
-    constructor() { }
+    addTransction(t: Transaction) {
+        t.id = UtilService.generateGUID();
+        t.date = new Date();
+        t.symbol = this.symbol;
+        this.transactions = this.transactions || [];
+        this.transactions.push(t);
+        return this;
+    }
 }
 
 export class Transaction {

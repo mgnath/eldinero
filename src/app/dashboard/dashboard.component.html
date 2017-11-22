@@ -1,0 +1,5 @@
+<div class="form-inline">
+  <input [(ngModel)]="newPortfolioName" placeholder="Portfolio Name" class="form-control">
+  <button (click)="addTransaction(newT)" class="btn btn-primary"
+    [disabled]="(newT.name.length<1) || (newT.shares < 1) ">Add</button>
+</div>

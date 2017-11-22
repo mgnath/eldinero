@@ -1,7 +1,7 @@
 import { Component, OnInit,EventEmitter } from '@angular/core';
 import {MatFormFieldModule} from '@angular/material';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import { Transaction, TransactionType, StockPosition } from '../shared/models/transaction';
+import { Transaction, TransactionType, StockPosition } from '../shared/models/entities';
 import { FinanceService } from '../shared/services/finance.service';
 import { RobinhoodService } from '../shared/services/robinhood.service';
 

@@ -18,6 +18,9 @@ import { ColoredTextComponent } from './shared/components/colored-text/colored-t
 import { NewTickerComponent } from './new-ticker/new-ticker.component';
 import { MAT_PLACEHOLDER_GLOBAL_OPTIONS } from '@angular/material';
 import { AlphavantageService } from './shared/services/alphavantage.service';
+import { PortfolioComponent } from './portfolio/portfolio.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { PortfolioService } from './shared/services/portfolio.service';
  
 @NgModule({
   declarations: [
@@ -26,7 +29,9 @@ import { AlphavantageService } from './shared/services/alphavantage.service';
     MapToIterablePipe,
     ChangecolorPipe,
     ColoredTextComponent,
-    NewTickerComponent
+    NewTickerComponent,
+    PortfolioComponent,
+    DashboardComponent
   ], 
   imports: [
     BrowserAnimationsModule,
@@ -36,7 +41,7 @@ import { AlphavantageService } from './shared/services/alphavantage.service';
     HttpClientModule,
     HttpModule
   ],
-  providers: [FinanceService, UtilService, RobinhoodService,AlphavantageService,
+  providers: [FinanceService, UtilService, RobinhoodService,AlphavantageService, PortfolioService,
     {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'auto'}}],
   bootstrap: [AppComponent]
 })
