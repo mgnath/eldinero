@@ -4,6 +4,7 @@ export class Portfolio {
     name: string;
     positions: StockPosition[];
     version: string;
+    constructor() { }
 }
 export class StockPosition {
     id: string;

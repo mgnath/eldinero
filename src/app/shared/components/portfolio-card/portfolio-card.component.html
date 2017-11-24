@@ -1,0 +1,30 @@
+<mat-card class="example-card" [ngClass]="{'custom-card':true}">
+  <mat-card-header>
+    <mat-card-title>{{portfolio.name}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      <span style="font-size:xx-large;float:right;white-space: nowrap;">
+        $
+        <ed-colored-text [num]="getGrandTotal(portfolio)" [noColor]="true" title="Total Market Value"></ed-colored-text>
+      </span>
+    </p><br>
+    <p>
+      <span style="font-size:large;float:right;white-space: nowrap;">
+        <span style="font-size:x-large;">
+          <ed-colored-text [num]="getGrandTotalDayGain()" title="Day Gain/Loss"></ed-colored-text>
+        </span>
+        <ed-colored-text [num]="getGrandTotalGain()" title="Unrealized Gain/Loss"></ed-colored-text>
+        <span style="font-size:small;">
+          (
+          <ed-colored-text [num]="getGrandTotalGainPer()" title="Unrealized Gain/Loss Percentage"></ed-colored-text>%)
+        </span>
+      </span>
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-icon-button (click)="deletePortfolio()">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </mat-card-actions>
+</mat-card>

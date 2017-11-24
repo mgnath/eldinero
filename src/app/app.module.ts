@@ -4,9 +4,11 @@ import { FormsModule } from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
+import { RouterModule, Routes } from '@angular/router';
 
 import {EdMaterialModule} from './edmaterial-module/edMaterial.module';
 
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { FinanceService } from './shared/services/finance.service';
@@ -21,6 +23,7 @@ import { AlphavantageService } from './shared/services/alphavantage.service';
 import { PortfolioComponent } from './portfolio/portfolio.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PortfolioService } from './shared/services/portfolio.service';
+import { PortfolioCardComponent } from './shared/components/portfolio-card/portfolio-card.component';
  
 @NgModule({
   declarations: [
@@ -31,12 +34,14 @@ import { PortfolioService } from './shared/services/portfolio.service';
     ColoredTextComponent,
     NewTickerComponent,
     PortfolioComponent,
-    DashboardComponent
+    DashboardComponent,
+    PortfolioCardComponent
   ], 
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
     EdMaterialModule,
+    AppRoutingModule,
     FormsModule,
     HttpClientModule,
     HttpModule

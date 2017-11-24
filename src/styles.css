@@ -1,19 +1,23 @@
-/* You can add global styles to this file, and also import other style files */
-@import "~@angular/material/prebuilt-themes/pink-bluegrey.css";
+/* You can add global styles to this file, and also import other style files 
+pink-bluegrey
+indigo-pink
+deeppurple-amber
+purple-green
+*/
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import "https://fonts.googleapis.com/css?family=Material+Icons";
 @import "https://fonts.googleapis.com/css?family=Roboto:400,300";
 
 .fill-space {
     flex: 1 1 auto;
   }
-
-  html,body{
-    display: flex;
-    flex-direction: column;
-    font-family: Roboto,Arial, Helvetica, sans-serif;
-    margin:0;
-    height: 100%;
-}
+/* html,body{
+  display: flex;
+  flex-direction: column;
+  font-family: Roboto,Arial, Helvetica, sans-serif;
+  margin:0;
+  height: 100%;
+} */
 .table-center {
   width: 95%;
   margin-left: auto;
