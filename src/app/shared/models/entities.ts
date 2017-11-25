@@ -1,7 +1,7 @@
 import { UtilService } from "../services/util.service";
 export class Portfolio {
     id: string;
-    name: string;
+    portfolioName: string;
     positions: StockPosition[];
     version: string;
     constructor() { }
@@ -14,18 +14,18 @@ export class StockPosition {
     adj_prev_close: number;
     transactions: Transaction[];
     constructor() { }
-    shares(): number {
+    get shares(): number {
         return UtilService.getSum(this.transactions, "shares");
     }
-    avgPrice(): number {
-        return Math.round((this.totalCostBasis() / this.shares()) * 1000) / 1000;
+    get avgPrice(): number {
+        return Math.round((this.totalCostBasis() / this.shares * 1000) / 1000;
     }
     totalCostBasis(): number {
         return this.transactions.reduce(function (p, c, i) {
             return p + (c.price * c.shares);
         }, 0);
     }
-    marketValue(): number { return this.shares() * this.quote; }
+    marketValue(): number { return this.shares * this.quote; }
     unrealizedGainLoss(): number { return this.marketValue() - this.totalCostBasis(); }
     gainLossPer() {
         var origCos = this.totalCostBasis();

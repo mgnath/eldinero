@@ -1,4 +1,4 @@
-import { Component, OnInit,EventEmitter } from '@angular/core';
+import { Component, OnInit,EventEmitter, Output } from '@angular/core';
 import {MatFormFieldModule} from '@angular/material';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import { Transaction, TransactionType, StockPosition } from '../shared/models/entities';
@@ -12,7 +12,7 @@ import { RobinhoodService } from '../shared/services/robinhood.service';
 })
 export class NewTickerComponent implements OnInit {
   newT: Transaction;
-  add: EventEmitter<Transaction> = new EventEmitter<Transaction>();
+  @Output() add: EventEmitter<Transaction> = new EventEmitter<Transaction>();
   
   constructor(private financeService: FinanceService, private stockService:RobinhoodService ){
     this.newT = new Transaction("", "", null, null, null, false, null);
@@ -22,9 +22,8 @@ export class NewTickerComponent implements OnInit {
   addTransaction(trans: Transaction) {
     this.newT.type = TransactionType.BUY;
     this.newT.symbol = this.newT.symbol.toUpperCase();
-    this.financeService.addTransction(trans).getAllPositions();
-    this.newT = new Transaction("", "", null, null, 0, false, 0);
     this.add.emit(this.newT);
+    this.newT = new Transaction("", "", null, null, 0, false, 0);
   }
   validateSymbol() {
     this.newT.name = "";

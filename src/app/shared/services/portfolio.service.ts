@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Portfolio, StockPosition } from '../models/entities';
+import { Portfolio, StockPosition, Transaction } from '../models/entities';
 import { Portal } from '@angular/cdk/portal';
 import { UtilService } from './util.service';
 import { Observable } from 'rxjs/Observable';
@@ -8,7 +8,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 @Injectable()
 export class PortfolioService {
   readonly CURR_VER = "1";
-  //portfolios: Observable<Portfolio[]>;
   private _portfolios: BehaviorSubject<Portfolio[]>;
   private dataStore: {
     portfolios: Portfolio[]
@@ -16,7 +15,6 @@ export class PortfolioService {
   constructor() {
     this.dataStore = { portfolios: [] };
     this._portfolios = <BehaviorSubject<Portfolio[]>>new BehaviorSubject([]);
-    //this.portfolios = this._portfolios.asObservable();
     this.loadData();
   }
   get portfolios() {
@@ -38,36 +36,66 @@ export class PortfolioService {
     this._portfolios.next(Object.assign({}, this.dataStore).portfolios);
     return this.dataStore.portfolios;
   }
-  saveData(portfolios:Portfolio[]) {
-    localStorage.setItem("eldinero.v"+this.CURR_VER, JSON.stringify(portfolios));
+  saveData(portfolios: Portfolio[]) {
+    localStorage.setItem("eldinero.v" + this.CURR_VER, JSON.stringify(portfolios));
   }
   addPortfolio(name: string) {
     let newPortfolio = new Portfolio();
-    newPortfolio.name = name;
+    newPortfolio.portfolioName = name;
     newPortfolio.id = UtilService.generateGUID();
     newPortfolio.version = this.CURR_VER;
     this.dataStore.portfolios = this.dataStore.portfolios || new Array<Portfolio>();
     this.dataStore.portfolios.push(newPortfolio);
     this.saveData(this.dataStore.portfolios);
-    //this._portfolios.next(Object.assign({}, this.dataStore).portfolios);
     this.dataStore.portfolios = this.loadData();
-    
+
     let dataStoreCopy = Object.assign({}, this.dataStore); // Create a dataStore copy
-    this._portfolios.next(dataStoreCopy.portfolios); // Only push dataStore.todos to subscribers
-    
+    this._portfolios.next(dataStoreCopy.portfolios);//copy is to avoid direct reference of dataStore to subs
   }
-  removePosition(id:string){
+  addTransction(t: Transaction, portfolioId: string) {
+    console.log('serice adding trans');
+    t.id = UtilService.generateGUID();
+    t.date = new Date();
+    this.dataStore.portfolios = this.dataStore.portfolios || new Array<Portfolio>();
+    this.dataStore.portfolios.forEach((element, index) => {
+      if (element.id === portfolioId) {
+
+        element.positions = element.positions || [];
+        if (element.positions.find(e => e.symbol === t.symbol)) {
+          element.positions.find(e => e.symbol === t.symbol).transactions =
+            element.positions.find(e => e.symbol === t.symbol).transactions || [];
+          element.positions.find(e => e.symbol === t.symbol).transactions.push(t);
+        }
+        else {
+          var stockPos: StockPosition = new StockPosition();
+          stockPos.name = t.name;
+          stockPos.symbol = t.symbol;
+          stockPos.transactions = [];
+          stockPos.transactions.push(t);
+          element.positions.push(stockPos);
+        }
+        this.dataStore.portfolios[index] = element;
+      }
+
+       this.saveData(this.dataStore.portfolios);
+       this.dataStore.portfolios = this.loadData();
+
+       let dataStoreCopy = Object.assign({}, this.dataStore); // Create a dataStore copy
+       this._portfolios.next(dataStoreCopy.portfolios);//copy is to avoid direct reference of dataStore to subs
+    });
+  }
+  removePosition(id: string) {
     this.dataStore.portfolios.forEach((p, i) => {
-      if (p.id === id) { 
+      if (p.id === id) {
         this.dataStore.portfolios.splice(i, 1);
-        this.saveData(this.dataStore.portfolios); }
+        this.saveData(this.dataStore.portfolios);
+      }
     });
   }
   removeAllPositions() {
     this.dataStore = { portfolios: [] };
     this._portfolios = <BehaviorSubject<Portfolio[]>>new BehaviorSubject([]);
-    //this.portfolios = this._portfolios.asObservable();
-    localStorage.clear();
+    localStorage.removeItem("eldinero.v" + this.CURR_VER);
     return this;
   }
 }

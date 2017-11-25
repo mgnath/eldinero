@@ -579,8 +579,31 @@
                         "id": "ef5d891e-972a-4781-6811-9f1z6e451c76"
                     }
                 ],
-                "quote": "71.7100",
-                "adj_prev_close": "71.7700"
+                "quote": "44.0800",
+                "adj_prev_close": "43.9800"
+            }
+        ]
+    },
+    {
+        "name": "XSXS",
+        "id": "20d64349-3d39-4f04-c752-2156e8b67f56",
+        "version": "1",
+        "positions": [
+            {
+                "name": "IBM",
+                "symbol": "IBM",
+                "transactions": [
+                    {
+                        "name": "IBM",
+                        "symbol": "IBM",
+                        "date": "2017-11-25T04:28:29.008Z",
+                        "type": 0,
+                        "shares": 6,
+                        "isDrip": false,
+                        "price": 66,
+                        "id": "eb0ea19c-c7d6-4e40-69bf-5907fdfb598a"
+                    }
+                ]
             }
         ]
     }
