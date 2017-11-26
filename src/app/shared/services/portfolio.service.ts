@@ -49,8 +49,7 @@ export class PortfolioService {
     this.saveData(this.dataStore.portfolios);
     this.dataStore.portfolios = this.loadData();
 
-    let dataStoreCopy = Object.assign({}, this.dataStore); // Create a dataStore copy
-    this._portfolios.next(dataStoreCopy.portfolios);//copy is to avoid direct reference of dataStore to subs
+    this.publishData();
   }
   addTransction(t: Transaction, portfolioId: string) {
     console.log('serice adding trans');
@@ -77,13 +76,17 @@ export class PortfolioService {
         this.dataStore.portfolios[index] = element;
       }
 
-       this.saveData(this.dataStore.portfolios);
-       this.dataStore.portfolios = this.loadData();
+      this.saveData(this.dataStore.portfolios);
+      this.dataStore.portfolios = this.loadData();
 
-       let dataStoreCopy = Object.assign({}, this.dataStore); // Create a dataStore copy
-       this._portfolios.next(dataStoreCopy.portfolios);//copy is to avoid direct reference of dataStore to subs
+      this.publishData();
     });
   }
+  private publishData() {
+    let dataStoreCopy = Object.assign({}, this.dataStore); // Create a dataStore copy
+    this._portfolios.next(dataStoreCopy.portfolios);//copy is to avoid direct reference of dataStore to subs
+  }
+
   removePosition(id: string) {
     this.dataStore.portfolios.forEach((p, i) => {
       if (p.id === id) {

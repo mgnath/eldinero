@@ -6,6 +6,15 @@ export class Portfolio {
     version: string;
     constructor() { }
 }
+export class quote {
+    name: string;
+    symbol: string;
+    last_trade_price: number;
+    adj_prev_close: number;
+    last_extended_hours_trade_price:number;
+    updated_at:Date
+    constructor() { }
+}
 export class StockPosition {
     id: string;
     name: string;
@@ -18,7 +27,7 @@ export class StockPosition {
         return UtilService.getSum(this.transactions, "shares");
     }
     get avgPrice(): number {
-        return Math.round((this.totalCostBasis() / this.shares * 1000) / 1000;
+        return Math.round((this.totalCostBasis() / this.shares * 1000) / 1000);
     }
     totalCostBasis(): number {
         return this.transactions.reduce(function (p, c, i) {

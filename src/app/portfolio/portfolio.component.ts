@@ -12,6 +12,7 @@ import { PortfolioService } from '../shared/services/portfolio.service';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operator/map';
 import { ActivatedRoute } from '@angular/router';
+import { RobinhoodRxService } from '../shared/services/robinhood-rx.service';
 
 
 @Component({
@@ -25,7 +26,8 @@ export class PortfolioComponent {
   id:string;
   private sub: any;
   constructor(private route: ActivatedRoute,
-              private portfolioSrv:PortfolioService) {
+              private portfolioSrv:PortfolioService,
+              private robinhoodRxSrv:RobinhoodRxService) {
   }
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
@@ -38,6 +40,8 @@ export class PortfolioComponent {
   }
   private InitPositions() {
     console.log(this.id);
+    //debugger;
+    //this.robinhoodRxSrv.observeQuotes(['AAPL','IBM']).subscribe(d=>{console.log(d);});
     this.currPortfolio$ =
         this.portfolioSrv.portfolios.pipe().map(portfolios => portfolios.find(p => p.id ===  this.id));
     this.currPortfolio$.subscribe(d=>this.currPortfolio=d);

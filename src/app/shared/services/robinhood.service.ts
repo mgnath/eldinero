@@ -3,9 +3,15 @@ import { Headers, Http, Response, RequestOptions, Jsonp } from '@angular/http';
 import { mergeMap } from 'rxjs/operators';
 import 'rxjs/add/operator/map';
 import * as $ from 'jquery';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { quote } from '../models/entities';
 @Injectable()
 export class RobinhoodService {
-  constructor(private http: Http) { }
+  
+
+  constructor(private http: Http) {
+   
+   }
   GetStockQuotes(symbols: string[]) {
       return this.http.
         get("https://api.robinhood.com/quotes/?symbols=" + symbols.join(",")).

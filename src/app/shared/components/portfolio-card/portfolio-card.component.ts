@@ -14,7 +14,7 @@ export class PortfolioCardComponent implements OnInit {
   totalValue: number = 0;
   constructor(private stockService: RobinhoodService) { }
   ngOnInit() {
-    IntervalObservable.create(3000)// get our data every subsequent 10 seconds
+    IntervalObservable.create(300000)// get our data every subsequent 10 seconds
       .subscribe(() => {
         if (this.portfolio.positions && this.portfolio.positions.length > 0 
                                      && (document.visibilityState != "hidden")) {
@@ -28,9 +28,6 @@ export class PortfolioCardComponent implements OnInit {
   loadLastTradedValue(portfolio: Portfolio) {
     var syms = [];
     portfolio.positions.forEach(e => syms.push(e.symbol));
-
-    console.log(syms);
-
     if (syms.length > 0) {
       this.stockService.GetStockQuotes(syms).subscribe(data => {
         data.results.forEach(k => {
@@ -80,7 +77,7 @@ export class PortfolioCardComponent implements OnInit {
     this.portfolio.positions.forEach(
       pos => (
         totSum +=
-        pos.marketValue() - pos.adj_prev_close * pos.shares()
+        pos.marketValue() - pos.adj_prev_close * pos.shares
       )
     );
     return totSum;

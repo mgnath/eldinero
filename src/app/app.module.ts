@@ -24,6 +24,7 @@ import { PortfolioComponent } from './portfolio/portfolio.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PortfolioService } from './shared/services/portfolio.service';
 import { PortfolioCardComponent } from './shared/components/portfolio-card/portfolio-card.component';
+import { RobinhoodRxService } from './shared/services/robinhood-rx.service';
  
 @NgModule({
   declarations: [
@@ -46,7 +47,7 @@ import { PortfolioCardComponent } from './shared/components/portfolio-card/portf
     HttpClientModule,
     HttpModule
   ],
-  providers: [FinanceService, UtilService, RobinhoodService,AlphavantageService, PortfolioService,
+  providers: [FinanceService, UtilService, RobinhoodService,AlphavantageService, PortfolioService,RobinhoodRxService,
     {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'auto'}}],
   bootstrap: [AppComponent]
 })
