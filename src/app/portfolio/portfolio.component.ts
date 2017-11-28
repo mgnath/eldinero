@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-import { Transaction, StockPosition, TransactionType, Portfolio } from '../shared/models/entities';
+import { Transaction, StockPosition, TransactionType, Portfolio, quote } from '../shared/models/entities';
 import { FinanceService } from '../shared/services/finance.service';
 import { saveAs } from 'file-saver/FileSaver';
 import { RobinhoodService } from '../shared/services/robinhood.service';
@@ -19,10 +19,11 @@ import { RobinhoodRxService } from '../shared/services/robinhood-rx.service';
   selector: 'app-portfolio',
   templateUrl: './portfolio.component.html',
   styleUrls: ['./portfolio.component.css']
-})
+})//http://localhost:4200/portfolio/20d64349-3d39-4f04-c752-2156e8b67f56
 export class PortfolioComponent {
   currPortfolio:Portfolio;
   currPortfolio$:Observable<Portfolio>;
+  quotes$:Observable<quote[]>;
   id:string;
   private sub: any;
   constructor(private route: ActivatedRoute,
@@ -37,17 +38,33 @@ export class PortfolioComponent {
   }
   ngOnDestroy() {
     this.sub.unsubscribe();
+   // this.currPortfolio$.unsubscribe();  tbd
+
   }
   private InitPositions() {
-    console.log(this.id);
-    //debugger;
-    //this.robinhoodRxSrv.observeQuotes(['AAPL','IBM']).subscribe(d=>{console.log(d);});
     this.currPortfolio$ =
         this.portfolioSrv.portfolios.pipe().map(portfolios => portfolios.find(p => p.id ===  this.id));
-    this.currPortfolio$.subscribe(d=>this.currPortfolio=d);
+    this.currPortfolio$.subscribe(
+      p=>{
+        this.currPortfolio=p;
+        this.updateQuotes();
+      }
+    );
+  }
+  updateQuotes(){
+    var syms = [];
+    this.currPortfolio.positions.forEach(e => syms.push(e.symbol));
+    this.quotes$ = this.robinhoodRxSrv.getQuotes(syms);
+    this.quotes$.subscribe(
+      q=>{
+        q.forEach(k => {
+          if(this.currPortfolio.positions.find(e => e.symbol === k.symbol)){
+            this.currPortfolio.positions.find(e => e.symbol === k.symbol).latestQuote = k;
+          }
+        });
+      });
   }
   handleAddTrans(newTrans: Transaction) {
-    console.log(newTrans);
     this.portfolioSrv.addTransction(newTrans,this.id);
   }
 }

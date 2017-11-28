@@ -10,7 +10,7 @@ export class quote {
     name: string;
     symbol: string;
     last_trade_price: number;
-    adj_prev_close: number;
+    adjusted_previous_close: number;
     last_extended_hours_trade_price:number;
     updated_at:Date
     constructor() { }
@@ -19,8 +19,9 @@ export class StockPosition {
     id: string;
     name: string;
     symbol: string;
-    quote: number;
-    adj_prev_close: number;
+    latestQuote:quote;
+    quote: number; //obsolete
+    adj_prev_close: number; //obsolete
     transactions: Transaction[];
     constructor() { }
     get shares(): number {

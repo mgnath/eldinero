@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output,EventEmitter } from '@angular/core';
 import { Portfolio } from '../../models/entities';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-import { RobinhoodService } from '../../services/robinhood.service';
+import { RobinhoodRxService } from '../../services/robinhood-rx.service';
 
 @Component({
   selector: 'app-portfolio-card',
@@ -12,9 +12,10 @@ export class PortfolioCardComponent implements OnInit {
   @Input() portfolio: Portfolio;
   @Output() delete: EventEmitter<string> = new EventEmitter<string>();
   totalValue: number = 0;
-  constructor(private stockService: RobinhoodService) { }
+  loading:boolean=true;
+  constructor(private stockService: RobinhoodRxService) { }
   ngOnInit() {
-    IntervalObservable.create(300000)// get our data every subsequent 10 seconds
+    IntervalObservable.create(3000)// get our data every subsequent 10 seconds
       .subscribe(() => {
         if (this.portfolio.positions && this.portfolio.positions.length > 0 
                                      && (document.visibilityState != "hidden")) {
@@ -29,11 +30,15 @@ export class PortfolioCardComponent implements OnInit {
     var syms = [];
     portfolio.positions.forEach(e => syms.push(e.symbol));
     if (syms.length > 0) {
-      this.stockService.GetStockQuotes(syms).subscribe(data => {
-        data.results.forEach(k => {
-          this.portfolio.positions.find(e => e.symbol === k.symbol).quote = k.last_trade_price;
-          this.portfolio.positions.find(e => e.symbol === k.symbol).adj_prev_close = k.adjusted_previous_close;
+      this.stockService.getQuotes(syms).subscribe(data => {
+        data.forEach(k => {
+          if(this.portfolio.positions.find(e => e.symbol === k.symbol)){
+            this.loading=false;
+            this.portfolio.positions.find(e => e.symbol === k.symbol).quote = k.last_trade_price;
+            this.portfolio.positions.find(e => e.symbol === k.symbol).adj_prev_close = k.adjusted_previous_close;
+          }
         });
+        
         this.totalValue = this.getGrandTotal(this.portfolio);
       }, e => { console.log('error occured in getting quotes'); });
     }
@@ -73,6 +78,7 @@ export class PortfolioCardComponent implements OnInit {
     return totSum;
   }
   getGrandTotalDayGain() {
+    
     var totSum: number = 0;
     this.portfolio.positions.forEach(
       pos => (

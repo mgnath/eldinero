@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Portfolio, StockPosition, Transaction } from '../models/entities';
+import { Portfolio, StockPosition, Transaction, quote } from '../models/entities';
 import { Portal } from '@angular/cdk/portal';
 import { UtilService } from './util.service';
 import { Observable } from 'rxjs/Observable';
@@ -27,6 +27,7 @@ export class PortfolioService {
       let pos: StockPosition[] = [];
       e.positions = e.positions || [];
       e.positions.forEach(p => {
+        p.latestQuote = p.latestQuote || new quote();
         pos.push(Object.assign(new StockPosition(), p))
       });
       e.positions = pos;

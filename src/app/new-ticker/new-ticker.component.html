@@ -1,9 +1,12 @@
-{{newT.name}}
-<div class="form-inline">
-  <input [(ngModel)]="newT.symbol" placeholder="Symbol" (blur)="validateSymbol()" class="form-control">
-  <input [(ngModel)]="newT.shares" type="number" class="form-control" placeholder="Shares">
-  <input [(ngModel)]="newT.price"  type="number" class="form-control" placeholder="Purchase Price" 
-    (keyup.enter)="addTransaction(newT)">
-  <button (click)="addTransaction(newT)" class="btn btn-primary"
-   [disabled]="(newT.name.length<1) || (newT.shares < 1) ">Add</button>
-</div>
+<mat-form-field class="example-full-width">
+  <input matInput [(ngModel)]="newT.symbol" placeholder="{{newT.name || 'Symbol'}}" value="" (blur)="validateSymbol()" >
+</mat-form-field>
+<mat-form-field class="example-full-width">
+  <input matInput [(ngModel)]="newT.shares" type="number" placeholder="Shares" value="">
+</mat-form-field>
+<mat-form-field class="example-full-width">
+  <input matInput [(ngModel)]="newT.price"  type="number" placeholder="Purchase Price" value="" (keyup.enter)="addTransaction(newT)">
+</mat-form-field>
+<button mat-raised-button (click)="addTransaction(newT)"  color="primary" [disabled]="(newT.name.length<1) || (newT.shares < 1) ">
+    Add
+  </button>

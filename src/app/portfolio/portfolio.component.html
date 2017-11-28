@@ -1,7 +1,8 @@
 <p>
-  {{this.currPortfolio.name}}
-<ed-new-ticker (add)="handleAddTrans($event)"></ed-new-ticker>
+  {{this.currPortfolio.portfolioName}}
 </p>
+<ed-new-ticker (add)="handleAddTrans($event)"></ed-new-ticker>
+
 <p *ngFor="let pos of this.currPortfolio.positions" >
-  {{pos.name}} -- {{pos.shares}}
+  {{pos.name}} -- {{pos.shares}}  -- {{ pos.latestQuote.last_trade_price}} -- {{pos.latestQuote.updated_at}}
 </p>

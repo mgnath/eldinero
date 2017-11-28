@@ -13,24 +13,38 @@ export class RobinhoodRxService {
   };
   constructor(private http: HttpClient) {
     this.dataStore = { quotes: [] };
-
-    let q: quote = new quote();
-    q.symbol = "AAPL";
-    this.dataStore.quotes.push(q)
-
     this._quotes = <BehaviorSubject<quote[]>>new BehaviorSubject([]);
-    IntervalObservable.create(30000)// get our data every subsequent 10 seconds
+    IntervalObservable.create(10000)// get our data every subsequent 10 seconds
       .subscribe(() => {
         if (this.dataStore.quotes && this.dataStore.quotes.length > 0) {
           this.refreshData();
         }
       });
   }
-
-  refreshData() {
-    this.http.get("https://api.robinhood.com/quotes/?symbols=" +
-      this.dataStore.quotes.map(q => q.symbol).join(","))
-      .subscribe(data => { console.log(data) }, 
-                  error => console.log('Could not load quotes.'));
+  private publishData() {
+    let dataStoreCopy = Object.assign({}, this.dataStore); // Create a dataStore copy
+    this._quotes.next(dataStoreCopy.quotes);//copy is to avoid direct reference of dataStore to subs
   }
+  getQuotes(symbols: string[]) {
+    symbols.forEach(s => {
+      if (!this.dataStore.quotes.find(q => q.symbol === s)) {
+        let q: quote = new quote();
+        q.symbol = s;
+        this.dataStore.quotes.push(q);
+      }
+    });
+    return this._quotes.asObservable();
+  }
+  refreshData() {
+    this.http.get<QuotesResponse>("https://api.robinhood.com/quotes/?symbols=" +
+      this.dataStore.quotes.map(q => q.symbol).join(",")).map(resp => resp.results)
+      .subscribe(data => {
+        this.dataStore.quotes = data;
+        this.publishData();
+      },
+      error => console.log('Could not load quotes.'));
+  }
+}
+interface QuotesResponse {
+  results: quote[];
 }
