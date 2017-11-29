@@ -68,6 +68,15 @@
             <ed-colored-text [num]="p.unrealizedGainLoss()"></ed-colored-text> (
             <ed-colored-text [num]="p.gainLossPer()"></ed-colored-text>%)</td>
         </tr>
+        <ng-container *ngIf="p.transactions.length > 1 && showAll">
+            <tr *ngFor="let t of p.transactions">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="right">{{ t.shares }} </td>
+               <td class="right">{{ t.price }}</td>
+              </tr>
+        </ng-container>
       </ng-container>
     </tbody>
   </table>
