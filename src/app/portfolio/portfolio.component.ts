@@ -21,50 +21,106 @@ import { RobinhoodRxService } from '../shared/services/robinhood-rx.service';
   styleUrls: ['./portfolio.component.css']
 })//http://localhost:4200/portfolio/20d64349-3d39-4f04-c752-2156e8b67f56
 export class PortfolioComponent {
-  currPortfolio:Portfolio;
-  currPortfolio$:Observable<Portfolio>;
-  quotes$:Observable<quote[]>;
-  id:string;
+  currPortfolio: Portfolio;
+  currPortfolio$: Observable<Portfolio>;
+  quotes$: Observable<quote[]>;
+  id: string;
+  alive = true;
+  sCol: string = 'name';
+  sortDir: number = 1;
+  firstLoad: boolean = true;
+
   private sub: any;
   constructor(private route: ActivatedRoute,
-              private portfolioSrv:PortfolioService,
-              private robinhoodRxSrv:RobinhoodRxService) {
+    private portfolioSrv: PortfolioService,
+    private robinhoodRxSrv: RobinhoodRxService) {
   }
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-       this.id = params['id'];
-       this.InitPositions();
+      this.id = params['id'];
+      this.InitPositions();
     });
   }
   ngOnDestroy() {
     this.sub.unsubscribe();
-   // this.currPortfolio$.unsubscribe();  tbd
+    // this.currPortfolio$.unsubscribe();  tbd
 
   }
   private InitPositions() {
     this.currPortfolio$ =
-        this.portfolioSrv.portfolios.pipe().map(portfolios => portfolios.find(p => p.id ===  this.id));
+      this.portfolioSrv.portfolios.pipe().map(portfolios => portfolios.find(p => p.id === this.id));
     this.currPortfolio$.subscribe(
-      p=>{
-        this.currPortfolio=p;
+      p => {
+        this.currPortfolio = p;
         this.updateQuotes();
       }
     );
   }
-  updateQuotes(){
+  updateQuotes() {
     var syms = [];
     this.currPortfolio.positions.forEach(e => syms.push(e.symbol));
     this.quotes$ = this.robinhoodRxSrv.getQuotes(syms);
     this.quotes$.subscribe(
-      q=>{
+      q => {
         q.forEach(k => {
-          if(this.currPortfolio.positions.find(e => e.symbol === k.symbol)){
+          if (this.currPortfolio.positions.find(e => e.symbol === k.symbol)) {
             this.currPortfolio.positions.find(e => e.symbol === k.symbol).latestQuote = k;
           }
         });
       });
   }
   handleAddTrans(newTrans: Transaction) {
-    this.portfolioSrv.addTransction(newTrans,this.id);
+    this.portfolioSrv.addTransction(newTrans, this.id);
+  }
+    getTitle(colName: string) {
+       let retStr = "";
+        if (colName == 'name') { retStr = "Name"; }
+        else if (colName == 'symbol') { retStr = "Symbol"; }
+        else if (colName == 'shares') { retStr = "Shares"; }
+       else if (colName == 'avgcost') { retStr = "Avg.Cost"; }
+        else if (colName == 'quote') { retStr = "Price"; }
+        else if (colName == 'daychange') { retStr = "Day Change"; }
+        else if (colName == 'daychangeper') { retStr = "Day Change %"; }
+        else if (colName == 'daygain') { retStr = "Day Gain"; }
+        else if (colName == 'mktval') { retStr = "Market Value"; }
+        else if (colName == 'totgain') { retStr = "Gain/Loss"; }
+        if (colName == this.sCol) {
+          retStr += (this.sortDir == 1) ? "▲" : "▼";
+        }
+        return retStr;
+      }
+  sortData(sortingCol: string) {
+    if (sortingCol === this.sCol) this.sortDir *= -1;
+    if (sortingCol == 'name' || sortingCol == 'symbol') { this.currPortfolio.positions.sort((a, b) => { return this.sortDir * a[sortingCol].localeCompare(b[sortingCol]); }) }
+    else if (sortingCol == 'shares') { this.currPortfolio.positions.sort((a, b) => { return this.sortDir * (a.shares - b.shares) }) }
+    else if (sortingCol == 'avgcost') { this.currPortfolio.positions.sort((a, b) => { return this.sortDir * (a.avgPrice - b.avgPrice) }) }
+    else if (sortingCol == 'daychange') {
+      this.currPortfolio.positions.sort((a, b) => { return this.sortDir * 
+                                                        (a.dayChange - b.dayChange); })
+    }
+    else if (sortingCol == 'daychangeper') {
+      this.currPortfolio.positions.sort((a, b) => {
+        return this.sortDir * (a.dayChangePer - b.dayChangePer);
+      })
+    }
+    else if (sortingCol == 'daygain') {
+      this.currPortfolio.positions.sort((a, b) => {
+        return this.sortDir * (a.dayGain- b.dayGain)
+      });
+    }
+    else if (sortingCol == 'mktval') {
+      this.currPortfolio.positions.sort((a, b) => {
+        return this.sortDir * (a.marketValue() -b.marketValue());
+      })
+    }
+    else if (sortingCol == 'avgcost') { this.currPortfolio.positions.sort((a, b) => { return this.sortDir * (a.avgPrice - b.avgPrice); }) }
+    else if (sortingCol == 'quote') { this.currPortfolio.positions.sort((a, b) => 
+                      { return this.sortDir * (a.latestQuote.last_trade_price - b.latestQuote.last_trade_price); }) }
+    else if (sortingCol == 'totgain') {
+      this.currPortfolio.positions.sort((a, b) => {
+        return this.sortDir * (a.unrealizedGainLoss() - b.unrealizedGainLoss());
+      })
+    }
+    this.sCol = sortingCol;
   }
 }

@@ -1,13 +1,13 @@
-<mat-form-field>
-  <input [(ngModel)]="newPortfolioName" matInput (keyup.enter)="createNewPortfolio(newPortfolioName)" placeholder="New Portfolio Name"
-    value="" />
-</mat-form-field>
-<button mat-raised-button (click)="createNewPortfolio(newPortfolioName);" color="primary" [disabled]="(newPortfolioName.length<1) ">
-  Add
-</button>
-<div class="flex-container">
-  <app-portfolio-card style="padding:3px;cursor:pointer;" 
-  *ngFor="let p of portfolios| async;let i = index" 
-  [portfolio]="p" (delete)="DeletePortfolio($event)" 
-  routerLink="portfolio/{{p.id}}"></app-portfolio-card>
+<div style="margin:3px;">
+  <mat-form-field>
+    <input [(ngModel)]="newPortfolioName" matInput (keyup.enter)="createNewPortfolio(newPortfolioName)" placeholder="New Portfolio Name"
+      value="" />
+  </mat-form-field>
+  <button mat-raised-button (click)="createNewPortfolio(newPortfolioName);" color="primary" [disabled]="(newPortfolioName.length<1) ">
+    Add
+  </button>
+  <div class="flex-container">
+    <app-portfolio-card style="padding:3px;cursor:pointer;" *ngFor="let p of portfolios| async;let i = index" [portfolio]="p"
+      (delete)="DeletePortfolio($event)" routerLink="portfolio/{{p.id}}"></app-portfolio-card>
+  </div>
 </div>
