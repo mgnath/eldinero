@@ -5,23 +5,62 @@ export class Portfolio {
     positions: StockPosition[];
     version: string;
     constructor() { }
+    getGrandTotal() {
+        var totSum: number = 0;
+        this.positions.forEach(
+            pos => (
+                totSum += pos.marketValue()
+            )
+        );
+        return totSum;
+    }
+    getGrandTotalGain() {
+        var totSum: number = 0;
+        this.positions.forEach(
+            pos => (
+                totSum += pos.unrealizedGainLoss())
+        );
+        return totSum;
+    }
+    getGrandTotalGainPer() {
+        var origCos = this.getGrandCostBasis();
+        return ((this.getGrandTotal() - origCos) / origCos) * 100;
+    }
+    getGrandCostBasis() {
+        var totSum: number = 0;
+        this.positions.forEach(
+            pos => (
+                totSum += pos.totalCostBasis()
+            )
+        );
+        return totSum;
+    }
+    getGrandTotalDayGain() {
+
+        var totSum: number = 0;
+        this.positions.forEach(
+            pos => (
+                totSum +=
+                pos.marketValue() - (pos.latestQuote.adjusted_previous_close * pos.shares)
+            )
+        );
+        return totSum;
+    }
 }
 export class quote {
     name: string;
     symbol: string;
     last_trade_price: number;
     adjusted_previous_close: number;
-    last_extended_hours_trade_price:number;
-    updated_at:Date
+    last_extended_hours_trade_price: number;
+    updated_at: Date
     constructor() { }
 }
 export class StockPosition {
     id: string;
     name: string;
     symbol: string;
-    latestQuote:quote;
-    quote: number; //obsolete
-    adj_prev_close: number; //obsolete
+    latestQuote: quote;
     transactions: Transaction[];
     constructor() { }
     get shares(): number {
@@ -35,7 +74,7 @@ export class StockPosition {
             return p + (c.price * c.shares);
         }, 0);
     }
-    marketValue(): number { return this.shares * this.quote; }
+    marketValue(): number { return this.shares * this.latestQuote.last_trade_price; }
     unrealizedGainLoss(): number { return this.marketValue() - this.totalCostBasis(); }
     gainLossPer() {
         var origCos = this.totalCostBasis();

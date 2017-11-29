@@ -2,14 +2,17 @@
   <mat-card-header>
     <mat-card-title>{{portfolio.portfolioName}}</mat-card-title>
   </mat-card-header>
-  <mat-card-content>
-    <mat-spinner color="warn" *ngIf="loading" style="margin:0 auto;" mode="indeterminate"></mat-spinner>
-    <table  *ngIf="!loading" style="border:0;width:100%">
+  <mat-card-content style="height:60px;" *ngIf="!portfolio.positions || portfolio.positions.length < 1" >
+    No Symbols
+  </mat-card-content>
+  <mat-card-content style="height:60px;" *ngIf="portfolio.positions && portfolio.positions.length > 0" >
+    <img *ngIf="loading"  src="assets/Ripple.svg" style="width:60px;height:60px;margin:0 auto;"alt="loading">        
+    <table  *ngIf="!loading && portfolio.positions && portfolio.positions.length > 0" style="border:0;width:100%">
       <tr>
         <td align="right">
             <div style="font-size:xx-large;float:right;white-space: nowrap;">
                 $
-                <ed-colored-text [num]="getGrandTotal(portfolio)" [noColor]="true" title="Total Market Value"></ed-colored-text>
+                <ed-colored-text [num]="portfolio.getGrandTotal()" [noColor]="true" title="Total Market Value"></ed-colored-text>
               </div>
         </td>
       </tr>
@@ -17,12 +20,12 @@
           <td align="right">
               <div style="font-size:large;float:right;white-space: nowrap;">
                   <span style="font-size:xx-large;">
-                    <ed-colored-text [num]="getGrandTotalDayGain()" title="Day Gain/Loss"></ed-colored-text>
+                    <ed-colored-text [num]="portfolio.getGrandTotalDayGain()" title="Day Gain/Loss"></ed-colored-text>
                   </span>
-                    <ed-colored-text [num]="getGrandTotalGain()" title="Unrealized Gain/Loss"></ed-colored-text>
+                    <ed-colored-text [num]="portfolio.getGrandTotalGain()" title="Unrealized Gain/Loss"></ed-colored-text>
                   <span style="font-size:small;">
                     (
-                    <ed-colored-text [num]="getGrandTotalGainPer()" title="Unrealized Gain/Loss Percentage"></ed-colored-text>%)
+                    <ed-colored-text [num]="portfolio.getGrandTotalGainPer()" title="Unrealized Gain/Loss Percentage"></ed-colored-text>%)
                   </span>
                 </div>
           </td>
