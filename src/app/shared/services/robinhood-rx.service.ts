@@ -62,20 +62,29 @@ export class RobinhoodRxService {
       .subscribe(data => { this.updateMarketStatus(data.todays_hours) }, error => { console.log('market info not loaded') });
   }
   updateMarketStatus(url) {
+    console.log('Updating Market Status');
     this.http.get<any>("https://cors-anywhere.herokuapp.com/" + url)
       .subscribe(d => {
         this.marketAlive = (new Date(d.opens_at).valueOf() < new Date().valueOf())
           && (new Date(d.closes_at).valueOf() > new Date().valueOf());
+
         if(new Date(d.opens_at).valueOf() > new Date().valueOf())
         {
-          console.log("market will opens in" + <any>(new Date(d.opens_at).valueOf() - new Date().valueOf()))
-          //setTimeout(this.updateMarketStatus(url), (new Date(d.opens_at).valueOf() - new Date().valueOf()));
+          var remainingMS = new Date(d.opens_at).valueOf() - new Date().valueOf();
+          console.log("market will opens in mins " + (remainingMS/1000)/60)
+          setTimeout(()=>{this.updateMarketStatus(url);}, remainingMS);
+        }
+        if((new Date(d.opens_at).valueOf() < new Date().valueOf())
+            && (new Date(d.closes_at).valueOf() > new Date().valueOf()))
+        {
+          var remainingMS = (new Date(d.closes_at).getTime() - new Date().getTime());
+          console.log("market will close in mins " + (remainingMS/1000)/60);
+          setTimeout(()=>{this.updateMarketStatus(url);}, remainingMS);
         }
         if(new Date().valueOf() > new Date(d.closes_at).valueOf()){
           var remainingMS = (new Date(d.opens_at).getTime() + 86400000 - new Date().getTime());
-          console.log("market will open in ms " + remainingMS);
           console.log("market will open in mins " + (remainingMS/1000)/60);
-          //setTimeout(this.updateMarketStatus(url), remainingMS);
+          setTimeout(()=>{this.updateMarketStatus(url);}, remainingMS);
         }
       }, error => { console.log('market data not loaded') });
   }
