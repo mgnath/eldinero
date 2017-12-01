@@ -1,17 +1,11 @@
 <div style="margin:3px;height:100%;font-size:14px;">
   <div *ngIf="currPortfolio && currPortfolio.positions && currPortfolio.positions.length > 0">
-    <button mat-mini-fab color="warn" (click)="removeAll()">
-      <mat-icon>delete</mat-icon>
-    </button>
-    <button mat-mini-fab color="primary" (click)="SaveAsFile()">
-      <mat-icon>save</mat-icon>
-    </button>
+    
+    <!-- Market Status:<label [ngClass]="{'green':alive, 'red':!alive}">{{ alive?"Online":"Offline" }}</label> -->
+    <label style="font-size:x-large;width:100%;">{{currPortfolio.portfolioName}}</label>
     <button mat-button color="primary" (click)="showAll=!showAll" title="Show All Transactions">
       {{ showAll?"Collapse All":"Show All"}}
     </button>
-    &nbsp; &nbsp;&nbsp;
-    <!-- Market Status:<label [ngClass]="{'green':alive, 'red':!alive}">{{ alive?"Online":"Offline" }}</label> -->
-    <label style="font-size:large;width:100%;">{{currPortfolio.portfolioName}}</label>
     <span style="font-size:large; float:right; margin-right:20px;">
        
       <span style="font-size:x-large;">
@@ -79,6 +73,6 @@
         </ng-container>
       </ng-container>
     </tbody>
-  </table>
+  </table><br>
   <ed-new-ticker (add)="handleAddTrans($event)"></ed-new-ticker>
 </div>

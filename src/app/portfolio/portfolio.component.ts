@@ -2,12 +2,9 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { Transaction, StockPosition, TransactionType, Portfolio, quote } from '../shared/models/entities';
 import { FinanceService } from '../shared/services/finance.service';
-import { saveAs } from 'file-saver/FileSaver';
 import { RobinhoodService } from '../shared/services/robinhood.service';
 import { IntervalObservable } from "rxjs/observable/IntervalObservable";
 import { UtilService } from '../shared/services/util.service';
-import * as $ from 'jquery';
-import { AlphavantageService } from '../shared/services/alphavantage.service';
 import { PortfolioService } from '../shared/services/portfolio.service';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operator/map';
@@ -18,7 +15,7 @@ import { RobinhoodRxService } from '../shared/services/robinhood-rx.service';
   selector: 'app-portfolio',
   templateUrl: './portfolio.component.html',
   styleUrls: ['./portfolio.component.css']
-})//http://localhost:4200/portfolio/20d64349-3d39-4f04-c752-2156e8b67f56
+})
 export class PortfolioComponent {
   currPortfolio: Portfolio;
   currPortfolio$: Observable<Portfolio>;
@@ -57,16 +54,6 @@ export class PortfolioComponent {
       }
     );
   }
-  removeAll() {
-    var deleteAll = window.confirm('Are you sure to clear all?');
-    if (deleteAll) {
-      this.portfolioSrv.removePosition(this.currPortfolio.id);
-      this.router.navigate(['/']);
-    }
-  }
-  SaveAsFile() {
-    this.utilService.SaveAsFile(JSON.stringify(this.currPortfolio), this.currPortfolio.portfolioName+".json");
-  }
   updateQuotes() {
     var syms = [];
     this.currPortfolio.positions.forEach(e => syms.push(e.symbol));
@@ -95,9 +82,7 @@ export class PortfolioComponent {
     else if (colName == 'daygain') { retStr = "Day Gain"; }
     else if (colName == 'mktval') { retStr = "Market Value"; }
     else if (colName == 'totgain') { retStr = "Gain/Loss"; }
-    if (colName == this.sCol) {
-      retStr += (this.sortDir == 1) ? "▲" : "▼";
-    }
+    if (colName == this.sCol) { retStr += (this.sortDir == 1) ? "▲" : "▼"; }
     return retStr;
   }
   sortData(sortingCol: string) {
