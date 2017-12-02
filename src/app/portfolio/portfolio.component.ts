@@ -34,6 +34,7 @@ export class PortfolioComponent {
     private utilService: UtilService) {
   }
   ngOnInit() {
+
     this.sub = this.route.params.subscribe(params => {
       this.id = params['id'];
       this.InitPositions();
@@ -45,6 +46,7 @@ export class PortfolioComponent {
 
   }
   private InitPositions() {
+    console.log('initializing port comp');
     this.currPortfolio$ =
       this.portfolioSrv.portfolios.pipe().map(portfolios => portfolios.find(p => p.id === this.id));
     this.currPortfolio$.subscribe(

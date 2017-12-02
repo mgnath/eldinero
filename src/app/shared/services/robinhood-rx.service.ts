@@ -11,6 +11,7 @@ export class RobinhoodRxService {
   private dataStore: {
     quotes: quote[]
   };
+  private forceLoad = true;
   private loading = false;
   private marketAlive = true;
 
@@ -18,9 +19,10 @@ export class RobinhoodRxService {
     this.getMarketInfo("XNAS");
     this.dataStore = { quotes: [] };
     this._quotes = <BehaviorSubject<quote[]>>new BehaviorSubject([]);
-    IntervalObservable.create(30000)// get our data every subsequent 10 seconds
+
+    IntervalObservable.create(10000)// get our data every subsequent 10 seconds
       .subscribe(() => {
-        if (this.dataStore.quotes && this.dataStore.quotes.length > 0) {
+        if (this.hasQuotesinStore) {
           this.refreshData();
         }
       });
@@ -35,24 +37,32 @@ export class RobinhoodRxService {
         let q: quote = new quote();
         q.symbol = s;
         this.dataStore.quotes.push(q);
+        this.forceLoad = true;
       }
     });
     this.refreshData();
     return this._quotes.asObservable();
   }
   refreshData() {
-    if (!this.loading && this.hasQuotesinStore && this.marketAlive) {
+    if (!this.forceLoad && (this.loading || !this.hasQuotesinStore)) {
+      console.log('loading or no syms');
+      return;
+    }
+    if (this.forceLoad || this.marketAlive) {
       this.loading = true;
+      console.log('call started');
       this.http.get<QuotesResponse>("https://api.robinhood.com/quotes/?symbols=" +
         this.dataStore.quotes.map(q => q.symbol).join(",")).map(resp => resp.results)
         .subscribe(data => {
+          console.log('call ended');
           this.loading = false;
           this.dataStore.quotes = data;
           this.publishData();
+          this.forceLoad = false;
         },
         error => { console.log('Could not load quotes.'); this.loading = false; })
     }
-    else { console.log('call in progress / no symbols'); }
+    //else { console.log('force load'+ this.forceLoad +'or market live'+this.marketAlive); }
   }
   get hasQuotesinStore() {
     return (this.dataStore.quotes.map(q => q.symbol).join(",").length > 0);
@@ -65,26 +75,25 @@ export class RobinhoodRxService {
     console.log('Updating Market Status');
     this.http.get<any>("https://cors-anywhere.herokuapp.com/" + url)
       .subscribe(d => {
-        this.marketAlive = (new Date(d.opens_at).valueOf() < new Date().valueOf())
-          && (new Date(d.closes_at).valueOf() > new Date().valueOf());
-
-        if(new Date(d.opens_at).valueOf() > new Date().valueOf())
-        {
-          var remainingMS = new Date(d.opens_at).valueOf() - new Date().valueOf();
-          console.log("market will opens in mins " + (remainingMS/1000)/60)
-          setTimeout(()=>{this.updateMarketStatus(url);}, remainingMS);
+        this.marketAlive = d.is_open && ((new Date(d.opens_at).valueOf() < new Date().valueOf())
+          && (new Date(d.closes_at).valueOf() > new Date().valueOf()));
+        if (!d.is_open) {
+          this.updateMarketStatus(d.next_open_hours);
         }
-        if((new Date(d.opens_at).valueOf() < new Date().valueOf())
-            && (new Date(d.closes_at).valueOf() > new Date().valueOf()))
-        {
+        else {
           var remainingMS = (new Date(d.closes_at).getTime() - new Date().getTime());
-          console.log("market will close in mins " + (remainingMS/1000)/60);
-          setTimeout(()=>{this.updateMarketStatus(url);}, remainingMS);
-        }
-        if(new Date().valueOf() > new Date(d.closes_at).valueOf()){
-          var remainingMS = (new Date(d.opens_at).getTime() + 86400000 - new Date().getTime());
-          console.log("market will open in mins " + (remainingMS/1000)/60);
-          setTimeout(()=>{this.updateMarketStatus(url);}, remainingMS);
+          if (new Date(d.opens_at).valueOf() > new Date().valueOf()) {
+            var remainingMS = new Date(d.opens_at).valueOf() - new Date().valueOf();
+          }
+          if ((new Date(d.opens_at).valueOf() < new Date().valueOf())
+            && (new Date(d.closes_at).valueOf() > new Date().valueOf())) {
+            var remainingMS = (new Date(d.closes_at).getTime() - new Date().getTime());
+          }
+          if (new Date().valueOf() > new Date(d.closes_at).valueOf()) {
+            var remainingMS = (new Date(d.opens_at).getTime() + 86400000 - new Date().getTime());
+          }
+          console.log("market will open/close in hrs " + (remainingMS / 1000) / 3600);
+          setTimeout(() => { this.updateMarketStatus(url); }, remainingMS);
         }
       }, error => { console.log('market data not loaded') });
   }

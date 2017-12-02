@@ -53,7 +53,7 @@ export class PortfolioService {
     this.publishData();
   }
   addTransction(t: Transaction, portfolioId: string) {
-    console.log('serice adding trans');
+    console.log('portfolio service adding trans');
     t.id = UtilService.generateGUID();
     t.date = new Date();
     this.dataStore.portfolios = this.dataStore.portfolios || new Array<Portfolio>();
