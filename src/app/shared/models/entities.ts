@@ -54,6 +54,7 @@ export class quote {
     adjusted_previous_close: number;
     last_extended_hours_trade_price: number;
     updated_at: Date
+    instrument:string
     constructor() { }
 }
 export class StockPosition {

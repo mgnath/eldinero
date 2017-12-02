@@ -1,8 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { Transaction, StockPosition, TransactionType, Portfolio, quote } from '../shared/models/entities';
-import { FinanceService } from '../shared/services/finance.service';
-import { RobinhoodService } from '../shared/services/robinhood.service';
 import { IntervalObservable } from "rxjs/observable/IntervalObservable";
 import { UtilService } from '../shared/services/util.service';
 import { PortfolioService } from '../shared/services/portfolio.service';

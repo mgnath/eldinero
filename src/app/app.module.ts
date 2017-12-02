@@ -11,10 +11,8 @@ import {EdMaterialModule} from './edmaterial-module/edMaterial.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
-import { FinanceService } from './shared/services/finance.service';
 import { UtilService } from './shared/services/util.service';
 import { MapToIterablePipe } from './shared/pipes/map-to-iterable.pipe';
-import { RobinhoodService } from './shared/services/robinhood.service';
 import { ChangecolorPipe } from './shared/pipes/changecolor.pipe';
 import { ColoredTextComponent } from './shared/components/colored-text/colored-text.component';
 import { NewTickerComponent } from './new-ticker/new-ticker.component';
@@ -47,7 +45,7 @@ import { RobinhoodRxService } from './shared/services/robinhood-rx.service';
     HttpClientModule,
     HttpModule
   ],
-  providers: [FinanceService, UtilService, RobinhoodService,AlphavantageService, PortfolioService,RobinhoodRxService,
+  providers: [UtilService,AlphavantageService, PortfolioService,RobinhoodRxService,
     {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'auto'}}],
   bootstrap: [AppComponent]
 })

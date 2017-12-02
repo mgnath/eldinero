@@ -4,6 +4,7 @@ import { quote } from '../models/entities';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class RobinhoodRxService {
@@ -66,6 +67,14 @@ export class RobinhoodRxService {
   }
   get hasQuotesinStore() {
     return (this.dataStore.quotes.map(q => q.symbol).join(",").length > 0);
+  }
+  getSymbolName(url) {
+    return this.http.get<any>("https://cors-anywhere.herokuapp.com/" + url);
+  }
+  GetStockQuotes(symbols: string[]) {
+    return this.http.
+      get<QuotesResponse>("https://api.robinhood.com/quotes/?symbols=" + symbols.join(",")).
+      map(resp => resp.results);
   }
   getMarketInfo(market) {
     this.http.get<any>("https://cors-anywhere.herokuapp.com/https://api.robinhood.com/markets/" + market)
