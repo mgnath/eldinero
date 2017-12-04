@@ -45,10 +45,8 @@ export class RobinhoodRxService {
     return this._quotes.asObservable();
   }
   refreshData() {
-    if (!this.forceLoad && (this.loading || !this.hasQuotesinStore)) {
-      console.log('loading or no syms');
-      return;
-    }
+    if (!this.hasQuotesinStore) { console.log('no syms'); return; }
+    if (!this.forceLoad && this.loading) { console.log('loading...'); return; }
     if (this.forceLoad || this.marketAlive) {
       this.loading = true;
       console.log('call started');
@@ -61,7 +59,7 @@ export class RobinhoodRxService {
           this.publishData();
           this.forceLoad = false;
         },
-        error => { console.log('Could not load quotes.'); this.loading = false; })
+        error => { console.log('Could not load quotes.'); this.loading = false; },()=>{this.loading = false; })
     }
     //else { console.log('force load'+ this.forceLoad +'or market live'+this.marketAlive); }
   }
@@ -81,7 +79,7 @@ export class RobinhoodRxService {
       .subscribe(data => { this.updateMarketStatus(data.todays_hours) }, error => { console.log('market info not loaded') });
   }
   updateMarketStatus(url) {
-    console.log('Updating Market Status');
+    console.log('Updating Market Status ' + url);
     this.http.get<any>("https://cors-anywhere.herokuapp.com/" + url)
       .subscribe(d => {
         this.marketAlive = d.is_open && ((new Date(d.opens_at).valueOf() < new Date().valueOf())
@@ -101,7 +99,7 @@ export class RobinhoodRxService {
           if (new Date().valueOf() > new Date(d.closes_at).valueOf()) {
             var remainingMS = (new Date(d.opens_at).getTime() + 86400000 - new Date().getTime());
           }
-          console.log("market will open/close in hrs " + (remainingMS / 1000) / 3600);
+          console.log("market will open/close in hrs " + ((remainingMS / 1000) / 3600).toFixed(2));
           setTimeout(() => { this.updateMarketStatus(url); }, remainingMS);
         }
       }, error => { console.log('market data not loaded') });

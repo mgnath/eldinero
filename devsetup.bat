@@ -1,13 +1,10 @@
-ng new ElDinero
+git clone eldinero from github
 npm install --save @angular/material @angular/cdk
 npm install --save @angular/animations
 
 
-cp -R  ~/Projects/eldinero/dist/ ~/Projects/publish/mgnath.github.io/
-
 alphaadvantage apikey O22XVPSPMRTX7OGT
 
-        "../node_modules/bootstrap/dist/css/bootstrap.min.css",
 
 
   getSMEData(){

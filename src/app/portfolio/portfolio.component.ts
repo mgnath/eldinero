@@ -40,8 +40,6 @@ export class PortfolioComponent {
   }
   ngOnDestroy() {
     this.sub.unsubscribe();
-    // this.currPortfolio$.unsubscribe();  tbd
-
   }
   private InitPositions() {
     console.log('initializing port comp');
