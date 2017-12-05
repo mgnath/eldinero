@@ -1,0 +1,20 @@
+<div style="margin:5px;">
+    <button mat-mini-fab color="accent" (click)="SaveAsFile()">
+        <mat-icon>save</mat-icon>
+    </button>
+    <br/>
+    <br/>
+    <span>
+        Restore
+        <input type="file" accept='application/json' (change)='openFile($event)'>
+    </span>
+</div>
+
+
+
+<!-- 
+<span class="btn btn-primary btn-file">
+    Import Transactions
+    <input class="btn btn-warning" type="file" accept='application/json' (change)='openFile($event)'>
+</span>
+     -->

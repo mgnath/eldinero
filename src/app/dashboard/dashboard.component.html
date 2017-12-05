@@ -1,4 +1,4 @@
-<div style="margin:3px;">
+<div style="margin:5px;">
   <mat-form-field>
     <input [(ngModel)]="newPortfolioName" matInput (keyup.enter)="createNewPortfolio(newPortfolioName)" placeholder="New Portfolio Name"
       value="" />
@@ -6,6 +6,11 @@
   <button mat-raised-button (click)="createNewPortfolio(newPortfolioName);" color="primary" [disabled]="(newPortfolioName.length<1) ">
     Add
   </button>
+  <span style="float:right;">
+      <button mat-icon-button routerLink="settings">
+          <mat-icon>settings</mat-icon>
+      </button>
+  </span>
   <div class="flex-container">
     <app-portfolio-card style="padding:3px;cursor:pointer;" *ngFor="let p of portfolios| async;let i = index" [portfolio]="p"
       (delete)="DeletePortfolio($event)" routerLink="portfolio/{{p.id}}"></app-portfolio-card>

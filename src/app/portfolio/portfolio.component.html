@@ -43,7 +43,13 @@
       <ng-container *ngFor="let p of currPortfolio.positions;let i = index">
         <tr [ngClass]="{'greenborder':((p.dayChange)>0) , 'redborder':((p.dayChange)<0)}">
           <td>{{i+1}}</td>
-          <td>{{ p.name }}</td>
+          <td>
+              <span class="md-accent">
+                <a href="https://finance.yahoo.com/chart/{{p.symbol}}" target="new">
+                  {{ p.name }}
+                </a>
+              </span>
+          </td>
           <td class="light">{{ p.symbol }}</td>
           <td class="right light">{{ p.shares}} </td>
           <td class="right light">{{ p.avgPrice| number:'1.2-2'}} </td>

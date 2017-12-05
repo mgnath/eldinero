@@ -23,6 +23,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { PortfolioService } from './shared/services/portfolio.service';
 import { PortfolioCardComponent } from './shared/components/portfolio-card/portfolio-card.component';
 import { RobinhoodRxService } from './shared/services/robinhood-rx.service';
+import { SettingsComponent } from './settings/settings.component';
  
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { RobinhoodRxService } from './shared/services/robinhood-rx.service';
     NewTickerComponent,
     PortfolioComponent,
     DashboardComponent,
-    PortfolioCardComponent
+    PortfolioCardComponent,
+    SettingsComponent
   ], 
   imports: [
     BrowserAnimationsModule,

@@ -21,7 +21,7 @@ export class RobinhoodRxService {
     this.dataStore = { quotes: [] };
     this._quotes = <BehaviorSubject<quote[]>>new BehaviorSubject([]);
 
-    IntervalObservable.create(10000)// get our data every subsequent 10 seconds
+    IntervalObservable.create(3000)// get our data every subsequent 10 seconds
       .subscribe(() => {
         if (this.hasQuotesinStore) {
           this.refreshData();
@@ -41,19 +41,17 @@ export class RobinhoodRxService {
         this.forceLoad = true;
       }
     });
-    this.refreshData();
     return this._quotes.asObservable();
   }
   refreshData() {
+    if(document.visibilityState == "hidden"){ return;}
     if (!this.hasQuotesinStore) { console.log('no syms'); return; }
-    if (!this.forceLoad && this.loading) { console.log('loading...'); return; }
+    if (this.loading) { console.log('loading...'); return; }
     if (this.forceLoad || this.marketAlive) {
       this.loading = true;
-      console.log('call started');
       this.http.get<QuotesResponse>("https://api.robinhood.com/quotes/?symbols=" +
         this.dataStore.quotes.map(q => q.symbol).join(",")).map(resp => resp.results)
         .subscribe(data => {
-          console.log('call ended');
           this.loading = false;
           this.dataStore.quotes = data;
           this.publishData();
@@ -85,7 +83,7 @@ export class RobinhoodRxService {
         this.marketAlive = d.is_open && ((new Date(d.opens_at).valueOf() < new Date().valueOf())
           && (new Date(d.closes_at).valueOf() > new Date().valueOf()));
         if (!d.is_open) {
-          this.updateMarketStatus(d.next_open_hours);
+          this.updateMarketStatus(d.next_open_hours); return;
         }
         else {
           var remainingMS = (new Date(d.closes_at).getTime() - new Date().getTime());
@@ -97,7 +95,7 @@ export class RobinhoodRxService {
             var remainingMS = (new Date(d.closes_at).getTime() - new Date().getTime());
           }
           if (new Date().valueOf() > new Date(d.closes_at).valueOf()) {
-            var remainingMS = (new Date(d.opens_at).getTime() + 86400000 - new Date().getTime());
+            this.updateMarketStatus(d.next_open_hours); return;
           }
           console.log("market will open/close in hrs " + ((remainingMS / 1000) / 3600).toFixed(2));
           setTimeout(() => { this.updateMarketStatus(url); }, remainingMS);

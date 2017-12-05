@@ -40,6 +40,9 @@ export class PortfolioService {
   saveData(portfolios: Portfolio[]) {
     localStorage.setItem("eldinero.v" + this.CURR_VER, JSON.stringify(portfolios));
   }
+  getData(){
+    return this.dataStore.portfolios;
+  }
   addPortfolio(name: string) {
     let newPortfolio = new Portfolio();
     newPortfolio.portfolioName = name;
@@ -49,7 +52,12 @@ export class PortfolioService {
     this.dataStore.portfolios.push(newPortfolio);
     this.saveData(this.dataStore.portfolios);
     this.dataStore.portfolios = this.loadData();
-
+    this.publishData();
+  }
+  replacePortfolios(portfolios: Portfolio[]){
+    this.dataStore.portfolios = portfolios;
+    this.saveData(this.dataStore.portfolios);
+    this.dataStore.portfolios = this.loadData();
     this.publishData();
   }
   addTransction(t: Transaction, portfolioId: string) {
