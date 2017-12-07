@@ -1,17 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { PortfolioService } from '../shared/services/portfolio.service';
 import { UtilService } from '../shared/services/util.service';
+import { PreferenceService } from '../shared/services/preference.service';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.css']
+  styleUrls: ['./settings.component.css'],
+  encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
 export class SettingsComponent implements OnInit {
-
-  constructor(private portfolioSrv:PortfolioService, private utilService:UtilService) { }
+  refreshRate = 3;
+  constructor(private portfolioSrv: PortfolioService, 
+    private utilService: UtilService, private prefSrv:PreferenceService) { }
 
   ngOnInit() {
+    console.log(this.prefSrv.loadData().refreshRate);
+    this.refreshRate = this.prefSrv.appSettings.refreshRate / 1000;
   }
   openFile(event) {
     let input = event.target;
@@ -28,7 +34,9 @@ export class SettingsComponent implements OnInit {
     this.portfolioSrv.replacePortfolios(portfolioObj);
   }
   SaveAsFile() {
-
     this.utilService.SaveAsFile(JSON.stringify(this.portfolioSrv.getData()), "myportfolio.json");
- }
+  }
+  saveRefreshRate(){
+    this.prefSrv.saveData({refreshRate:this.refreshRate*1000});
+  }
 }

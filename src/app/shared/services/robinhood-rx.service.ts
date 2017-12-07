@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import 'rxjs/add/operator/map';
+import { PreferenceService } from './preference.service';
 
 @Injectable()
 export class RobinhoodRxService {
@@ -16,12 +17,12 @@ export class RobinhoodRxService {
   private loading = false;
   private marketAlive = true;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private prefSrv:PreferenceService) {
     this.getMarketInfo("XNAS");
     this.dataStore = { quotes: [] };
     this._quotes = <BehaviorSubject<quote[]>>new BehaviorSubject([]);
 
-    IntervalObservable.create(3000)// get our data every subsequent 10 seconds
+    IntervalObservable.create(this.prefSrv.appSettings.refreshRate || 3000)// get our data every subsequent 10 seconds
       .subscribe(() => {
         if (this.hasQuotesinStore) {
           this.refreshData();

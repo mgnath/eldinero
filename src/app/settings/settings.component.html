@@ -1,13 +1,21 @@
-<div style="margin:5px;">
+<div style="margin:15px;">
     <button mat-mini-fab color="accent" (click)="SaveAsFile()">
         <mat-icon>save</mat-icon>
     </button>
     <br/>
     <br/>
     <span>
-        Restore
+        <mat-icon>settings_backup_restore</mat-icon>
         <input type="file" accept='application/json' (change)='openFile($event)'>
     </span>
+    <br/>
+    <br/>
+    <mat-card class="result">
+        <mat-card-content>
+            Refresh Rate
+            <input type="range" (change)="saveRefreshRate()" min="3" max="30" [(ngModel)]="refreshRate"/> {{refreshRate}} seconds
+        </mat-card-content>
+    </mat-card>
 </div>
 
 
