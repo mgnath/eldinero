@@ -9,6 +9,7 @@ import { map} from 'rxjs/operator/map';
 import {debounce} from 'rxjs/operator/debounce';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RobinhoodRxService } from '../shared/services/robinhood-rx.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-portfolio',
@@ -21,8 +22,8 @@ export class PortfolioComponent {
   quotes$: Observable<quote[]>;
   id: string;
   alive = true;
-  sCol: string = 'name';
-  sortDir: number = 1;
+  sCol: string = 'daygain';
+  sortDir: number = -1;
   firstLoad: boolean = true;
 
   private sub: any;
@@ -30,7 +31,8 @@ export class PortfolioComponent {
     private router: Router,
     private portfolioSrv: PortfolioService,
     private robinhoodRxSrv: RobinhoodRxService,
-    private utilService: UtilService) {
+    private utilService: UtilService,
+    private titleSrv:Title) {
   }
   ngOnInit() {
 
@@ -53,6 +55,10 @@ export class PortfolioComponent {
       }
     );
   }
+  getTtl(){
+    this.titleSrv.setTitle(this.currPortfolio.getGrandTotalDayGain().toFixed(2).toString());
+    return this.currPortfolio.getGrandTotalDayGain();
+  }
   updateQuotes() {
     var syms = [];
     this.currPortfolio.positions.forEach(e => syms.push(e.symbol));
@@ -66,6 +72,7 @@ export class PortfolioComponent {
         });
       });
   }
+
   handleAddTrans(newTrans: Transaction) {
     this.portfolioSrv.addTransction(newTrans, this.id);
   }

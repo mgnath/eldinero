@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -48,7 +48,7 @@ import { PreferenceService } from './shared/services/preference.service';
     HttpClientModule,
     HttpModule
   ],
-  providers: [UtilService,AlphavantageService, PortfolioService,RobinhoodRxService,PreferenceService,
+  providers: [UtilService,AlphavantageService, PortfolioService,RobinhoodRxService,PreferenceService,Title,
     {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'auto'}}],
   bootstrap: [AppComponent]
 })

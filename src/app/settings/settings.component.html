@@ -1,14 +1,16 @@
 <div class="flex-container" style="margin:15px;">
     <mat-card class="result">
-        <mat-icon (click)="SaveAsFile()" style="cursor:pointer;">archive</mat-icon><br/><br/>
+        <mat-icon (click)="SaveAsFile()" style="cursor:pointer;">archive</mat-icon>
+        <br/>
+        <br/>
         <mat-icon>unarchive</mat-icon>
         <input class="inputfile" type="file" accept='application/json' (change)='openFile($event)'>
-       
-    </mat-card><br/>
+    </mat-card>
+    <br/>
     <mat-card class="result">
         <mat-card-content>
             Refresh Rate
-            <input type="range" (change)="saveRefreshRate()" min="3" max="30" [(ngModel)]="refreshRate"/> {{refreshRate}} seconds
+            <input type="range" (change)="saveRefreshRate()" min="3" max="30" [(ngModel)]="refreshRate" /> {{refreshRate}} seconds
             <span style="font-size:xx-small;">Note: Manually refresh the page after changing the rate</span>
         </mat-card-content>
     </mat-card>

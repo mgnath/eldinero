@@ -48,7 +48,8 @@ export class RobinhoodRxService {
     if(document.visibilityState == "hidden"){ return;}
     if (!this.hasQuotesinStore) { console.log('no syms'); return; }
     if (this.loading) { console.log('loading...'); return; }
-    if (this.forceLoad || this.marketAlive) {
+    if (this.forceLoad || this.marketAlive) 
+    {
       this.loading = true;
       this.http.get<QuotesResponse>("https://api.robinhood.com/quotes/?symbols=" +
         this.dataStore.quotes.map(q => q.symbol).join(",")).map(resp => resp.results)
