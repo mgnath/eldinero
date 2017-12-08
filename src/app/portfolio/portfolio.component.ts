@@ -56,7 +56,7 @@ export class PortfolioComponent {
     );
   }
   getTtl(){
-    this.titleSrv.setTitle(this.currPortfolio.getGrandTotalDayGain().toFixed(2).toString());
+    this.titleSrv.setTitle('El Dinero>'+this.currPortfolio.getGrandTotalDayGain().toFixed(2).toString());
     return this.currPortfolio.getGrandTotalDayGain();
   }
   updateQuotes() {
