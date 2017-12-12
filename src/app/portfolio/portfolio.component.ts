@@ -5,11 +5,12 @@ import { IntervalObservable } from "rxjs/observable/IntervalObservable";
 import { UtilService } from '../shared/services/util.service';
 import { PortfolioService } from '../shared/services/portfolio.service';
 import { Observable } from 'rxjs/Observable';
-import { map} from 'rxjs/operator/map';
-import {debounce} from 'rxjs/operator/debounce';
+import { map } from 'rxjs/operator/map';
+import { debounce } from 'rxjs/operator/debounce';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RobinhoodRxService } from '../shared/services/robinhood-rx.service';
 import { Title } from '@angular/platform-browser';
+import { AlphavantageService } from '../shared/services/alphavantage.service';
 
 @Component({
   selector: 'app-portfolio',
@@ -25,14 +26,16 @@ export class PortfolioComponent {
   sCol: string = 'daygain';
   sortDir: number = -1;
   firstLoad: boolean = true;
+  histArray: any[] = [];
 
   private sub: any;
   constructor(private route: ActivatedRoute,
     private router: Router,
     private portfolioSrv: PortfolioService,
     private robinhoodRxSrv: RobinhoodRxService,
+    private alphSrv: AlphavantageService,
     private utilService: UtilService,
-    private titleSrv:Title) {
+    private titleSrv: Title) {
   }
   ngOnInit() {
 
@@ -52,11 +55,12 @@ export class PortfolioComponent {
       p => {
         this.currPortfolio = p;
         this.updateQuotes();
+        this.historicalData();
       }
     );
   }
-  getTtl(){
-    this.titleSrv.setTitle('El Dinero>'+this.currPortfolio.getGrandTotalDayGain().toFixed(2).toString());
+  getTtl() {
+    this.titleSrv.setTitle('El Dinero>' + this.currPortfolio.getGrandTotalDayGain().toFixed(2).toString());
     return this.currPortfolio.getGrandTotalDayGain();
   }
   updateQuotes() {
@@ -72,7 +76,29 @@ export class PortfolioComponent {
         });
       });
   }
+  historicalData() {
+    this.currPortfolio.positions.forEach(pos => {
+      this.alphSrv.getHistoricalData(pos.symbol.replace('.', '-'))
+        .subscribe(d => {
+          try {
+            let temp: any = {};
+            temp.symbol = pos.symbol;
 
+            Object.keys(d["Time Series (Daily)"]).forEach(
+              key => {
+                  var results = this.histArray.find(e=> e.tradeDate ===  key);
+                  if(results){
+                    results.dailyTot += d["Time Series (Daily)"][key]["4. close"]* pos.shares;
+                  }
+                  else{
+                    this.histArray.push({ tradeDate : key, dailyTot: d["Time Series (Daily)"][key]["4. close"]* pos.shares});
+                  }
+                }
+            );
+          } catch (ex) { console.log('error in' + ex); }
+        });
+    });
+  }
   handleAddTrans(newTrans: Transaction) {
     this.portfolioSrv.addTransction(newTrans, this.id);
   }
@@ -128,4 +154,5 @@ export class PortfolioComponent {
     }
     this.sCol = sortingCol;
   }
+
 }

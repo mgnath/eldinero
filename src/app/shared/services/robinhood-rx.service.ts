@@ -6,10 +6,13 @@ import { Observable } from 'rxjs/Observable';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import 'rxjs/add/operator/map';
 import { PreferenceService } from './preference.service';
+import { AlphavantageService } from './alphavantage.service';
+import { UtilService } from './util.service';
 
 @Injectable()
 export class RobinhoodRxService {
   private _quotes: BehaviorSubject<quote[]>;
+  private _histData: HistData[] = [];
   private dataStore: {
     quotes: quote[]
   };
@@ -17,7 +20,8 @@ export class RobinhoodRxService {
   private loading = false;
   private marketAlive = true;
 
-  constructor(private http: HttpClient, private prefSrv:PreferenceService) {
+  constructor(private http: HttpClient, private prefSrv: PreferenceService, 
+              private alphSrv: AlphavantageService, private utilSrv:UtilService) {
     this.getMarketInfo("XNAS");
     this.dataStore = { quotes: [] };
     this._quotes = <BehaviorSubject<quote[]>>new BehaviorSubject([]);
@@ -45,11 +49,10 @@ export class RobinhoodRxService {
     return this._quotes.asObservable();
   }
   refreshData() {
-    if(document.visibilityState == "hidden"){ return;}
+    if (document.visibilityState == "hidden") { return; }
     if (!this.hasQuotesinStore) { console.log('no syms'); return; }
     if (this.loading) { console.log('loading...'); return; }
-    if (this.forceLoad || this.marketAlive) 
-    {
+    if (this.forceLoad || this.marketAlive) {
       this.loading = true;
       this.http.get<QuotesResponse>("https://api.robinhood.com/quotes/?symbols=" +
         this.dataStore.quotes.map(q => q.symbol).join(",")).map(resp => resp.results)
@@ -59,7 +62,7 @@ export class RobinhoodRxService {
           this.publishData();
           this.forceLoad = false;
         },
-        error => { console.log('Could not load quotes.'); this.loading = false; },()=>{this.loading = false; })
+        error => { console.log('Could not load quotes.'); this.loading = false; }, () => { this.loading = false; })
     }
     //else { console.log('force load'+ this.forceLoad +'or market live'+this.marketAlive); }
   }
@@ -107,4 +110,9 @@ export class RobinhoodRxService {
 }
 interface QuotesResponse {
   results: quote[];
+}
+class HistData {
+  symbol: string;
+  histData: any;
+  constructor() { }
 }

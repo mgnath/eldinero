@@ -5,6 +5,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
+import { ChartsModule } from 'ng2-charts';
 
 import {EdMaterialModule} from './edmaterial-module/edMaterial.module';
 
@@ -25,7 +26,9 @@ import { PortfolioCardComponent } from './shared/components/portfolio-card/portf
 import { RobinhoodRxService } from './shared/services/robinhood-rx.service';
 import { SettingsComponent } from './settings/settings.component';
 import { PreferenceService } from './shared/services/preference.service';
- 
+import { HistChartComponent } from './hist-chart/hist-chart.component';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +40,8 @@ import { PreferenceService } from './shared/services/preference.service';
     PortfolioComponent,
     DashboardComponent,
     PortfolioCardComponent,
-    SettingsComponent
+    SettingsComponent,
+    HistChartComponent
   ], 
   imports: [
     BrowserAnimationsModule,
@@ -46,7 +50,8 @@ import { PreferenceService } from './shared/services/preference.service';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    HttpModule
+    HttpModule,
+    ChartsModule
   ],
   providers: [UtilService,AlphavantageService, PortfolioService,RobinhoodRxService,PreferenceService,Title,
     {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'auto'}}],
