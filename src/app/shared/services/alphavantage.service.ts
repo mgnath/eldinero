@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 @Injectable()
 export class AlphavantageService {
@@ -21,8 +22,13 @@ export class AlphavantageService {
 
   //https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=MSFT&apikey=demo
 
+
+
   getHistoricalData(symbol: string): Observable<any> {
-    var params = new HttpParams().set("function", "TIME_SERIES_DAILY_ADJUSTED")
+    var cacheData = JSON.parse(localStorage.getItem(symbol+'_Hist'));
+    //console.log(cacheData);
+    if(cacheData){  return  Observable.of(cacheData); }
+    var params = new HttpParams().set("function", "TIME_SERIES_DAILY_ADJUSTED")// TIME_SERIES_WEEKL "TIME_SERIES_DAILY_ADJUSTED")
       .set("symbol", symbol)
       .set("apikey", this.API_KEY);
     return this.http.get(this.BASEURL, { params });

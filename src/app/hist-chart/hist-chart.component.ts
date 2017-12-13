@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Portfolio } from '../shared/models/entities';
+import { AlphavantageService } from '../shared/services/alphavantage.service';
+import { setTimeout } from 'timers';
 
 @Component({
   selector: 'app-hist-chart',
@@ -7,30 +10,62 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HistChartComponent implements OnInit {
 
-  constructor() { }
+  constructor(private alphSrv: AlphavantageService) { }
+
+  @Input() currPortfolio: Portfolio;
+  histArray: any[] = [];
+
+  //this.lineChartData[0].data = marketData.map(e=>e.dailyTot);
+  //this.lineChartLabels =  marketData.map(e=>e.tradeDate);
+  //console.log(this.lineChartData[0].data);
 
   ngOnInit() {
+    this.historicalData();
+  }
+
+
+  historicalData() {
+    this.currPortfolio.positions.forEach((pos, idx) => {
+      setTimeout(() => {
+        this.alphSrv.getHistoricalData(pos.symbol.replace('.', '-'))
+          .subscribe(d => {
+            //try {
+              
+              localStorage.setItem(pos.symbol.replace('.', '-')+'_Hist',JSON.stringify(d));
+
+              let temp: any = {};
+              temp.symbol = pos.symbol;
+              let timeKey:string = "Time Series (Daily)";
+              Object.keys(d[timeKey]).forEach(
+                key => {
+                  var results = this.histArray.find(e => e.tradeDate === key);
+                  if (results) {
+                    // Time Series (Daily)
+                    results.dailyTot += d[timeKey][key]["4. close"] * pos.shares;
+                  }
+                  else {
+                    this.histArray.push({ tradeDate: key, dailyTot: d[timeKey][key]["4. close"] * pos.shares });
+                  }
+                }
+              );
+              this.lineChartData[0].data = this.histArray.map(e=>e.dailyTot).reverse();
+              this.lineChartLabels =  this.histArray.map(e=>e.tradeDate).reverse();
+              //console.log(this.lineChartData[0].data);
+           // } catch (ex) { console.log('error in' + ex); }
+          });
+      }, (idx + 1) * 1000);
+    });
   }
 
   // lineChart
   public lineChartData: Array<any> = [
-    { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
-    { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' },
-    { data: [18, 48, 77, 9, 100, 27, 40], label: 'Series C' }
+    { data: [65, 59, 80, 81, 56, 55, 40], label: 'Market Value' }
   ];
   public lineChartLabels: Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
   public lineChartOptions: any = {
     responsive: true
   };
   public lineChartColors: Array<any> = [
-    { // grey
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    },
     { // dark grey
       backgroundColor: 'rgba(77,83,96,0.2)',
       borderColor: 'rgba(77,83,96,1)',
@@ -38,6 +73,14 @@ export class HistChartComponent implements OnInit {
       pointBorderColor: '#fff',
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgba(77,83,96,1)'
+    },
+    { // grey
+      backgroundColor: 'rgba(148,159,177,0.2)',
+      borderColor: 'rgba(148,159,177,1)',
+      pointBackgroundColor: 'rgba(148,159,177,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
     },
     { // grey
       backgroundColor: 'rgba(148,159,177,0.2)',

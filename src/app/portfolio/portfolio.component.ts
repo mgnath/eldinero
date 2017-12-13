@@ -55,7 +55,6 @@ export class PortfolioComponent {
       p => {
         this.currPortfolio = p;
         this.updateQuotes();
-        this.historicalData();
       }
     );
   }
@@ -95,6 +94,7 @@ export class PortfolioComponent {
                   }
                 }
             );
+            //console.log(this.histArray);
           } catch (ex) { console.log('error in' + ex); }
         });
     });
