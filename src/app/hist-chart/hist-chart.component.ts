@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Portfolio } from '../shared/models/entities';
+import { Portfolio, Transaction } from '../shared/models/entities';
 import { AlphavantageService } from '../shared/services/alphavantage.service';
 import { setTimeout } from 'timers';
 
@@ -14,7 +14,7 @@ export class HistChartComponent implements OnInit {
 
   @Input() currPortfolio: Portfolio;
   histArray: any[] = [];
-
+  graphDuration:number = 7;
   //this.lineChartData[0].data = marketData.map(e=>e.dailyTot);
   //this.lineChartLabels =  marketData.map(e=>e.tradeDate);
   //console.log(this.lineChartData[0].data);
@@ -25,41 +25,66 @@ export class HistChartComponent implements OnInit {
 
 
   historicalData() {
-    this.currPortfolio.positions.forEach((pos, idx) => {
+    this.histArray = [];
+    let trans: Array<Transaction> = new Array<Transaction>();
+    this.currPortfolio.positions.map(pos => pos.transactions).forEach(
+      t => { t.forEach(e => trans.push(e)) }
+    );
+    console.log(trans);
+    trans.forEach((tran, idx) => {
       setTimeout(() => {
-        this.alphSrv.getHistoricalData(pos.symbol.replace('.', '-'))
+        this.alphSrv.getHistoricalData(tran.symbol.replace('.', '-'))
           .subscribe(d => {
             //try {
-              
-              localStorage.setItem(pos.symbol.replace('.', '-')+'_Hist',JSON.stringify(d));
 
-              let temp: any = {};
-              temp.symbol = pos.symbol;
-              let timeKey:string = "Time Series (Daily)";
-              Object.keys(d[timeKey]).forEach(
-                key => {
-                  var results = this.histArray.find(e => e.tradeDate === key);
-                  if (results) {
-                    // Time Series (Daily)
-                    results.dailyTot += d[timeKey][key]["4. close"] * pos.shares;
+            localStorage.setItem(tran.symbol.replace('.', '-') + '_Hist', JSON.stringify(d));
+
+            let temp: any = {};
+            temp.symbol = tran.symbol;
+            let timeKey: string = "Time Series (Daily)";//"Monthly Time Series";
+            Object.keys(d[timeKey]).forEach(
+              key => {
+                var results = this.histArray.find(e => e.tradeDate === key);
+                if (results) {
+                  //results.dailyTot += d[timeKey][key]["4. close"] * tran.shares;
+                 if(new Date(key).valueOf()  >= new Date(tran.date).valueOf() ){
+                    results.dailyTot += d[timeKey][key]["4. close"] * tran.shares;
+                    results.costBasis += tran.price * tran.shares;
                   }
-                  else {
-                    this.histArray.push({ tradeDate: key, dailyTot: d[timeKey][key]["4. close"] * pos.shares });
+                  else{
+                    //results.dailyTot += tran.price * tran.shares;
+                    //results.costBasis += tran.price * tran.shares;
                   }
                 }
-              );
-              this.lineChartData[0].data = this.histArray.map(e=>e.dailyTot).reverse();
-              this.lineChartLabels =  this.histArray.map(e=>e.tradeDate).reverse();
-              //console.log(this.lineChartData[0].data);
-           // } catch (ex) { console.log('error in' + ex); }
+                else {
+                  //this.histArray.push({ tradeDate: key, dailyTot: d[timeKey][key]["4. close"] * tran.shares });
+                  
+                  if(new Date(key).valueOf()  >= new Date(tran.date).valueOf() ){
+                    this.histArray.push({ tradeDate: key, dailyTot: d[timeKey][key]["4. close"] * tran.shares, costBasis: tran.price * tran.shares  });
+                  }
+                  else{
+                    this.histArray.push({ tradeDate: key, dailyTot: tran.price * tran.shares,costBasis: tran.price * tran.shares });
+                  }
+                  
+                  
+                }
+              }
+            );
+            let totLen = this.histArray.length;
+            this.lineChartData[0].data = this.histArray.map(e => e.dailyTot.toFixed(2)).reverse().slice(Math.max( totLen - this.graphDuration, 1));//.splice(100-this.graphDuration,this.graphDuration);
+            this.lineChartData[1].data = this.histArray.map(e => e.costBasis.toFixed(2)).reverse().slice(Math.max( totLen - this.graphDuration, 1));//.splice(100-this.graphDuration,this.graphDuration);
+            this.lineChartLabels = this.histArray.map(e => e.tradeDate).reverse().slice(Math.max( totLen - this.graphDuration, 1));//.splice(100-(100-this.graphDuration),this.graphDuration);
+            //console.log(this.lineChartData[0].data);
+            // } catch (ex) { console.log('error in' + ex); }
           });
-      }, (idx + 1) * 1000);
+      }, (idx + 1) * 50);
     });
   }
 
   // lineChart
   public lineChartData: Array<any> = [
-    { data: [65, 59, 80, 81, 56, 55, 40], label: 'Market Value' }
+    { data: [65, 59, 80, 81, 56, 55, 40], label: 'Market Value'}
+    ,{ data: [65, 59, 80, 81, 56, 55, 40], label: 'Cost Basis' }
   ];
   public lineChartLabels: Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
   public lineChartOptions: any = {

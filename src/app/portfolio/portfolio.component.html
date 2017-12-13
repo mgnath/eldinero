@@ -51,7 +51,7 @@
               </span>
           </td>
           <td class="light">{{ p.symbol }}</td>
-          <td class="right light">{{ p.shares}} </td>
+          <td class="right light">{{ p.shares | number:'1.0-3'}} </td>
           <td class="right light">{{ p.avgPrice| number:'1.2-2'}} </td>
           <td class="right">{{ p.latestQuote.last_trade_price | number:'1.2-2'}}</td>
           <td class="right">
@@ -86,5 +86,5 @@
     </li>
   </ul> -->
   <ed-new-ticker (add)="handleAddTrans($event)"></ed-new-ticker>
-  <app-hist-chart  [currPortfolio]="currPortfolio" ></app-hist-chart>
+  <app-hist-chart *ngIf="currPortfolio && currPortfolio.positions && currPortfolio.positions.length > 0"  [currPortfolio]="currPortfolio" style="width:90%"></app-hist-chart>
 </div>

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { PortfolioService } from '../shared/services/portfolio.service';
 import { UtilService } from '../shared/services/util.service';
 import { PreferenceService } from '../shared/services/preference.service';
+import { Portfolio } from '../shared/models/entities';
 
 @Component({
   selector: 'app-settings',
@@ -34,6 +35,8 @@ export class SettingsComponent implements OnInit {
     this.portfolioSrv.replacePortfolios(portfolioObj);
   }
   SaveAsFile() {
+    let portfolioCopy:Portfolio[] = this.portfolioSrv.getData();
+    portfolioCopy.forEach(p=>{ p.positions.forEach( pos=> pos.latestQuote=null )});
     this.utilService.SaveAsFile(JSON.stringify(this.portfolioSrv.getData()), "myportfolio.json");
   }
   saveRefreshRate(){

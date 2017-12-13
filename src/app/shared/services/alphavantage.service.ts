@@ -28,7 +28,7 @@ export class AlphavantageService {
     var cacheData = JSON.parse(localStorage.getItem(symbol+'_Hist'));
     //console.log(cacheData);
     if(cacheData){  return  Observable.of(cacheData); }
-    var params = new HttpParams().set("function", "TIME_SERIES_DAILY_ADJUSTED")// TIME_SERIES_WEEKL "TIME_SERIES_DAILY_ADJUSTED")
+    var params = new HttpParams().set("function", "TIME_SERIES_DAILY_ADJUSTED")// TIME_SERIES_MONTHLY "TIME_SERIES_DAILY_ADJUSTED")
       .set("symbol", symbol)
       .set("apikey", this.API_KEY);
     return this.http.get(this.BASEURL, { params });
