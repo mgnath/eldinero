@@ -52,7 +52,7 @@
           </td>
           <td class="light">{{ p.symbol }}</td>
           <td class="right light">{{ p.shares | number:'1.0-3'}} </td>
-          <td class="right light">{{ p.avgPrice| number:'1.2-2'}} </td>
+          <td class="right light">{{ p.avgPrice | number:'1.2-2'}} </td>
           <td class="right">{{ p.latestQuote.last_trade_price | number:'1.2-2'}}</td>
           <td class="right">
             <ed-colored-text [num]="(p.dayChange)"></ed-colored-text>
@@ -65,13 +65,16 @@
           </td>
           <td class="right">{{ p.marketValue() | number:'1.2-2' }}</td>
           <td class="right">
-            <ed-colored-text [num]="p.unrealizedGainLoss()"></ed-colored-text> (
-            <ed-colored-text [num]="p.gainLossPer()"></ed-colored-text>%)</td>
+            <ng-container *ngIf="p.unrealizedGainLoss()">
+              <ed-colored-text [num]="p.unrealizedGainLoss()"></ed-colored-text> (
+              <ed-colored-text [num]="p.gainLossPer()"></ed-colored-text>%)
+            </ng-container>
+          </td>
         </tr>
         <ng-container *ngIf="p.transactions.length > 1 && showAll">
             <tr *ngFor="let t of p.transactions">
                 <td></td>
-                <td></td>
+                <td>{{ t.date }}</td>
                 <td></td>
                 <td class="right">{{ t.shares }} </td>
                <td class="right">{{ t.price }}</td>

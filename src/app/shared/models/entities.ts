@@ -68,7 +68,7 @@ export class StockPosition {
         return UtilService.getSum(this.transactions, "shares");
     }
     get avgPrice(): number {
-        return Math.round((this.totalCostBasis() / this.shares * 1000) / 1000);
+        return this.totalCostBasis() / this.shares;
     }
     get dayChange():number{
         return this.latestQuote.last_trade_price - this.latestQuote.adjusted_previous_close;

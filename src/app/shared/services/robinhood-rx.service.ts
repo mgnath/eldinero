@@ -50,6 +50,7 @@ export class RobinhoodRxService {
   }
   refreshData() {
     if (document.visibilityState == "hidden") { return; }
+    if(!navigator.onLine) { console.log('No Internet'); return;}
     if (!this.hasQuotesinStore) { console.log('no syms'); return; }
     if (this.loading) { console.log('loading...'); return; }
     if (this.forceLoad || this.marketAlive) {
