@@ -1,17 +1,21 @@
 import { Injectable } from '@angular/core';
+// import { LokiService } from 'angular2-loki';
 
 @Injectable()
 export class StocksApiService {
-
-  constructor() { }
+  private stocksData: any;
+  constructor() {
+    // let db = loki.init('stocksdb.json');
+    // this.stocksData = db.addCollection('stocks');
+  }
 
 }
-export class Stock{
-  id:string;
-  symbol:string;
-  market:string;
-  timestamp:Date;
-  last_traded_price:number;
-  volume:number;
+export class Stock {
+  id: string;
+  sym: string;
+  mkt: string;
+  t: Date;
+  price: number;
+  vol: number;
   constructor() { }
 }
