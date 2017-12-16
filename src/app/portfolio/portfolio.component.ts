@@ -33,7 +33,6 @@ export class PortfolioComponent {
     private router: Router,
     private portfolioSrv: PortfolioService,
     private robinhoodRxSrv: RobinhoodRxService,
-    private alphSrv: AlphavantageService,
     private utilService: UtilService,
     private titleSrv: Title) {
   }
@@ -74,30 +73,6 @@ export class PortfolioComponent {
           }
         });
       });
-  }
-  historicalData() {
-    this.currPortfolio.positions.forEach(pos => {
-      this.alphSrv.getHistoricalData(pos.symbol.replace('.', '-'))
-        .subscribe(d => {
-          try {
-            let temp: any = {};
-            temp.symbol = pos.symbol;
-
-            Object.keys(d["Time Series (Daily)"]).forEach(
-              key => {
-                  var results = this.histArray.find(e=> e.tradeDate ===  key);
-                  if(results){
-                    results.dailyTot += d["Time Series (Daily)"][key]["4. close"]* pos.shares;
-                  }
-                  else{
-                    this.histArray.push({ tradeDate : key, dailyTot: d["Time Series (Daily)"][key]["4. close"]* pos.shares});
-                  }
-                }
-            );
-            //console.log(this.histArray);
-          } catch (ex) { console.log('error in' + ex); }
-        });
-    });
   }
   handleAddTrans(newTrans: Transaction) {
     this.portfolioSrv.addTransction(newTrans, this.id);

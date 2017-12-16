@@ -14,9 +14,6 @@ export class HistChartComponent implements OnInit {
   @Input() currPortfolio: Portfolio;
   histArray: any[] = [];
   graphDuration: number = 7;
-  //this.lineChartData[0].data = marketData.map(e=>e.dailyTot);
-  //this.lineChartLabels =  marketData.map(e=>e.tradeDate);
-  //console.log(this.lineChartData[0].data);
 
   ngOnInit() {
     this.historicalData();
@@ -31,30 +28,31 @@ export class HistChartComponent implements OnInit {
     );
     trans.forEach((tran, idx) => {
       setTimeout(() => {
-        this.alphSrv.getHistoricalData(tran.symbol.replace('.', '-'))
+        this.alphSrv.getHistoricalData(tran.symbol.replace('.', '-'),"TIME_SERIES_DAILY_ADJUSTED")
           .subscribe(d => {
             try {
-              if(!(d["isCache"] && d["isCache"]==true)){
+              if (!(d["isCache"] && d["isCache"] == true)) {
                 d["Meta Data"]["3. Last Refreshed"] = new Date();
               }
               localStorage.setItem(tran.symbol.replace('.', '-') + '_Hist', JSON.stringify(d));
               let timeKey: string = "Time Series (Daily)";//"Monthly Time Series";
-              let closeKey:string ="4. close";
+              //let timeKey: string = "Monthly Adjusted Time Series";
+              let closeKey: string = "4. close";
+              Object.keys(d[timeKey]).forEach(
+                key => {
+                  var results = this.histArray.find(e => e.tradeDate === key);
+                  if (!results) {
+                    this.histArray.push({ tradeDate: key, dailyTot:0,costBasis:0});
+                  }
+                });
               Object.keys(d[timeKey]).forEach(
                 key => {
                   var results = this.histArray.find(e => e.tradeDate === key);
                   if (results) {
-                    if (new Date(key).valueOf() >= new Date(tran.date).valueOf()) {
+                    if (new Date(key).valueOf() > (new Date(tran.date).valueOf()- 86400000)) {
+                      
                       results.dailyTot += d[timeKey][key][closeKey] * tran.shares;
                       results.costBasis += tran.price * tran.shares;
-                    }
-                  }
-                  else {
-                    if (new Date(key).valueOf() >= new Date(tran.date).valueOf()) {
-                      this.histArray.push({ tradeDate: key, dailyTot: d[timeKey][key][closeKey] * tran.shares, costBasis: tran.price * tran.shares });
-                    }
-                    else {
-                      this.histArray.push({ tradeDate: key, dailyTot: tran.price * tran.shares, costBasis: tran.price * tran.shares });
                     }
                   }
                 }
@@ -64,11 +62,19 @@ export class HistChartComponent implements OnInit {
               this.lineChartData[1].data = this.histArray.map(e => e.costBasis.toFixed(2)).reverse();//.slice(Math.max(totLen - this.graphDuration, 1));
               this.lineChartLabels = this.histArray.map(e => e.tradeDate).reverse();//.slice(Math.max(totLen - this.graphDuration, 1));
             } catch (ex) { console.log('error in' + ex); }
-          }, err=>{console.log(err)});
-      }, (idx + 1) * 2000);
+          }, err => { console.log(err) });
+      }, (idx + 1) * 2);
     });
   }
+/*
 
+                  else {
+                    console.log('leak');
+                    if (new Date(key).valueOf() >= new Date(tran.date).valueOf()) {
+                      this.histArray.push({ tradeDate: key, dailyTot: d[timeKey][key][closeKey] * tran.shares,
+                         costBasis: tran.price * tran.shares });
+                    }
+                  } */
   // lineChart
   public lineChartData: Array<any> = [
     { data: [], label: 'Market Value' }

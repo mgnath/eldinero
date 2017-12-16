@@ -24,18 +24,18 @@ export class AlphavantageService {
 
 
 
-  getHistoricalData(symbol: string): Observable<any> {
+  getHistoricalData(symbol: string, range:string): Observable<any> {
     var cacheData = JSON.parse(localStorage.getItem(symbol + '_Hist'));
     if (cacheData) {
       var LastRefreshed: Date = new Date(cacheData["Meta Data"]["3. Last Refreshed"]);
       if ((new Date().valueOf() - LastRefreshed.valueOf() < 3600000)){
-        console.log('from cache');
+        //console.log('from cache');
         cacheData["isCache"] = true;
         return Observable.of(cacheData);
       }
     }
-    console.log('hot call');
-    var params = new HttpParams().set("function", "TIME_SERIES_DAILY_ADJUSTED")// TIME_SERIES_MONTHLY "TIME_SERIES_DAILY_ADJUSTED")
+    //console.log('hot call');
+    var params = new HttpParams().set("function", range)// "TIME_SERIES_MONTHLY_ADJUSTED")// TIME_SERIES_MONTHLY "TIME_SERIES_DAILY_ADJUSTED")
       .set("symbol", symbol)
       .set("apikey", this.API_KEY);
     return this.http.get(this.BASEURL, { params });

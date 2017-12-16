@@ -83,11 +83,6 @@
       </ng-container>
     </tbody>
   </table><br>
-  <!-- <ul>
-    <li *ngFor="let dTot of histArray;">
-     {{dTot.tradeDate}}-- {{dTot.dailyTot.toFixed(2)}}
-    </li>
-  </ul> -->
   <ed-new-ticker (add)="handleAddTrans($event)"></ed-new-ticker>
   <app-hist-chart *ngIf="currPortfolio && currPortfolio.positions && currPortfolio.positions.length > 0"  [currPortfolio]="currPortfolio" style="width:90%"></app-hist-chart>
 </div>
