@@ -12,7 +12,8 @@ import { UtilService } from './util.service';
 @Injectable()
 export class RobinhoodRxService {
   private _quotes: BehaviorSubject<quote[]>;
-  private _histData: HistData[] = [];
+  private _mktStatus: BehaviorSubject<boolean>;
+  private statusStore:{ mktStatus:boolean };
   private dataStore: {
     quotes: quote[]
   };
@@ -37,6 +38,7 @@ export class RobinhoodRxService {
     let dataStoreCopy = Object.assign({}, this.dataStore); // Create a dataStore copy
     this._quotes.next(dataStoreCopy.quotes);//copy is to avoid direct reference of dataStore to subs
   }
+  
   getQuotes(symbols: string[]) {
     symbols.forEach(s => {
       if (!this.dataStore.quotes.find(q => q.symbol === s)) {
@@ -53,7 +55,7 @@ export class RobinhoodRxService {
     if(!navigator.onLine) { console.log('No Internet'); return;}
     if (!this.hasQuotesinStore) { console.log('no syms'); return; }
     if (this.loading) { console.log('loading...'); return; }
-    if (this.forceLoad || this.marketAlive) {
+    if (this.forceLoad || this.marketAlive) { 
       this.loading = true;
       this.http.get<QuotesResponse>("https://api.robinhood.com/quotes/?symbols=" +
         this.dataStore.quotes.map(q => q.symbol).join(",")).map(resp => resp.results)
@@ -78,9 +80,17 @@ export class RobinhoodRxService {
       get<QuotesResponse>("https://api.robinhood.com/quotes/?symbols=" + symbols.join(",")).
       map(resp => resp.results);
   }
+  trackMarketStatus(){
+    this.getMarketInfo('XNAS');
+    return this._mktStatus.asObservable();
+  }
   getMarketInfo(market) {
     this.http.get<any>("https://cors-anywhere.herokuapp.com/https://api.robinhood.com/markets/" + market)
       .subscribe(data => { this.updateMarketStatus(data.todays_hours) }, error => { console.log('market info not loaded') });
+  }
+  private publishMktStatus() {
+    let mktStoreCopy = Object.assign({}, this.statusStore); // Create a dataStore copy
+    this._mktStatus.next(mktStoreCopy.mktStatus);//copy is to avoid direct reference of dataStore to subs
   }
   updateMarketStatus(url) {
     console.log('Updating Market Status ' + url);

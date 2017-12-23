@@ -1,22 +1,29 @@
-<div class="row" style="margin-right:10px;" >
-    <div class="col-md-6">
-      <div style="display: block;">
-      <canvas baseChart width="300" height="100"
-                  [datasets]="lineChartData"
-                  [labels]="lineChartLabels"
-                  [options]="lineChartOptions"
-                  [colors]="lineChartColors"
-                  [legend]="lineChartLegend"
-                  [chartType]="lineChartType"
-                  (chartHover)="chartHovered($event)"
-                  (chartClick)="chartClicked($event)"></canvas>
-      </div>
+<div class="row" style="margin-right:10px;">
+  <div class="col-md-6">
+    <div style="display: block;">
+      <canvas baseChart width="300" height="50" [datasets]="lineChartDataDaily"
+       [labels]="lineChartLabelsDaily" [options]="lineChartOptionsDaily"
+        [colors]="lineChartColorsDaily" [legend]="lineChartLegendDaily" 
+        [chartType]="lineChartTypeDaily" ></canvas>
     </div>
-    <button (click)="graphDuration=100;historicalData()">100 Days</button>
-    <button (click)="graphDuration=30;historicalData()">30 Days</button>
-    <button (click)="graphDuration=7;historicalData()">7 Days</button>
+  </div>
+</div>
 
-    <!-- <div class="col-md-6" style="margin-bottom: 10px">
+<div class="row" style="margin-right:10px;">
+  <div class="col-md-6">
+    <div style="display: block;">
+      <canvas baseChart width="300" height="100" [datasets]="lineChartData" 
+      [labels]="lineChartLabels" [options]="lineChartOptions"
+        [colors]="lineChartColors" [legend]="lineChartLegend" 
+        [chartType]="lineChartType" (chartHover)="chartHovered($event)"
+        (chartClick)="chartClicked($event)"></canvas>
+    </div>
+  </div>
+  <button (click)="graphDuration=100;historicalData()">100 Days</button>
+  <button (click)="graphDuration=30;historicalData()">30 Days</button>
+  <button (click)="graphDuration=7;historicalData()">7 Days</button>
+
+  <!-- <div class="col-md-6" style="margin-bottom: 10px">
       <table class="table table-responsive table-condensed">
         <tr>
           <th *ngFor="let label of lineChartLabels">{{label}}</th>
@@ -27,4 +34,4 @@
       </table>
       <button (click)="randomize()">CLICK</button>
     </div> -->
-  </div>
+</div>

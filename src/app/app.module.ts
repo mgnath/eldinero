@@ -28,6 +28,8 @@ import { SettingsComponent } from './settings/settings.component';
 import { PreferenceService } from './shared/services/preference.service';
 import { HistChartComponent } from './hist-chart/hist-chart.component';
 import { StocksApiService } from './shared/services/stocksapi.service';
+import { TimelineComponent } from './timeline/timeline.component';
+import { StocksRepoService } from './shared/services/stocks-repo.service';
 
 
 @NgModule({
@@ -42,7 +44,8 @@ import { StocksApiService } from './shared/services/stocksapi.service';
     DashboardComponent,
     PortfolioCardComponent,
     SettingsComponent,
-    HistChartComponent
+    HistChartComponent,
+    TimelineComponent
   ], 
   imports: [
     BrowserAnimationsModule,
@@ -55,7 +58,7 @@ import { StocksApiService } from './shared/services/stocksapi.service';
     ChartsModule
   ],
   providers: [UtilService,AlphavantageService, PortfolioService,
-              RobinhoodRxService,PreferenceService,Title,StocksApiService,
+              RobinhoodRxService,PreferenceService,Title,StocksApiService,StocksRepoService,
     {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'auto'}}],
   bootstrap: [AppComponent]
 })

@@ -17,8 +17,50 @@ export class HistChartComponent implements OnInit {
 
   ngOnInit() {
     this.historicalData();
+    this.dailyChart();
   }
+  public lineChartDataDaily: Array<any> = [
+    { data: [7,9,8], label: 'Intra Day Value' }
+  ];
+  public lineChartLabelsDaily: Array<any> = ['a','b','c'];
+  public lineChartOptionsDaily: any = {
+    responsive: true
+  };
+  public lineChartLegendDaily: boolean = true;
+  public lineChartTypeDaily: string = 'line';
+  public lineChartColorsDaily: Array<any> = [
+    { // dark grey
+      backgroundColor: 'rgba(77,83,96,0.2)',
+      borderColor: 'rgba(77,83,96,1)',
+      pointBackgroundColor: 'rgba(77,83,96,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(77,83,96,1)'
+    },
+    { // grey
+      backgroundColor: 'rgba(148,159,177,0.2)',
+      borderColor: 'rgba(148,159,177,1)',
+      pointBackgroundColor: 'rgba(148,159,177,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+    },
+    { // grey
+      backgroundColor: 'rgba(148,159,177,0.2)',
+      borderColor: 'rgba(148,159,177,1)',
+      pointBackgroundColor: 'rgba(148,159,177,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+    }
+  ];
 
+
+  dailyChart(){
+    //this.lineChartDataDaily[0].data = 
+    //this.lineChartLabels = this.histArray.map(e => e.tradeKey).reverse();//.slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
+
+  }
 
   historicalData() {
     this.histArray = [];
@@ -31,6 +73,7 @@ export class HistChartComponent implements OnInit {
         this.alphSrv.getHistoricalData(tran.symbol.replace('.', '-'),"TIME_SERIES_DAILY_ADJUSTED")
           .subscribe(d => {
             try {
+             
               if (!(d["isCache"] && d["isCache"] == true)) {
                 d["Meta Data"]["3. Last Refreshed"] = new Date();
               }
@@ -40,15 +83,16 @@ export class HistChartComponent implements OnInit {
               let closeKey: string = "4. close";
               Object.keys(d[timeKey]).forEach(
                 key => {
-                  var results = this.histArray.find(e => e.tradeDate === key);
-                  if (!results) {
-                    this.histArray.push({ tradeDate: key, dailyTot:0,costBasis:0});
+                  var results = this.histArray.find(e => e.tradeKey === key);
+                  if (!results && key != '2017-07-31') {
+                    this.histArray.push({ tradeKey: key, tradeDate: new Date(key), dailyTot:0,costBasis:0});
                   }
                 });
               Object.keys(d[timeKey]).forEach(
                 key => {
-                  var results = this.histArray.find(e => e.tradeDate === key);
-                  if (results) {
+                  
+                  var results = this.histArray.find(e => e.tradeKey === key);
+                  if (results && key != '2017-07-31') {
                     if (new Date(key).valueOf() > (new Date(tran.date).valueOf()- 86400000)) {
                       
                       results.dailyTot += d[timeKey][key][closeKey] * tran.shares;
@@ -57,24 +101,23 @@ export class HistChartComponent implements OnInit {
                   }
                 }
               );
-              let totLen = this.histArray.length;
-              this.lineChartData[0].data = this.histArray.map(e => e.dailyTot.toFixed(2)).reverse();//.slice(Math.max(totLen - this.graphDuration, 1));
-              this.lineChartData[1].data = this.histArray.map(e => e.costBasis.toFixed(2)).reverse();//.slice(Math.max(totLen - this.graphDuration, 1));
-              this.lineChartLabels = this.histArray.map(e => e.tradeDate).reverse();//.slice(Math.max(totLen - this.graphDuration, 1));
+              
+              this.lineChartData[0].data = this.histArray.map(e => e.dailyTot.toFixed(2)).reverse();//.slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
+              this.lineChartData[1].data = this.histArray.map(e => e.costBasis.toFixed(2)).reverse();//.slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
+              this.lineChartLabels = this.histArray.map(e => e.tradeKey).reverse();//.slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
             } catch (ex) { console.log('error in' + ex); }
           }, err => { console.log(err) });
-      }, (idx + 1) * 2);
+      }, (idx + 1) * 2000);
     });
   }
 /*
-
-                  else {
-                    console.log('leak');
-                    if (new Date(key).valueOf() >= new Date(tran.date).valueOf()) {
-                      this.histArray.push({ tradeDate: key, dailyTot: d[timeKey][key][closeKey] * tran.shares,
-                         costBasis: tran.price * tran.shares });
-                    }
-                  } */
+    else {
+      console.log('leak');
+      if (new Date(key).valueOf() >= new Date(tran.date).valueOf()) {
+        this.histArray.push({ tradeDate: key, dailyTot: d[timeKey][key][closeKey] * tran.shares,
+            costBasis: tran.price * tran.shares });
+      }
+    } */
   // lineChart
   public lineChartData: Array<any> = [
     { data: [], label: 'Market Value' }
@@ -84,6 +127,8 @@ export class HistChartComponent implements OnInit {
   public lineChartOptions: any = {
     responsive: true
   };
+  public lineChartLegend: boolean = true;
+  public lineChartType: string = 'line';
   public lineChartColors: Array<any> = [
     { // dark grey
       backgroundColor: 'rgba(77,83,96,0.2)',
@@ -110,8 +155,7 @@ export class HistChartComponent implements OnInit {
       pointHoverBorderColor: 'rgba(148,159,177,0.8)'
     }
   ];
-  public lineChartLegend: boolean = true;
-  public lineChartType: string = 'line';
+ 
 
   public randomize(): void {
     let _lineChartData: Array<any> = new Array(this.lineChartData.length);

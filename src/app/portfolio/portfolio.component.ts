@@ -11,6 +11,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { RobinhoodRxService } from '../shared/services/robinhood-rx.service';
 import { Title } from '@angular/platform-browser';
 import { AlphavantageService } from '../shared/services/alphavantage.service';
+import { StocksApiService, StockPrice } from '../shared/services/stocksapi.service';
 
 @Component({
   selector: 'app-portfolio',
@@ -20,7 +21,7 @@ import { AlphavantageService } from '../shared/services/alphavantage.service';
 export class PortfolioComponent {
   currPortfolio: Portfolio;
   currPortfolio$: Observable<Portfolio>;
-  quotes$: Observable<quote[]>;
+  quotes$: Observable<StockPrice[]>;
   id: string;
   alive = true;
   sCol: string = 'daygain';
@@ -32,9 +33,10 @@ export class PortfolioComponent {
   constructor(private route: ActivatedRoute,
     private router: Router,
     private portfolioSrv: PortfolioService,
-    private robinhoodRxSrv: RobinhoodRxService,
+    //private robinhoodRxSrv: RobinhoodRxService,
     private utilService: UtilService,
-    private titleSrv: Title) {
+    private titleSrv: Title,
+    private sapi:StocksApiService) {
   }
   ngOnInit() {
 
@@ -48,6 +50,8 @@ export class PortfolioComponent {
   }
   private InitPositions() {
     console.log('initializing port comp');
+
+
     this.currPortfolio$ =
       this.portfolioSrv.portfolios.pipe().map(portfolios => portfolios.find(p => p.id === this.id));
     this.currPortfolio$.subscribe(
@@ -56,6 +60,8 @@ export class PortfolioComponent {
         this.updateQuotes();
       }
     );
+
+
   }
   getTtl() {
     this.titleSrv.setTitle('El Dinero>' + this.currPortfolio.getGrandTotalDayGain().toFixed(2).toString());
@@ -64,12 +70,17 @@ export class PortfolioComponent {
   updateQuotes() {
     var syms = [];
     this.currPortfolio.positions.forEach(e => syms.push(e.symbol));
-    this.quotes$ = this.robinhoodRxSrv.getQuotes(syms);
+    this.quotes$ = this.sapi.getLatestPrice(syms);// this.robinhoodRxSrv.getQuotes(syms);
     this.quotes$.subscribe(
       q => {
         q.forEach(k => {
-          if (this.currPortfolio.positions.find(e => e.symbol === k.symbol)) {
-            this.currPortfolio.positions.find(e => e.symbol === k.symbol).latestQuote = k;
+          if (this.currPortfolio.positions.find(e => e.symbol === k.sym)) {
+            this.currPortfolio.positions
+            .find(e => e.symbol === k.sym).latestQuote.last_trade_price = k.price;
+            this.currPortfolio.positions
+            .find(e => e.symbol === k.sym).latestQuote.updated_at = k.t;
+            this.currPortfolio.positions
+            .find(e => e.symbol === k.sym).latestQuote.adjusted_previous_close = k.prev_close;
           }
         });
       });

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Portfolio } from '../../models/entities';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-import { RobinhoodRxService } from '../../services/robinhood-rx.service';
+import { StocksApiService } from '../../services/stocksapi.service';
 
 @Component({
   selector: 'app-portfolio-card',
@@ -13,7 +13,9 @@ export class PortfolioCardComponent implements OnInit {
   @Output() delete: EventEmitter<string> = new EventEmitter<string>();
   totalValue: number = 0;
   loading: boolean = true;
-  constructor(private stockService: RobinhoodRxService) { }
+
+
+  constructor(private stockService: StocksApiService) { }
   ngOnInit() {
     this.loadLastTradedValues(this.portfolio);
   }
@@ -24,15 +26,24 @@ export class PortfolioCardComponent implements OnInit {
     var syms = [];
     portfolio.positions.forEach(e => syms.push(e.symbol));
     if (syms.length > 0) {
-      this.stockService.getQuotes(syms).subscribe(data => {
+      this.stockService.getLatestPrice(syms).subscribe(data => {
+        //console.log("new data")
         data.forEach(k => {
-          if (this.portfolio.positions.find(e => e.symbol === k.symbol)) {
+          if (this.portfolio.positions.find(e => e.symbol === k.sym)) {
             this.loading = false;
-            this.portfolio.positions.find(e => e.symbol === k.symbol).latestQuote = k;
+            this.portfolio.positions
+            .find(e => e.symbol === k.sym).latestQuote.last_trade_price = k.price;
+            this.portfolio.positions
+            .find(e => e.symbol === k.sym).latestQuote.updated_at = k.t;
+            this.portfolio.positions
+            .find(e => e.symbol === k.sym).latestQuote.adjusted_previous_close = k.prev_close;
+
           }
         });
 
         this.totalValue = this.portfolio.getGrandTotal();
+
+
       }, e => { console.log('error occured in getting quotes'); });
     }
     else {
