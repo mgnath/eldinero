@@ -8,7 +8,6 @@ import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operator/map';
 import { debounce } from 'rxjs/operator/debounce';
 import { Router, ActivatedRoute } from '@angular/router';
-import { RobinhoodRxService } from '../shared/services/robinhood-rx.service';
 import { Title } from '@angular/platform-browser';
 import { AlphavantageService } from '../shared/services/alphavantage.service';
 import { StocksApiService, StockPrice } from '../shared/services/stocksapi.service';
@@ -33,7 +32,6 @@ export class PortfolioComponent {
   constructor(private route: ActivatedRoute,
     private router: Router,
     private portfolioSrv: PortfolioService,
-    //private robinhoodRxSrv: RobinhoodRxService,
     private utilService: UtilService,
     private titleSrv: Title,
     private sapi:StocksApiService) {
@@ -73,6 +71,7 @@ export class PortfolioComponent {
     this.quotes$ = this.sapi.getLatestPrice(syms);// this.robinhoodRxSrv.getQuotes(syms);
     this.quotes$.subscribe(
       q => {
+        //console.log(q);
         q.forEach(k => {
           if (this.currPortfolio.positions.find(e => e.symbol === k.sym)) {
             this.currPortfolio.positions
@@ -83,6 +82,7 @@ export class PortfolioComponent {
             .find(e => e.symbol === k.sym).latestQuote.adjusted_previous_close = k.prev_close;
           }
         });
+        this.sortData(this.sCol,true);
       });
   }
   handleAddTrans(newTrans: Transaction) {
@@ -103,8 +103,8 @@ export class PortfolioComponent {
     if (colName == this.sCol) { retStr += (this.sortDir == 1) ? "▲" : "▼"; }
     return retStr;
   }
-  sortData(sortingCol: string) {
-    if (sortingCol === this.sCol) this.sortDir *= -1;
+  sortData(sortingCol: string, refreshCall:boolean = false) {
+    if (sortingCol === this.sCol && !refreshCall) this.sortDir *= -1;
     if (sortingCol == 'name' || sortingCol == 'symbol') { this.currPortfolio.positions.sort((a, b) => { return this.sortDir * a[sortingCol].localeCompare(b[sortingCol]); }) }
     else if (sortingCol == 'shares') { this.currPortfolio.positions.sort((a, b) => { return this.sortDir * (a.shares - b.shares) }) }
     else if (sortingCol == 'avgcost') { this.currPortfolio.positions.sort((a, b) => { return this.sortDir * (a.avgPrice - b.avgPrice) }) }

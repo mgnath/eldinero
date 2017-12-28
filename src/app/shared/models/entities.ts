@@ -46,6 +46,16 @@ export class Portfolio {
         );
         return totSum;
     }
+    getPrevDayCloseTotal() {
+        var totSum: number = 0;
+        this.positions.forEach(
+            pos => (
+                totSum +=
+                 (pos.latestQuote.adjusted_previous_close * pos.shares)
+            )
+        );
+        return totSum;
+    }
 }
 export class quote {
     name: string;

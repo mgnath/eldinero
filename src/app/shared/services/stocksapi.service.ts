@@ -24,13 +24,13 @@ export class StocksApiService implements IStocksApi {
     history: StockPrice[],
     marketStatus: boolean
   };
-  constructor(private http: HttpClient, private prefSrv: PreferenceService, private repoSrv:StocksRepoService) {
+  constructor(private http: HttpClient, private prefSrv: PreferenceService, private repoSrv: StocksRepoService) {
     console.log('StocksApiServie started');
-    this.dataStore = { 
-      history: <StockPrice[]>(JSON.parse(localStorage.getItem(this.archiveKey))) || new Array<StockPrice>(), 
-      latestPrices: [], 
-      stocks: JSON.parse(localStorage.getItem('eld_stocksInfo')) || [] ,
-      marketStatus:false
+    this.dataStore = {
+      history: repoSrv.getArchive() || new Array<StockPrice>(),
+      latestPrices: [],
+      stocks: JSON.parse(localStorage.getItem('eld_stocksInfo')) || [],
+      marketStatus: false
     };
     this._latestPrices = <BehaviorSubject<StockPrice[]>>new BehaviorSubject([]);
     this._stocks = <BehaviorSubject<Stock[]>>new BehaviorSubject([]);
@@ -40,14 +40,25 @@ export class StocksApiService implements IStocksApi {
     this.LoadData();
   }
 
-  getHistory(symbol: string, start: Date, end: Date): Observable<StockPrice[]> {
+  /* getHistory(symbol: string, start: Date, end: Date): Observable<StockPrice[]> {
     if (!this.dataStore.stocks.find(stock => stock.sym === symbol)) {
       let stock: Stock = new Stock();
       stock.sym = symbol;
       this.dataStore.stocks.push(stock);
     }
     return this._history.asObservable();
+  } */
+
+  getHistory(symbol: string, start: Date, end: Date): StockPrice[] {
+    if( this.dataStore.history){
+    return this.dataStore.history.filter(sp => {
+      return sp.sym == symbol
+        && new Date(sp.t).valueOf() >= start.valueOf()
+        && new Date(sp.t).valueOf() <= end.valueOf()
+    });
+  }else{return [];}
   }
+
   getLatestPrice(symbols: string[]): Observable<StockPrice[]> {
     symbols.forEach(s => {
       if (!this.dataStore.stocks.find(stock => stock.sym === s)) {
@@ -67,7 +78,9 @@ export class StocksApiService implements IStocksApi {
         this.dataStore.stocks.push(stock);
       }
     });
-    return this._stocks.asObservable();
+    this.forceLoad = true;
+    this.refreshLatestPrices();
+    return this._stocks;
   }
   publishLatestPrices() {
     let dataStoreCopy = Object.assign({}, this.dataStore); // Create a dataStore copy
@@ -87,20 +100,27 @@ export class StocksApiService implements IStocksApi {
       });
   }
   refreshLatestPrices() {
-    if (this.canMakeAPICall()) { return; }
+    if (this.cantMakeAPICall()) { return; }
     if (this.loadingLatest) { console.log('loading...'); return; }
-    if (this.forceLoad || this.dataStore.marketStatus) {
+    if (this.forceLoad || this.dataStore.marketStatus) 
+    {
       this.loadingLatest = true;
       this.http.get<any>("https://api.robinhood.com/quotes/?symbols=" +
         this.dataStore.stocks.map(q => q.sym).join(","))
         .subscribe(data => {
           this.loadingLatest = false;
+          this.dataStore.latestPrices = [];
           data.results.forEach(q => {
             var res = this.dataStore.latestPrices.find(lp => lp.sym == q.symbol);
-            (res) ? res = StockPrice.convert(q) : this.dataStore.latestPrices.push(StockPrice.convert(q));
+            //console.log(this.dataStore.latestPrices);
+            if (res) {
+              res = StockPrice.convert(q);
+            }
+            else { this.dataStore.latestPrices.push(StockPrice.convert(q)); }
             this.addToHistory(StockPrice.convert(q));
             this.updateStockInfo(q);
           });
+          //console.log(this.dataStore.latestPrices);
           this.publishLatestPrices();
 
           this.forceLoad = false;
@@ -108,11 +128,9 @@ export class StocksApiService implements IStocksApi {
         error => { console.log('Could not load quotes.'); this.loadingLatest = false; }, () => { this.loadingLatest = false; })
     }
   }
-  private archiveKey:string = "eld_archive_intraday_v4";
   private addToHistory(sp: StockPrice) {
-    if(this.repoSrv.saveStockPrice(sp))
-    {
-      this.dataStore.history = <StockPrice[]>(JSON.parse(localStorage.getItem(this.archiveKey)));
+    if (this.repoSrv.saveStockPrice(sp)) {
+      this.dataStore.history = this.repoSrv.getArchive();
       this.publishHistory();
     }
   }
@@ -122,13 +140,17 @@ export class StocksApiService implements IStocksApi {
     this.http.get<any>("https://cors-anywhere.herokuapp.com/" + quote.instrument)
       .subscribe(
       data => {
-        stk.name = data.simple_name;
+        stk.name = data.simple_name || data.name;
         localStorage.setItem('eld_stocksInfo', JSON.stringify(this.dataStore.stocks));
+
+        let dataStoreCopy = Object.assign({}, this.dataStore); // Create a dataStore copy
+        this._stocks.next(dataStoreCopy.stocks);//copy is to avoid direct reference of dataStore to subs
+
       },
       e => { console.log(e); }
       )
   }
-  trackMarketStatus(){
+  trackMarketStatus() {
     this.getMarketInfo('XNAS');
     return this._marketStatus.asObservable();
   }
@@ -163,7 +185,7 @@ export class StocksApiService implements IStocksApi {
       }, error => { console.log('market data not loaded') });
   }
 
-  private canMakeAPICall(): boolean {
+  private cantMakeAPICall(): boolean {
     if (document.visibilityState == "hidden") { return true; }
     if (!navigator.onLine) { console.log('No Internet'); return true; }
     if (!this.hasStocksinStore) { console.log('no syms'); return true; }
@@ -181,7 +203,7 @@ export class StocksApiService implements IStocksApi {
 
 
 interface IStocksApi {
-  getHistory(symbol: string, start: Date, end: Date): Observable<StockPrice[]>;
+  //getHistory(symbol: string, start: Date, end: Date): Observable<StockPrice[]>;
   getLatestPrice(symbols: string[]): Observable<StockPrice[]>;
   checkSymbols(symbols: string[]): Observable<Stock[]>;
 }

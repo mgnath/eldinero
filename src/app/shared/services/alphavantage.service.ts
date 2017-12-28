@@ -34,7 +34,7 @@ export class AlphavantageService {
         return Observable.of(cacheData);
       }
     }
-    //console.log('hot call');
+    console.log('hot call');
     var params = new HttpParams().set("function", range)// "TIME_SERIES_MONTHLY_ADJUSTED")// TIME_SERIES_MONTHLY "TIME_SERIES_DAILY_ADJUSTED")
       .set("symbol", symbol)
       .set("apikey", this.API_KEY);

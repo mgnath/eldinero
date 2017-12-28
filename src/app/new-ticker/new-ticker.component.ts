@@ -2,7 +2,7 @@ import { Component, OnInit,EventEmitter, Output } from '@angular/core';
 import {MatFormFieldModule} from '@angular/material';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import { Transaction, TransactionType, StockPosition } from '../shared/models/entities';
-import { RobinhoodRxService } from '../shared/services/robinhood-rx.service';
+import { StocksApiService } from '../shared/services/stocksapi.service';
 
 @Component({
   selector: 'ed-new-ticker',
@@ -13,7 +13,7 @@ export class NewTickerComponent implements OnInit {
   newT: Transaction;
   @Output() add: EventEmitter<Transaction> = new EventEmitter<Transaction>();
   
-  constructor(private stockService:RobinhoodRxService ){
+  constructor(private stockService:StocksApiService ){
     this.newT = new Transaction("", "", null, null, null, false, null);
   }
   ngOnInit() {
@@ -28,14 +28,23 @@ export class NewTickerComponent implements OnInit {
     this.newT.name = "";
     this.newT.symbol = this.newT.symbol.toUpperCase();
     if (this.newT.symbol.length > 0) {
-      this.stockService.GetStockQuotes(new Array(this.newT.symbol.toUpperCase())).subscribe(quotes => {
-        if (quotes.length > 0) {
-          this.stockService.getSymbolName(quotes[0].instrument).subscribe(r => {
-            this.newT.name = r.simple_name;
-          })
-        }
-        else { alert('Not a valid symbol'); }
-      }, err => { alert('Not a valid symbol'); });
+      this.stockService.checkSymbols(new Array(this.newT.symbol.toUpperCase()))
+      .subscribe(syms=> { 
+        let res = syms.filter(s=>s.sym == this.newT.symbol)
+        if(res)
+          this.newT.name = res[0].name || "";
+      });
+      
     }
   }
 }
+
+
+/* this.stockService.GetStockQuotes(new Array(this.newT.symbol.toUpperCase())).subscribe(quotes => {
+  if (quotes.length > 0) {
+    this.stockService.getSymbolName(quotes[0].instrument).subscribe(r => {
+      this.newT.name = r.simple_name;
+    })
+  }
+  else { alert('Not a valid symbol'); }
+}, err => { alert('Not a valid symbol'); }); */
