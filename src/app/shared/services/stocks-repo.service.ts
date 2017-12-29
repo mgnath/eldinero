@@ -14,18 +14,13 @@ export class StocksRepoService {
     let filteredRepo = repo.filter(s=>s.sym == sp.sym);
     if(filteredRepo.length > 1)
     {
-      if ((new Date().valueOf() - new Date(filteredRepo[filteredRepo.length - 1].t).valueOf()) < 60000) { return false; }
-      //console.log(filteredRepo.length+filteredRepo[filteredRepo.length - 1].sym + filteredRepo[filteredRepo.length - 1].t);
-      sp.t = new Date();
-      repo.push(sp);
-      localStorage.setItem( this.archiveKey, JSON.stringify(repo)); 
-      return true;
+      if ((new Date().valueOf() - new Date(filteredRepo[filteredRepo.length - 1].t).valueOf()) < 60000)
+       { return false; }
     }
-    else{
-      repo.push(sp);
-      localStorage.setItem( this.archiveKey, JSON.stringify(repo)); 
-      return true;
-    }
+    sp.t = new Date();
+    repo.push(sp);
+    localStorage.setItem( this.archiveKey, JSON.stringify(repo)); 
+    return true;
   }
 
 }

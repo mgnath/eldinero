@@ -6,6 +6,7 @@ import { from } from 'rxjs/observable/from';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { PreferenceService } from './preference.service';
 import { StocksRepoService } from './stocks-repo.service';
+import * as moment from 'moment';
 
 @Injectable()
 export class StocksApiService implements IStocksApi {
@@ -49,14 +50,33 @@ export class StocksApiService implements IStocksApi {
     return this._history.asObservable();
   } */
 
-  getHistory(symbol: string, start: Date, end: Date): StockPrice[] {
-    if( this.dataStore.history){
-    return this.dataStore.history.filter(sp => {
-      return sp.sym == symbol
-        && new Date(sp.t).valueOf() >= start.valueOf()
-        && new Date(sp.t).valueOf() <= end.valueOf()
-    });
-  }else{return [];}
+  private getHistoryInterval(symbol: string, start: Date, end: Date, intervalInMins: number): StockPrice[] {
+    let resp: StockPrice[] = [];
+    if (start <= end && intervalInMins > 1 && this.dataStore.history) {
+      let tempstart = moment(start);
+      let tempEnd= moment(start).add(intervalInMins,'m');
+      while( tempEnd <= moment(end)){
+        resp.push(
+          this.dataStore.history.find(sp => {
+          return sp.sym == symbol
+            && moment(sp.t) >= tempstart
+            && moment(sp.t) < tempEnd;
+        }));
+        tempstart = tempEnd;
+        tempEnd = tempEnd.add(intervalInMins,'m');
+      }
+      return resp;
+    }
+    return null;
+  }
+  getHistory(symbol: string, start: Date, end: Date, intervalInMins: number): StockPrice[] {
+    if (start <= end && this.dataStore.history) {
+      return this.dataStore.history.filter(sp => {
+        return sp.sym == symbol
+          && new Date(sp.t).valueOf() >= start.valueOf()
+          && new Date(sp.t).valueOf() <= end.valueOf()
+      });
+    } else { return []; }
   }
 
   getLatestPrice(symbols: string[]): Observable<StockPrice[]> {
@@ -102,8 +122,7 @@ export class StocksApiService implements IStocksApi {
   refreshLatestPrices() {
     if (this.cantMakeAPICall()) { return; }
     if (this.loadingLatest) { console.log('loading...'); return; }
-    if (this.forceLoad || this.dataStore.marketStatus) 
-    {
+    if (this.forceLoad || this.dataStore.marketStatus) {
       this.loadingLatest = true;
       this.http.get<any>("https://api.robinhood.com/quotes/?symbols=" +
         this.dataStore.stocks.map(q => q.sym).join(","))

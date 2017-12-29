@@ -28,14 +28,13 @@ export class HistChartComponent implements OnInit {
     this.historicalData();
     this.dailyChart();
     IntervalObservable.create(60001).subscribe(() => {
-      console.log("updating intra day graph");
       this.dailyChart();
     });
   }
   public lineChartDataDaily: Array<any> = [
-    { data: [7, 9, 8], label: 'Intra Day Value' }
+    { data: [], label: 'Intra Day Value' }
   ];
-  public lineChartLabelsDaily: Array<any> = ['a', 'b', 'c'];
+  public lineChartLabelsDaily: Array<any> = [];
   public lineChartOptionsDaily: any = {
     responsive: true
   };
@@ -73,31 +72,25 @@ export class HistChartComponent implements OnInit {
     this.intraDayArray = [];
     var intervals: Date[] = [];
     let today = new Date();
+    let now = moment();
     let gap = 60000;
     intervals.push(new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 25, 0, 0));
     for (var i = 1; i < 800; i++) {
       intervals.push(new Date(intervals[i - 1].valueOf() + gap));
     }
-   /*  this.intraDayArray.push(
+    /* this.intraDayArray.push(
       {
-        time: new Date(new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 0, 0, 0)),
+        time: moment().startOf('day'),
         intrdayTot: this.currPortfolio.getPrevDayCloseTotal()
       }
     ); */
     intervals.forEach(i => {
-      this.intraDayArray.push({ time: i, intrdayTot: 0 });
+      this.intraDayArray.push({ time: i, intrdayTot: 0, poscount: 0 });
     });
-    //console.log(this.intraDayArray);
-    let trans: Array<Transaction> = new Array<Transaction>();
-    this.currPortfolio.positions.map(pos => pos.transactions).forEach(
-      t => { t.forEach(e => trans.push(e)) }
-    );
     this.currPortfolio.positions.forEach((tran, idx) => {
-      let sps = this.sapi.getHistory(tran.symbol,
-        new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 25, 0, 0),
-        new Date(today.getFullYear(), today.getMonth(), today.getDate(), 16, 1, 0, 0)
-      );
-      //console.log(sps);
+      let sps = this.sapi.getHistory(tran.symbol
+        , moment().startOf('day').add(9.48, 'hours').toDate()
+        , moment().startOf('day').add(16.05, 'hours').toDate(), 1);
       this.intraDayArray.forEach(i => {
         let intSps = sps.filter(sp => {
           return new Date(sp.t).valueOf() >= i.time.valueOf()
@@ -105,17 +98,19 @@ export class HistChartComponent implements OnInit {
         });
 
         if (intSps && intSps.length > 0) {
-          i.intrdayTot += intSps[intSps.length-1].price * tran.shares;
+          i.intrdayTot += intSps[intSps.length - 1].price * tran.shares;
+          i.poscount++;
         }
       });
     });
-    let baseline = this.currPortfolio.getPrevDayCloseTotal();
+    //Findings 4, 5, and 7 (and possibly more)
     this.lineChartDataDaily[0].data = this.intraDayArray
-      .filter(e => e.intrdayTot > baseline/2)
-      .map(e => e.intrdayTot);
+      .filter(e => { return e.poscount == this.currPortfolio.positions.length })
+      .map(e => e.intrdayTot.toFixed(2));
+
     this.lineChartLabelsDaily = this.intraDayArray
-      .filter(e => e.intrdayTot > baseline/2)
-      .map(e => e.time.getHours() + ':' + e.time.getMinutes() + ':' + e.time.getSeconds());
+      .filter(e => e.poscount == this.currPortfolio.positions.length)
+      .map(e => moment(e.time).format('h:mm:ss a'));
 
   }
 
@@ -165,7 +160,7 @@ export class HistChartComponent implements OnInit {
               this.lineChartLabels = this.histArray.map(e => e.tradeKey).reverse();//.slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
             } catch (ex) { console.log('error in' + ex); }
           }, err => { console.log(err) });
-      }, (idx + 1) * 2000);
+      }, (idx + 1) * 200);
     });
   }
   /*
