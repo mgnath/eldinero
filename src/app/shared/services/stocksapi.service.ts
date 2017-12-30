@@ -50,9 +50,9 @@ export class StocksApiService implements IStocksApi {
     return this._history.asObservable();
   } */
 
-  private getHistoryInterval(symbol: string, start: Date, end: Date, intervalInMins: number): StockPrice[] {
+  getHistoryInterval(symbol: string, start: Date, end: Date, intervalInMins: number): StockPrice[] {
     let resp: StockPrice[] = [];
-    if (start <= end && intervalInMins > 1 && this.dataStore.history) {
+    if (start <= end && intervalInMins > 0 && this.dataStore.history) {
       let tempstart = moment(start);
       let tempEnd= moment(start).add(intervalInMins,'m');
       while( tempEnd <= moment(end)){
@@ -205,7 +205,7 @@ export class StocksApiService implements IStocksApi {
   }
 
   private cantMakeAPICall(): boolean {
-    if (document.visibilityState == "hidden") { return true; }
+    //if (document.visibilityState == "hidden") { return true; }
     if (!navigator.onLine) { console.log('No Internet'); return true; }
     if (!this.hasStocksinStore) { console.log('no syms'); return true; }
     return false;

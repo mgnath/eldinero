@@ -28,7 +28,6 @@ import { SettingsComponent } from './settings/settings.component';
 import { PreferenceService } from './shared/services/preference.service';
 import { HistChartComponent } from './hist-chart/hist-chart.component';
 import { StocksApiService } from './shared/services/stocksapi.service';
-import { TimelineComponent } from './timeline/timeline.component';
 import { StocksRepoService } from './shared/services/stocks-repo.service';
 
 
@@ -44,8 +43,7 @@ import { StocksRepoService } from './shared/services/stocks-repo.service';
     DashboardComponent,
     PortfolioCardComponent,
     SettingsComponent,
-    HistChartComponent,
-    TimelineComponent
+    HistChartComponent
   ], 
   imports: [
     BrowserAnimationsModule,

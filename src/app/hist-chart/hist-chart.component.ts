@@ -48,53 +48,29 @@ export class HistChartComponent implements OnInit {
       pointBorderColor: '#fff',
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgba(77,83,96,1)'
-    },
-    { // grey
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    },
-    { // grey
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
     }
   ];
 
 
   dailyChart() {
     this.intraDayArray = [];
-    var intervals: Date[] = [];
-    let today = new Date();
-    let now = moment();
-    let gap = 60000;
-    intervals.push(new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 25, 0, 0));
-    for (var i = 1; i < 800; i++) {
-      intervals.push(new Date(intervals[i - 1].valueOf() + gap));
+    let gap = 1;
+    let gapms = gap*60000;
+    let startTime = moment().startOf('day').add(9.48, 'hours');
+    let temStart = startTime.clone();
+    let endTime = moment().startOf('day').add(16.05, 'hours');
+    while (temStart <= endTime) {
+      this.intraDayArray.push({ time: temStart.toDate(), intrdayTot: 0, poscount: 0 });
+      temStart = temStart.add(gap, 'm');
     }
-    /* this.intraDayArray.push(
-      {
-        time: moment().startOf('day'),
-        intrdayTot: this.currPortfolio.getPrevDayCloseTotal()
-      }
-    ); */
-    intervals.forEach(i => {
-      this.intraDayArray.push({ time: i, intrdayTot: 0, poscount: 0 });
-    });
     this.currPortfolio.positions.forEach((tran, idx) => {
-      let sps = this.sapi.getHistory(tran.symbol
-        , moment().startOf('day').add(9.48, 'hours').toDate()
-        , moment().startOf('day').add(16.05, 'hours').toDate(), 1);
+      //let newsps = this.sapi.getHistoryInterval(tran.symbol, startTime.toDate(), endTime.toDate(), 1);
+      //console.log(newsps);
+      let sps = this.sapi.getHistory(tran.symbol, startTime.toDate(), endTime.toDate(), 1);
       this.intraDayArray.forEach(i => {
         let intSps = sps.filter(sp => {
           return new Date(sp.t).valueOf() >= i.time.valueOf()
-            && new Date(sp.t).valueOf() <= i.time.valueOf() + gap - 1
+            && new Date(sp.t).valueOf() < (i.time.valueOf() + gapms)
         });
 
         if (intSps && intSps.length > 0) {
@@ -103,7 +79,6 @@ export class HistChartComponent implements OnInit {
         }
       });
     });
-    //Findings 4, 5, and 7 (and possibly more)
     this.lineChartDataDaily[0].data = this.intraDayArray
       .filter(e => { return e.poscount == this.currPortfolio.positions.length })
       .map(e => e.intrdayTot.toFixed(2));
@@ -123,11 +98,12 @@ export class HistChartComponent implements OnInit {
     );
 
     trans.forEach((tran, idx) => {
+      var sinceLastRef = this.alphSrv.sinceLastRefreshedHist(tran.symbol.replace('.', '-'));
+      var interval = (sinceLastRef > 0 && sinceLastRef < 86400000)? 50:2000;
       setTimeout(() => {
         this.alphSrv.getHistoricalData(tran.symbol.replace('.', '-'), "TIME_SERIES_DAILY_ADJUSTED")
           .subscribe(d => {
             try {
-
               if (!(d["isCache"] && d["isCache"] == true)) {
                 d["Meta Data"]["3. Last Refreshed"] = new Date();
               }
@@ -160,18 +136,9 @@ export class HistChartComponent implements OnInit {
               this.lineChartLabels = this.histArray.map(e => e.tradeKey).reverse();//.slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
             } catch (ex) { console.log('error in' + ex); }
           }, err => { console.log(err) });
-      }, (idx + 1) * 200);
+      }, (idx + 1) * interval);
     });
   }
-  /*
-      else {
-        console.log('leak');
-        if (new Date(key).valueOf() >= new Date(tran.date).valueOf()) {
-          this.histArray.push({ tradeDate: key, dailyTot: d[timeKey][key][closeKey] * tran.shares,
-              costBasis: tran.price * tran.shares });
-        }
-      } */
-  // lineChart
   public lineChartData: Array<any> = [
     { data: [], label: 'Market Value' }
     , { data: [], label: 'Cost Basis' }
@@ -198,29 +165,8 @@ export class HistChartComponent implements OnInit {
       pointBorderColor: '#fff',
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    },
-    { // grey
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
     }
   ];
-
-
-  public randomize(): void {
-    let _lineChartData: Array<any> = new Array(this.lineChartData.length);
-    for (let i = 0; i < this.lineChartData.length; i++) {
-      _lineChartData[i] = { data: new Array(this.lineChartData[i].data.length), label: this.lineChartData[i].label };
-      for (let j = 0; j < this.lineChartData[i].data.length; j++) {
-        _lineChartData[i].data[j] = Math.floor((Math.random() * 100) + 1);
-      }
-    }
-    this.lineChartData = _lineChartData;
-  }
-
   // events
   public chartClicked(e: any): void {
     console.log(e);

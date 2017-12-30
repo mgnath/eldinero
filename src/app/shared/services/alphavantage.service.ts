@@ -11,7 +11,8 @@ export class AlphavantageService {
   constructor(private http: HttpClient) { }
 
   getStockSME(symbol: string): Observable<any> {
-    var params = new HttpParams().set("function", "SMA")
+    var params = new HttpParams()
+      .set("function", "SMA")
       .set("symbol", symbol)
       .set("interval", "15min")
       .set("time_period", "10")
@@ -23,13 +24,23 @@ export class AlphavantageService {
   //https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=MSFT&apikey=demo
 
 
+  sinceLastRefreshedHist(symbol: string): number {
+    try {
+      var cacheData = JSON.parse(localStorage.getItem(symbol + '_Hist'));
+      if (cacheData) {
 
-  getHistoricalData(symbol: string, range:string): Observable<any> {
+        var LastRefreshed: Date = new Date(cacheData["Meta Data"]["3. Last Refreshed"]);
+        return (new Date().valueOf() - LastRefreshed.valueOf());
+      }
+    }
+    catch (e) { }
+    return 0;
+  }
+  getHistoricalData(symbol: string, range: string): Observable<any> {
     var cacheData = JSON.parse(localStorage.getItem(symbol + '_Hist'));
     if (cacheData) {
       var LastRefreshed: Date = new Date(cacheData["Meta Data"]["3. Last Refreshed"]);
-      if ((new Date().valueOf() - LastRefreshed.valueOf() < 3600000)){
-        //console.log('from cache');
+      if (new Date().valueOf() - LastRefreshed.valueOf() < 86400000) {
         cacheData["isCache"] = true;
         return Observable.of(cacheData);
       }
