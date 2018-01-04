@@ -3,53 +3,48 @@ import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { from } from 'rxjs/observable/from';
+import 'rxjs/add/operator/mergeMap';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { PreferenceService } from './preference.service';
 import { StocksRepoService } from './stocks-repo.service';
 import * as moment from 'moment';
+import { MarketService } from './market.service';
 
 @Injectable()
 export class StocksApiService implements IStocksApi {
   private _stocks: BehaviorSubject<Stock[]>;
   private _latestPrices: BehaviorSubject<StockPrice[]>;
   private _history: BehaviorSubject<StockPrice[]>;
-  private _marketStatus: BehaviorSubject<boolean>;
 
 
   private loadingLatest: boolean = false;
   private forceLoad = true;
+  private marketStatus:Boolean;
 
   private dataStore: {
     stocks: Stock[],
     latestPrices: StockPrice[],
-    history: StockPrice[],
-    marketStatus: boolean
+    history: StockPrice[]
   };
-  constructor(private http: HttpClient, private prefSrv: PreferenceService, private repoSrv: StocksRepoService) {
+  constructor(private http: HttpClient, 
+    private mktSrv:MarketService,
+    private prefSrv: PreferenceService, 
+    private repoSrv: StocksRepoService) {
     console.log('StocksApiServie started');
     this.dataStore = {
       history: repoSrv.getArchive() || new Array<StockPrice>(),
       latestPrices: [],
-      stocks: JSON.parse(localStorage.getItem('eld_stocksInfo')) || [],
-      marketStatus: false
+      stocks: JSON.parse(localStorage.getItem('eld_stocksInfo')) || []
     };
     this._latestPrices = <BehaviorSubject<StockPrice[]>>new BehaviorSubject([]);
     this._stocks = <BehaviorSubject<Stock[]>>new BehaviorSubject([]);
     this._history = <BehaviorSubject<StockPrice[]>>new BehaviorSubject([]);
-    this._marketStatus = new BehaviorSubject<boolean>(false);
-    this.getMarketInfo("XNAS");
     this.LoadData();
+    this.subscribeMktService();
   }
-
-  /* getHistory(symbol: string, start: Date, end: Date): Observable<StockPrice[]> {
-    if (!this.dataStore.stocks.find(stock => stock.sym === symbol)) {
-      let stock: Stock = new Stock();
-      stock.sym = symbol;
-      this.dataStore.stocks.push(stock);
-    }
-    return this._history.asObservable();
-  } */
-
+  subscribeMktService(){
+    this.mktSrv.getMarketStatus().subscribe(status=>{ this.marketStatus = status.isOpen; } )
+  }
   getHistoryInterval(symbol: string, start: Date, end: Date, intervalInMins: number): StockPrice[] {
     let resp: StockPrice[] = [];
     if (start <= end && intervalInMins > 0 && this.dataStore.history) {
@@ -67,7 +62,7 @@ export class StocksApiService implements IStocksApi {
       }
       return resp;
     }
-    return null;
+    return [];
   }
   getHistory(symbol: string, start: Date, end: Date, intervalInMins: number): StockPrice[] {
     if (start <= end && this.dataStore.history) {
@@ -90,6 +85,13 @@ export class StocksApiService implements IStocksApi {
     });
     return this._latestPrices.asObservable();
   }
+  validateSymbol(sym:string):Observable<any>{
+    console.log(sym);
+    return this.http.get("https://api.robinhood.com/quotes/?symbols=" +sym)
+    .mergeMap((quote: any) => {
+      return this.http.get("https://cors-anywhere.herokuapp.com/"+quote.results[0].instrument)
+    });
+  }
   checkSymbols(symbols: string[]): Observable<Stock[]> {
     symbols.forEach(s => {
       if (!this.dataStore.stocks.find(stock => stock.sym === s)) {
@@ -100,8 +102,9 @@ export class StocksApiService implements IStocksApi {
     });
     this.forceLoad = true;
     this.refreshLatestPrices();
-    return this._stocks;
+    return this._stocks.asObservable();
   }
+
   publishLatestPrices() {
     let dataStoreCopy = Object.assign({}, this.dataStore); // Create a dataStore copy
     this._latestPrices.next(dataStoreCopy.latestPrices);//copy is to avoid direct reference of dataStore to subs
@@ -122,7 +125,8 @@ export class StocksApiService implements IStocksApi {
   refreshLatestPrices() {
     if (this.cantMakeAPICall()) { return; }
     if (this.loadingLatest) { console.log('loading...'); return; }
-    if (this.forceLoad || this.dataStore.marketStatus) {
+    //if (this.forceLoad || this.marketStatus) 
+    { //this.marketStatus
       this.loadingLatest = true;
       this.http.get<any>("https://api.robinhood.com/quotes/?symbols=" +
         this.dataStore.stocks.map(q => q.sym).join(","))
@@ -169,40 +173,6 @@ export class StocksApiService implements IStocksApi {
       e => { console.log(e); }
       )
   }
-  trackMarketStatus() {
-    this.getMarketInfo('XNAS');
-    return this._marketStatus.asObservable();
-  }
-  getMarketInfo(market) {
-    this.http.get<any>("https://cors-anywhere.herokuapp.com/https://api.robinhood.com/markets/" + market)
-      .subscribe(data => { this.updateMarketStatus(data.todays_hours) }, error => { console.log('market info not loaded') });
-  }
-  updateMarketStatus(url) {
-    console.log('Stocks API Market Status ' + url);
-    this.http.get<any>("https://cors-anywhere.herokuapp.com/" + url)
-      .subscribe(d => {
-        this.dataStore.marketStatus = d.is_open && ((new Date(d.opens_at).valueOf() < new Date().valueOf())
-          && (new Date(d.closes_at).valueOf() > new Date().valueOf()));
-        if (!d.is_open) {
-          this.updateMarketStatus(d.next_open_hours); return;
-        }
-        else {
-          var remainingMS = (new Date(d.closes_at).getTime() - new Date().getTime());
-          if (new Date(d.opens_at).valueOf() > new Date().valueOf()) {
-            var remainingMS = new Date(d.opens_at).valueOf() - new Date().valueOf();
-          }
-          if ((new Date(d.opens_at).valueOf() < new Date().valueOf())
-            && (new Date(d.closes_at).valueOf() > new Date().valueOf())) {
-            var remainingMS = (new Date(d.closes_at).getTime() - new Date().getTime());
-          }
-          if (new Date().valueOf() > new Date(d.closes_at).valueOf()) {
-            this.updateMarketStatus(d.next_open_hours); return;
-          }
-          console.log("market will open/close in hrs " + ((remainingMS / 1000) / 3600).toFixed(2));
-          setTimeout(() => { this.updateMarketStatus(url); }, remainingMS);
-        }
-      }, error => { console.log('market data not loaded') });
-  }
 
   private cantMakeAPICall(): boolean {
     //if (document.visibilityState == "hidden") { return true; }
@@ -214,12 +184,6 @@ export class StocksApiService implements IStocksApi {
     return (this.dataStore.stocks.map(q => q.sym).join(",").length > 0);
   }
 }
-
-
-
-
-
-
 
 interface IStocksApi {
   //getHistory(symbol: string, start: Date, end: Date): Observable<StockPrice[]>;

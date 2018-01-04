@@ -5,7 +5,7 @@
   <mat-card-content style="height:60px;" *ngIf="!portfolio.positions || portfolio.positions.length < 1">
     No Symbols
   </mat-card-content>
-  <mat-card-content style="height:140px;" *ngIf="portfolio.positions && portfolio.positions.length > 0">
+  <mat-card-content style="height:100px;" *ngIf="portfolio.positions && portfolio.positions.length > 0">
     <img *ngIf="loading" src="assets/Ripple.svg" style="width:60px;height:60px;margin:0 auto;" alt="loading">
     <table *ngIf="!loading && portfolio.positions && portfolio.positions.length > 0" style="border:0;width:100%">
       <tr>

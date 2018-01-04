@@ -29,6 +29,7 @@ import { PreferenceService } from './shared/services/preference.service';
 import { HistChartComponent } from './hist-chart/hist-chart.component';
 import { StocksApiService } from './shared/services/stocksapi.service';
 import { StocksRepoService } from './shared/services/stocks-repo.service';
+import { MarketService } from './shared/services/market.service';
 
 
 @NgModule({
@@ -56,7 +57,7 @@ import { StocksRepoService } from './shared/services/stocks-repo.service';
     ChartsModule
   ],
   providers: [UtilService,AlphavantageService, PortfolioService,
-              RobinhoodRxService,PreferenceService,Title,StocksApiService,StocksRepoService,
+              RobinhoodRxService,PreferenceService,Title,StocksApiService,StocksRepoService,MarketService,
     {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'auto'}}],
   bootstrap: [AppComponent]
 })

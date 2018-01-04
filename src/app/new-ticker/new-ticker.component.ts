@@ -28,12 +28,17 @@ export class NewTickerComponent implements OnInit {
     this.newT.name = "";
     this.newT.symbol = this.newT.symbol.toUpperCase();
     if (this.newT.symbol.length > 0) {
-      this.stockService.checkSymbols(new Array(this.newT.symbol.toUpperCase()))
+      this.stockService.validateSymbol(this.newT.symbol).subscribe(r=>{ 
+        this.newT.name = r.name || "";
+        console.log(r); 
+      });
+
+     /*  this.stockService.checkSymbols(new Array(this.newT.symbol.toUpperCase()))
       .subscribe(syms=> { 
         let res = syms.filter(s=>s.sym == this.newT.symbol)
         if(res)
           this.newT.name = res[0].name || "";
-      });
+      }); */
       
     }
   }
