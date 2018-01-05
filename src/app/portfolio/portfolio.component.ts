@@ -5,7 +5,7 @@ import { IntervalObservable } from "rxjs/observable/IntervalObservable";
 import { UtilService } from '../shared/services/util.service';
 import { PortfolioService } from '../shared/services/portfolio.service';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operator/map';
+import 'rxjs/add/operator/map';
 import { debounce } from 'rxjs/operator/debounce';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';

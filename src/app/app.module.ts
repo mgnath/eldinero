@@ -23,7 +23,6 @@ import { PortfolioComponent } from './portfolio/portfolio.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PortfolioService } from './shared/services/portfolio.service';
 import { PortfolioCardComponent } from './shared/components/portfolio-card/portfolio-card.component';
-import { RobinhoodRxService } from './shared/services/robinhood-rx.service';
 import { SettingsComponent } from './settings/settings.component';
 import { PreferenceService } from './shared/services/preference.service';
 import { HistChartComponent } from './hist-chart/hist-chart.component';
@@ -57,7 +56,7 @@ import { MarketService } from './shared/services/market.service';
     ChartsModule
   ],
   providers: [UtilService,AlphavantageService, PortfolioService,
-              RobinhoodRxService,PreferenceService,Title,StocksApiService,StocksRepoService,MarketService,
+              PreferenceService,Title,StocksApiService,StocksRepoService,MarketService,
     {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'auto'}}],
   bootstrap: [AppComponent]
 })
