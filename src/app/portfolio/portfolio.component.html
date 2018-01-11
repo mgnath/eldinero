@@ -10,6 +10,7 @@
        
       <span style="font-size:x-large;">
         <ed-colored-text  [num]="getTtl()" title="Day Gain/Loss"></ed-colored-text>
+        (<ed-colored-text  [num]="currPortfolio.getGrandTotalDayGainPer()" title="Day Gain/Loss Percentage"></ed-colored-text>%)
       </span>
       <ed-colored-text [num]="currPortfolio.getGrandTotalGain()" title="Unrealized Gain/Loss"></ed-colored-text>
       <span style="font-size:small;">
@@ -74,8 +75,8 @@
         <ng-container *ngIf="p.transactions.length > 1 && showAll">
             <tr *ngFor="let t of p.transactions">
                 <td></td>
-                <td>{{ t.date }}</td>
-                <td></td>
+                <td>{{ t.date | dateFormat:'YYYY-MM-DD'}}</td>
+                <td>{{ getTranType(t.type) }}</td>
                 <td class="right">{{ t.shares }} </td>
                <td class="right">{{ t.price }}</td>
               </tr>

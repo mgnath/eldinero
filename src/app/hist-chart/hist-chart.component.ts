@@ -54,7 +54,7 @@ export class HistChartComponent implements OnInit {
 
   dailyChart() {
     this.intraDayArray = [];
-    let gap = 1;
+    let gap = 5;
     let gapms = gap*60000;
     let startTime = moment().startOf('day').add(9.501, 'hours');//subtract(24,'hours');//
     let temStart = startTime.clone();

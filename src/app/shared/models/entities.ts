@@ -36,7 +36,6 @@ export class Portfolio {
         return totSum;
     }
     getGrandTotalDayGain() {
-
         var totSum: number = 0;
         this.positions.forEach(
             pos => (
@@ -45,6 +44,9 @@ export class Portfolio {
             )
         );
         return totSum;
+    }
+    getGrandTotalDayGainPer() {
+        return  (this.getGrandTotalDayGain()/this.getPrevDayCloseTotal())*100;
     }
     getPrevDayCloseTotal() {
         var totSum: number = 0;

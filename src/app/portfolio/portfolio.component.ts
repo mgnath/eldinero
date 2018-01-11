@@ -55,11 +55,21 @@ export class PortfolioComponent {
     this.currPortfolio$.subscribe(
       p => {
         this.currPortfolio = p;
+        console.log(p);
         this.updateQuotes();
       }
     );
 
 
+  }
+  getTranType(typ:any){
+    if(typ == 1){
+      return "SELL";
+    }
+    else if(typ == 0){
+      return "BUY";
+    }
+    else{return "tbd"};
   }
   getTtl() {
     this.titleSrv.setTitle('El Dinero>' + this.currPortfolio.getGrandTotalDayGain().toFixed(2).toString());

@@ -29,6 +29,7 @@ import { HistChartComponent } from './hist-chart/hist-chart.component';
 import { StocksApiService } from './shared/services/stocksapi.service';
 import { StocksRepoService } from './shared/services/stocks-repo.service';
 import { MarketService } from './shared/services/market.service';
+import { DateFormatPipe } from './shared/pipes/date-format.pipe';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { MarketService } from './shared/services/market.service';
     DashboardComponent,
     PortfolioCardComponent,
     SettingsComponent,
-    HistChartComponent
+    HistChartComponent,
+    DateFormatPipe
   ], 
   imports: [
     BrowserAnimationsModule,

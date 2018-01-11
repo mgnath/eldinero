@@ -5,6 +5,47 @@
         "version": "1.0.0",
         "positions": [
             {
+                "name": "Apple Inc.",
+                "symbol": "AAPL",
+                "transactions": [
+                    {
+                        "name": "Apple Inc.",
+                        "symbol": "AAPL",
+                        "date": "2010-12-10T00:19:10.195Z",
+                        "type": 0,
+                        "shares": "70",
+                        "isDrip": false,
+                        "price": "46.6941",
+                        "id": "7b046280-acfd-453f-b8cd-9aca754ecbd9"
+                    },
+                    {
+                        "name": "Apple Inc.",
+                        "symbol": "AAPL",
+                        "date": "2012-09-17T00:19:10.195Z",
+                        "type": 0,
+                        "shares": "98",
+                        "isDrip": false,
+                        "price": "99.8848",
+                        "id": "7b046280-acfd-453f-b8cd-9aca754ecbd1"
+                    },
+                    {
+                        "name": "Apple Inc.",
+                        "symbol": "AAPL",
+                        "date": "2017-05-15T00:19:10.195Z",
+                        "type": 0,
+                        "shares": "12.104",
+                        "isDrip": false,
+                        "price": "116.9",
+                        "id": "7b046280-acfd-453f-b8cd-9aca754ecbd2"
+                    }
+                ],
+                "latestQuote": {
+                    "last_trade_price": "175.0000",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "173.0300"
+                }
+            },
+            {
                 "name": "Direxion Daily Financial Bull 3X Shares",
                 "symbol": "FAS",
                 "transactions": [
@@ -12,7 +53,7 @@
                         "name": "Direxion Daily Financial Bull 3X Shares",
                         "symbol": "FAS",
                         "date": "2016-06-24T00:19:10.196Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "200",
                         "isDrip": false,
                         "price": "36.94",
@@ -20,42 +61,9 @@
                     }
                 ],
                 "latestQuote": {
-                    "last_trade_price": "68.8600",
-                    "updated_at": "2018-01-04T00:56:44Z",
-                    "adjusted_previous_close": "67.9400"
-                }
-            },
-            {
-                "name": "Royal Dutch Shell plc (ADR)",
-                "symbol": "RDS.A",
-                "transactions": [
-                    {
-                        "name": "Royal Dutch Shell plc (ADR)",
-                        "symbol": "RDS.A",
-                        "date": "2015-05-10T00:19:10.199Z",
-                        "type": null,
-                        "shares": "100",
-                        "isDrip": false,
-                        "price": "58.75",
-                        "id": "7b008a87-b4c7-4015-9565-b4e37742e902"
-                    },
-                    {
-                        "name": "Royal Dutch Shell plc (ADR)",
-                        "symbol": "RDS.A",
-                        "date": "2017-04-10T00:19:10.199Z",
-                        "type": null,
-                        "shares": "100",
-                        "isDrip": false,
-                        "price": "49.31",
-                        "id": "54034278-fdef-4015-af7d-d51ec804e8c3"
-                    }
-                ],
-                "quote": "62.1500",
-                "adj_prev_close": "61.4800",
-                "latestQuote": {
-                    "last_trade_price": "68.5900",
-                    "updated_at": "2018-01-04T00:31:33Z",
-                    "adjusted_previous_close": "68.0400"
+                    "last_trade_price": "70.9400",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "69.9200"
                 }
             },
             {
@@ -66,7 +74,7 @@
                         "name": "Amazon.com, Inc.",
                         "symbol": "AMZN",
                         "date": "2017-07-28T00:19:10.195Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "3",
                         "isDrip": false,
                         "price": "1024.58",
@@ -76,7 +84,7 @@
                         "name": "Amazon.com, Inc.",
                         "symbol": "AMZN",
                         "date": "2017-07-31T00:19:10.195Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "1",
                         "isDrip": false,
                         "price": "990",
@@ -86,7 +94,7 @@
                         "name": "Amazon.com, Inc.",
                         "symbol": "AMZN",
                         "date": "2017-08-10T00:19:10.195Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "1",
                         "isDrip": false,
                         "price": "969",
@@ -94,225 +102,30 @@
                     }
                 ],
                 "latestQuote": {
-                    "last_trade_price": "1204.2000",
-                    "updated_at": "2018-01-04T00:59:37Z",
-                    "adjusted_previous_close": "1189.0100"
+                    "last_trade_price": "1229.1400",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "1209.5900"
                 }
             },
             {
-                "name": "Abercrombie & Fitch Co.",
-                "symbol": "ANF",
+                "name": "T-Mobile US Inc",
+                "symbol": "TMUS",
                 "transactions": [
                     {
-                        "name": "Abercrombie & Fitch Co.",
-                        "symbol": "ANF",
-                        "date": "2015-10-10T00:19:10.194Z",
-                        "type": null,
-                        "shares": "200",
+                        "name": "T-Mobile US Inc",
+                        "symbol": "TMUS",
+                        "date": "2011-01-07T00:19:10.200Z",
+                        "type": 0,
+                        "shares": "60",
                         "isDrip": false,
-                        "price": "20.4",
-                        "id": "ef8df91e-97fa-4661-6811-9f1b3e451c76"
+                        "price": "18.1683",
+                        "id": "c601a837-9ac7-401b-3fc7-d489e3c81746"
                     }
                 ],
                 "latestQuote": {
-                    "last_trade_price": "18.5300",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "18.2000"
-                }
-            },
-            {
-                "name": "Alphabet Inc",
-                "symbol": "GOOGL",
-                "transactions": [
-                    {
-                        "name": "Alphabet Inc",
-                        "symbol": "GOOGL",
-                        "date": "2017-08-10T00:19:10.195Z",
-                        "type": null,
-                        "shares": "2",
-                        "isDrip": false,
-                        "price": "926.5",
-                        "id": "580d4491-1832-426f-3a00-ffec5ab5f53e"
-                    },
-                    {
-                        "name": "Alphabet Inc",
-                        "symbol": "GOOGL",
-                        "date": "2017-09-25T00:19:10.195Z",
-                        "type": null,
-                        "shares": "1",
-                        "isDrip": false,
-                        "price": "929.02",
-                        "id": "5fc19540-df1d-4ad7-b285-60728d8f2f32"
-                    }
-                ],
-                "latestQuote": {
-                    "last_trade_price": "1091.0000",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "1073.2100"
-                }
-            },
-            {
-                "name": "Costco Wholesale Corporation",
-                "symbol": "COST",
-                "transactions": [
-                    {
-                        "name": "Costco Wholesale Corporation",
-                        "symbol": "COST",
-                        "date": "2017-10-06T00:19:10.196Z",
-                        "type": null,
-                        "shares": "20",
-                        "isDrip": false,
-                        "price": "157.11",
-                        "id": "75504458-8d7e-401a-8366-75f61e37017f"
-                    }
-                ],
-                "latestQuote": {
-                    "last_trade_price": "190.5800",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "188.3200"
-                }
-            },
-            {
-                "name": "Citigroup Inc",
-                "symbol": "C",
-                "transactions": [
-                    {
-                        "name": "Citigroup Inc",
-                        "symbol": "C",
-                        "date": "2009-04-20T00:19:10.196Z",
-                        "type": null,
-                        "shares": "12",
-                        "isDrip": false,
-                        "price": "30.2317",
-                        "id": "3d8c3dce-0c16-4e8f-8f6e-92c1f9204841"
-                    },
-                    {
-                        "name": "Citigroup Inc",
-                        "symbol": "C",
-                        "date": "2009-08-05T00:19:10.196Z",
-                        "type": null,
-                        "shares": "20",
-                        "isDrip": false,
-                        "price": "34.1985",
-                        "id": "3d8c3dce-0c16-4e8f-8f6e-92c1f9204842"
-                    },
-                    {
-                        "name": "Citigroup Inc",
-                        "symbol": "C",
-                        "date": "2009-08-25T00:19:10.196Z",
-                        "type": null,
-                        "shares": "32",
-                        "isDrip": false,
-                        "price": "47.6122",
-                        "id": "3d8c3dce-0c16-4e8f-8f6e-92c1f9204843"
-                    },
-                    {
-                        "name": "Citigroup Inc",
-                        "symbol": "C",
-                        "date": "2009-09-03T00:19:10.196Z",
-                        "type": null,
-                        "shares": "50",
-                        "isDrip": false,
-                        "price": "47.6998",
-                        "id": "3d8c3dce-0c16-4e8f-8f6e-92c1f9204844"
-                    },
-                    {
-                        "name": "Citigroup Inc",
-                        "symbol": "C",
-                        "date": "2009-09-08T00:19:10.196Z",
-                        "type": null,
-                        "shares": "30",
-                        "isDrip": false,
-                        "price": "47.332",
-                        "id": "3d8c3dce-0c16-4e8f-8f6e-92c1f9204845"
-                    },
-                    {
-                        "name": "Citigroup Inc",
-                        "symbol": "C",
-                        "date": "2009-12-14T00:19:10.196Z",
-                        "type": null,
-                        "shares": "36",
-                        "isDrip": false,
-                        "price": "37.7775",
-                        "id": "3d8c3dce-0c16-4e8f-8f6e-92c1f9204846"
-                    },
-                    {
-                        "name": "Citigroup Inc",
-                        "symbol": "C",
-                        "date": "2017-11-24T00:19:10.196Z",
-                        "type": null,
-                        "shares": "0.797",
-                        "isDrip": false,
-                        "price": "72.271",
-                        "id": "3d8c3dce-0c16-4e8f-8f6e-92c1f9204847"
-                    }
-                ],
-                "latestQuote": {
-                    "last_trade_price": "74.5900",
-                    "updated_at": "2018-01-04T00:59:04Z",
-                    "adjusted_previous_close": "74.3600"
-                }
-            },
-            {
-                "name": "Gilead Sciences, Inc.",
-                "symbol": "GILD",
-                "transactions": [
-                    {
-                        "name": "Gilead Sciences, Inc.",
-                        "symbol": "GILD",
-                        "date": "2014-04-10T00:19:10.196Z",
-                        "type": null,
-                        "shares": "50",
-                        "isDrip": false,
-                        "price": "66.1",
-                        "id": "874a14e3-ab51-47fe-d6ee-db70d4894e9b"
-                    }
-                ],
-                "latestQuote": {
-                    "last_trade_price": "74.6600",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "74.1000"
-                }
-            },
-            {
-                "name": "Ford Motor Company",
-                "symbol": "F",
-                "transactions": [
-                    {
-                        "name": "Ford Motor Company",
-                        "symbol": "F",
-                        "date": "2010-03-05T00:19:10.196Z",
-                        "type": null,
-                        "shares": "56",
-                        "isDrip": false,
-                        "price": "13.1584",
-                        "id": "27515f8f-92aa-4309-8b32-6c2fa5933d70"
-                    },
-                    {
-                        "name": "Ford Motor Company",
-                        "symbol": "F",
-                        "date": "2017-10-18T00:19:10.196Z",
-                        "type": null,
-                        "shares": "200",
-                        "isDrip": false,
-                        "price": "12.2",
-                        "id": "f39516ef-3869-4d3d-68ce-a3ddc934818d"
-                    },
-                    {
-                        "name": "Ford Motor Company",
-                        "symbol": "F",
-                        "date": "2017-12-04T00:19:10.196Z",
-                        "type": null,
-                        "shares": "0.659",
-                        "isDrip": false,
-                        "price": "12.7",
-                        "id": "27515f8f-92aa-4309-8b32-6c2fa5933d76"
-                    }
-                ],
-                "latestQuote": {
-                    "last_trade_price": "12.7600",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "12.6600"
+                    "last_trade_price": "64.6000",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "63.0000"
                 }
             },
             {
@@ -323,7 +136,7 @@
                         "name": "Microsoft Corporation",
                         "symbol": "MSFT",
                         "date": "2009-11-10T00:19:10.196Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "60",
                         "isDrip": false,
                         "price": "29.1658",
@@ -333,7 +146,7 @@
                         "name": "Microsoft Corporation",
                         "symbol": "MSFT",
                         "date": "2016-09-08T00:19:10.196Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "0.379",
                         "isDrip": false,
                         "price": "56.9921",
@@ -343,7 +156,7 @@
                         "name": "Microsoft Corporation",
                         "symbol": "MSFT",
                         "date": "2016-12-08T00:19:10.196Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "0.382",
                         "isDrip": false,
                         "price": "61.6492",
@@ -353,7 +166,7 @@
                         "name": "Microsoft Corporation",
                         "symbol": "MSFT",
                         "date": "2017-03-09T00:19:10.196Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "0.365",
                         "isDrip": false,
                         "price": "64.9315",
@@ -363,7 +176,7 @@
                         "name": "Microsoft Corporation",
                         "symbol": "MSFT",
                         "date": "2017-06-08T00:19:10.196Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "0.335",
                         "isDrip": false,
                         "price": "71.1642",
@@ -373,17 +186,174 @@
                         "name": "Microsoft Corporation",
                         "symbol": "MSFT",
                         "date": "2017-09-15T00:19:10.196Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "0.319",
                         "isDrip": false,
                         "price": "75.1411",
                         "id": "3d8c3dce-0c16-4e8f-8f6e-92c1f9204845"
+                    },
+                    {
+                        "name": "Microsoft Corporation",
+                        "symbol": "MSFT",
+                        "date": "2017-12-15T00:19:10.196Z",
+                        "type": 0,
+                        "shares": "0.3",
+                        "isDrip": false,
+                        "price": "86.5905",
+                        "id": "3d8c3dce-0c16-4e8f-8f6e-92c1f9204846"
                     }
                 ],
                 "latestQuote": {
-                    "last_trade_price": "86.3300",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "85.9500"
+                    "last_trade_price": "88.1900",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "87.1100"
+                }
+            },
+            {
+                "name": "Ford Motor Company",
+                "symbol": "F",
+                "transactions": [
+                    {
+                        "name": "Ford Motor Company",
+                        "symbol": "F",
+                        "date": "2010-03-05T00:19:10.196Z",
+                        "type": 0,
+                        "shares": "56",
+                        "isDrip": false,
+                        "price": "13.1584",
+                        "id": "27515f8f-92aa-4309-8b32-6c2fa5933d70"
+                    },
+                    {
+                        "name": "Ford Motor Company",
+                        "symbol": "F",
+                        "date": "2017-10-18T00:19:10.196Z",
+                        "type": 0,
+                        "shares": "200",
+                        "isDrip": false,
+                        "price": "12.2",
+                        "id": "f39516ef-3869-4d3d-68ce-a3ddc934818d"
+                    },
+                    {
+                        "name": "Ford Motor Company",
+                        "symbol": "F",
+                        "date": "2017-12-04T00:19:10.196Z",
+                        "type": 0,
+                        "shares": "0.659",
+                        "isDrip": false,
+                        "price": "12.7",
+                        "id": "27515f8f-92aa-4309-8b32-6c2fa5933d76"
+                    }
+                ],
+                "latestQuote": {
+                    "last_trade_price": "13.2000",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "12.9800"
+                }
+            },
+            {
+                "name": "Alphabet Inc",
+                "symbol": "GOOGL",
+                "transactions": [
+                    {
+                        "name": "Alphabet Inc",
+                        "symbol": "GOOGL",
+                        "date": "2017-08-10T00:19:10.195Z",
+                        "type": 0,
+                        "shares": "2",
+                        "isDrip": false,
+                        "price": "926.5",
+                        "id": "580d4491-1832-426f-3a00-ffec5ab5f53e"
+                    },
+                    {
+                        "name": "Alphabet Inc",
+                        "symbol": "GOOGL",
+                        "date": "2017-09-25T00:19:10.195Z",
+                        "type": 0,
+                        "shares": "1",
+                        "isDrip": false,
+                        "price": "929.02",
+                        "id": "5fc19540-df1d-4ad7-b285-60728d8f2f32"
+                    }
+                ],
+                "latestQuote": {
+                    "last_trade_price": "1110.2900",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "1095.7600"
+                }
+            },
+            {
+                "name": "Gilead Sciences, Inc.",
+                "symbol": "GILD",
+                "transactions": [
+                    {
+                        "name": "Gilead Sciences, Inc.",
+                        "symbol": "GILD",
+                        "date": "2014-04-10T00:19:10.196Z",
+                        "type": 0,
+                        "shares": "50",
+                        "isDrip": false,
+                        "price": "66.1",
+                        "id": "874a14e3-ab51-47fe-d6ee-db70d4894e9b"
+                    }
+                ],
+                "latestQuote": {
+                    "last_trade_price": "74.5200",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "73.9000"
+                }
+            },
+            {
+                "name": "Royal Dutch Shell plc (ADR)",
+                "symbol": "RDS.A",
+                "transactions": [
+                    {
+                        "name": "Royal Dutch Shell plc (ADR)",
+                        "symbol": "RDS.A",
+                        "date": "2015-05-10T00:19:10.199Z",
+                        "type": 0,
+                        "shares": "100",
+                        "isDrip": false,
+                        "price": "58.75",
+                        "id": "7b008a87-b4c7-4015-9565-b4e37742e902"
+                    },
+                    {
+                        "name": "Royal Dutch Shell plc (ADR)",
+                        "symbol": "RDS.A",
+                        "date": "2017-04-10T00:19:10.199Z",
+                        "type": 0,
+                        "shares": "100",
+                        "isDrip": false,
+                        "price": "49.31",
+                        "id": "54034278-fdef-4015-af7d-d51ec804e8c3"
+                    }
+                ],
+                "quote": "62.1500",
+                "adj_prev_close": "61.4800",
+                "latestQuote": {
+                    "last_trade_price": "69.0400",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "68.8900"
+                }
+            },
+            {
+                "name": "Abercrombie & Fitch Co.",
+                "symbol": "ANF",
+                "transactions": [
+                    {
+                        "name": "Abercrombie & Fitch Co.",
+                        "symbol": "ANF",
+                        "date": "2015-10-10T00:19:10.194Z",
+                        "type": 0,
+                        "shares": "200",
+                        "isDrip": false,
+                        "price": "20.4",
+                        "id": "ef8df91e-97fa-4661-6811-9f1b3e451c76"
+                    }
+                ],
+                "latestQuote": {
+                    "last_trade_price": "18.2800",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "18.2000"
                 }
             },
             {
@@ -394,7 +364,7 @@
                         "name": "Sirius XM Holdings Inc.",
                         "symbol": "SIRI",
                         "date": "2009-05-05T00:19:10.200Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "500",
                         "isDrip": false,
                         "price": "0.4102",
@@ -412,9 +382,84 @@
                     }
                 ],
                 "latestQuote": {
-                    "last_trade_price": "5.2100",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "5.2100"
+                    "last_trade_price": "5.3300",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "5.3100"
+                }
+            },
+            {
+                "name": "Intel Corporation - Common Stock",
+                "symbol": "INTC",
+                "transactions": [
+                    {
+                        "name": "Intel Corporation - Common Stock",
+                        "symbol": "INTC",
+                        "date": "2018-01-05T20:55:12.555Z",
+                        "type": 0,
+                        "shares": 20,
+                        "isDrip": false,
+                        "price": 44.75,
+                        "id": "160902d3-261d-4921-89f3-a9f092bde3f7"
+                    }
+                ],
+                "latestQuote": {
+                    "last_trade_price": "44.7400",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "44.4300"
+                }
+            },
+            {
+                "name": "Teck Resources Ltd (USA)",
+                "symbol": "TECK",
+                "transactions": [
+                    {
+                        "name": "Teck Resources Ltd (USA)",
+                        "symbol": "TECK",
+                        "date": "2010-03-05T00:19:10.200Z",
+                        "type": 0,
+                        "shares": "20",
+                        "isDrip": false,
+                        "price": "41.2595",
+                        "id": "83382001-bdff-43b7-9166-79ff4302bc84"
+                    }
+                ],
+                "quote": "23.0500",
+                "adj_prev_close": "22.4200",
+                "latestQuote": {
+                    "last_trade_price": "27.3300",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "27.1100"
+                }
+            },
+            {
+                "name": "Randgold Resources Ltd. (ADR)",
+                "symbol": "GOLD",
+                "transactions": [
+                    {
+                        "name": "Randgold Resources Ltd. (ADR)",
+                        "symbol": "GOLD",
+                        "date": "2017-10-11T00:19:10.199Z",
+                        "type": 0,
+                        "shares": "10",
+                        "isDrip": false,
+                        "price": "98",
+                        "id": "46abf9e9-d048-4d9d-eeb7-a665c3f3e1ba"
+                    },
+                    {
+                        "name": "Randgold Resources",
+                        "symbol": "GOLD",
+                        "date": "2017-12-07T20:33:57.060Z",
+                        "type": 0,
+                        "shares": 10,
+                        "isDrip": false,
+                        "price": 90,
+                        "id": "76c7171d-28ff-4bf7-0147-378d7f572881"
+                    }
+                ],
+                "latestQuote": {
+                    "last_trade_price": "98.2900",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "98.0800"
                 }
             },
             {
@@ -435,127 +480,30 @@
                 "quote": "312.6000",
                 "adj_prev_close": "317.8100",
                 "latestQuote": {
-                    "last_trade_price": "317.2500",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "320.5300"
+                    "last_trade_price": "316.5800",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "314.6200"
                 }
             },
             {
-                "name": "Teck Resources Ltd (USA)",
-                "symbol": "TECK",
+                "name": "Macys",
+                "symbol": "M",
                 "transactions": [
                     {
-                        "name": "Teck Resources Ltd (USA)",
-                        "symbol": "TECK",
-                        "date": "2010-03-05T00:19:10.200Z",
-                        "type": null,
-                        "shares": "20",
-                        "isDrip": false,
-                        "price": "41.2595",
-                        "id": "83382001-bdff-43b7-9166-79ff4302bc84"
-                    }
-                ],
-                "quote": "23.0500",
-                "adj_prev_close": "22.4200",
-                "latestQuote": {
-                    "last_trade_price": "26.5900",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "26.9300"
-                }
-            },
-            {
-                "name": "Federal National Mortgage Association",
-                "symbol": "FNMA",
-                "transactions": [
-                    {
-                        "name": "Federal National Mortgage Association",
-                        "symbol": "FNMA",
-                        "date": "2011-10-06T00:19:10.196Z",
-                        "type": null,
-                        "shares": "350",
-                        "isDrip": false,
-                        "price": "1.27",
-                        "id": "5bf2f765-083f-4053-66a9-ad32b3588832"
-                    }
-                ],
-                "latestQuote": {
-                    "last_trade_price": "2.5200",
-                    "updated_at": "2018-01-03T20:59:28Z",
-                    "adjusted_previous_close": "2.5600"
-                }
-            },
-            {
-                "name": "Apple Inc.",
-                "symbol": "AAPL",
-                "transactions": [
-                    {
-                        "name": "Apple Inc.",
-                        "symbol": "AAPL",
-                        "date": "2010-12-10T00:19:10.195Z",
-                        "type": null,
-                        "shares": "70",
-                        "isDrip": false,
-                        "price": "46.6941",
-                        "id": "7b046280-acfd-453f-b8cd-9aca754ecbd9"
-                    },
-                    {
-                        "name": "Apple Inc.",
-                        "symbol": "AAPL",
-                        "date": "2012-09-17T00:19:10.195Z",
-                        "type": null,
-                        "shares": "98",
-                        "isDrip": false,
-                        "price": "99.8848",
-                        "id": "7b046280-acfd-453f-b8cd-9aca754ecbd1"
-                    },
-                    {
-                        "name": "Apple Inc.",
-                        "symbol": "AAPL",
-                        "date": "2017-05-15T00:19:10.195Z",
-                        "type": null,
-                        "shares": "12.104",
-                        "isDrip": false,
-                        "price": "116.9",
-                        "id": "7b046280-acfd-453f-b8cd-9aca754ecbd2"
-                    }
-                ],
-                "latestQuote": {
-                    "last_trade_price": "172.1800",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "172.2600"
-                }
-            },
-            {
-                "name": "Rite Aid Corporation",
-                "symbol": "RAD",
-                "transactions": [
-                    {
-                        "name": "Rite Aid Corporation",
-                        "symbol": "RAD",
-                        "date": "2013-09-02T00:19:10.199Z",
-                        "type": null,
-                        "shares": "760",
-                        "isDrip": false,
-                        "price": "7.06",
-                        "id": "5a5234cd-5847-4cc8-70f3-9ebb9e3d7418"
-                    },
-                    {
-                        "name": "Rite Aid Corporation",
-                        "symbol": "RAD",
-                        "date": "2017-12-12T00:19:10.199Z",
-                        "type": null,
+                        "name": "Macys",
+                        "symbol": "M",
+                        "date": "2017-11-03T00:19:10.198Z",
+                        "type": 0,
                         "shares": "100",
                         "isDrip": false,
-                        "price": "1.82",
-                        "id": "5a5234cd-5847-4cc8-70f3-9ebb9e3d7414"
+                        "price": "18.4",
+                        "id": "925d98b6-4dcf-4fba-8456-4cc517c44dbb"
                     }
                 ],
-                "quote": "1.6900",
-                "adj_prev_close": "1.6400",
                 "latestQuote": {
-                    "last_trade_price": "2.1100",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "2.1300"
+                    "last_trade_price": "24.4800",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "24.4900"
                 }
             },
             {
@@ -566,7 +514,7 @@
                         "name": "The Coca-Cola Co",
                         "symbol": "KO",
                         "date": "2014-02-18T00:19:10.201Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "120",
                         "isDrip": false,
                         "price": "37.41",
@@ -576,7 +524,7 @@
                         "name": "The Coca-Cola Co",
                         "symbol": "KO",
                         "date": "2014-02-18T00:19:10.201Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "0.949",
                         "isDrip": false,
                         "price": "38.57",
@@ -586,7 +534,7 @@
                         "name": "The Coca-Cola Co",
                         "symbol": "KO",
                         "date": "2014-11-22T00:19:10.201Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "0.87",
                         "isDrip": false,
                         "price": "42.4",
@@ -596,7 +544,7 @@
                         "name": "The Coca-Cola Co",
                         "symbol": "KO",
                         "date": "2014-11-22T00:19:10.202Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "0.874",
                         "isDrip": false,
                         "price": "42.5",
@@ -606,7 +554,7 @@
                         "name": "The Coca-Cola Co",
                         "symbol": "KO",
                         "date": "2014-11-22T00:19:10.202Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "0.911",
                         "isDrip": false,
                         "price": "41.075",
@@ -616,7 +564,7 @@
                         "name": "The Coca-Cola Co",
                         "symbol": "KO",
                         "date": "2015-11-22T00:19:10.202Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "1.06",
                         "isDrip": false,
                         "price": "40.5",
@@ -626,7 +574,7 @@
                         "name": "The Coca-Cola Co",
                         "symbol": "KO",
                         "date": "2015-11-22T00:19:10.203Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "1.044",
                         "isDrip": false,
                         "price": "41",
@@ -636,7 +584,7 @@
                         "name": "The Coca-Cola Co",
                         "symbol": "KO",
                         "date": "2015-11-22T00:19:10.203Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "1.031",
                         "isDrip": false,
                         "price": "40",
@@ -646,7 +594,7 @@
                         "name": "The Coca-Cola Co",
                         "symbol": "KO",
                         "date": "2016-11-22T00:19:10.203Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "0.969",
                         "isDrip": false,
                         "price": "42",
@@ -656,7 +604,7 @@
                         "name": "The Coca-Cola Co",
                         "symbol": "KO",
                         "date": "2016-11-22T00:19:10.204Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "3",
                         "isDrip": false,
                         "price": "43",
@@ -666,7 +614,7 @@
                         "name": "The Coca-Cola Co",
                         "symbol": "KO",
                         "date": "2016-11-22T00:19:10.204Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "5",
                         "isDrip": false,
                         "price": "43",
@@ -686,82 +634,144 @@
                 "quote": "45.8400",
                 "adj_prev_close": "45.7800",
                 "latestQuote": {
-                    "last_trade_price": "45.4400",
-                    "updated_at": "2018-01-04T00:59:45Z",
-                    "adjusted_previous_close": "45.5400"
+                    "last_trade_price": "46.0700",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "46.0800"
                 }
             },
             {
-                "name": "T-Mobile US Inc",
-                "symbol": "TMUS",
+                "name": "Citigroup Inc",
+                "symbol": "C",
                 "transactions": [
                     {
-                        "name": "T-Mobile US Inc",
-                        "symbol": "TMUS",
-                        "date": "2011-01-07T00:19:10.200Z",
-                        "type": null,
-                        "shares": "60",
+                        "name": "Citigroup Inc",
+                        "symbol": "C",
+                        "date": "2009-04-20T00:19:10.196Z",
+                        "type": 0,
+                        "shares": "12",
                         "isDrip": false,
-                        "price": "18.1683",
-                        "id": "c601a837-9ac7-401b-3fc7-d489e3c81746"
-                    }
-                ],
-                "latestQuote": {
-                    "last_trade_price": "63.6100",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "64.0400"
-                }
-            },
-            {
-                "name": "Randgold Resources Ltd. (ADR)",
-                "symbol": "GOLD",
-                "transactions": [
-                    {
-                        "name": "Randgold Resources Ltd. (ADR)",
-                        "symbol": "GOLD",
-                        "date": "2017-10-11T00:19:10.199Z",
-                        "type": null,
-                        "shares": "10",
-                        "isDrip": false,
-                        "price": "98",
-                        "id": "46abf9e9-d048-4d9d-eeb7-a665c3f3e1ba"
+                        "price": "30.2317",
+                        "id": "3d8c3dce-0c16-4e8f-8f6e-92c1f9204841"
                     },
                     {
-                        "name": "Randgold Resources",
-                        "symbol": "GOLD",
-                        "date": "2017-12-07T20:33:57.060Z",
+                        "name": "Citigroup Inc",
+                        "symbol": "C",
+                        "date": "2009-08-05T00:19:10.196Z",
                         "type": 0,
-                        "shares": 10,
+                        "shares": "20",
                         "isDrip": false,
-                        "price": 90,
-                        "id": "76c7171d-28ff-4bf7-0147-378d7f572881"
+                        "price": "34.1985",
+                        "id": "3d8c3dce-0c16-4e8f-8f6e-92c1f9204842"
+                    },
+                    {
+                        "name": "Citigroup Inc",
+                        "symbol": "C",
+                        "date": "2009-08-25T00:19:10.196Z",
+                        "type": 0,
+                        "shares": "32",
+                        "isDrip": false,
+                        "price": "47.6122",
+                        "id": "3d8c3dce-0c16-4e8f-8f6e-92c1f9204843"
+                    },
+                    {
+                        "name": "Citigroup Inc",
+                        "symbol": "C",
+                        "date": "2009-09-03T00:19:10.196Z",
+                        "type": 0,
+                        "shares": "50",
+                        "isDrip": false,
+                        "price": "47.6998",
+                        "id": "3d8c3dce-0c16-4e8f-8f6e-92c1f9204844"
+                    },
+                    {
+                        "name": "Citigroup Inc",
+                        "symbol": "C",
+                        "date": "2009-09-08T00:19:10.196Z",
+                        "type": 0,
+                        "shares": "30",
+                        "isDrip": false,
+                        "price": "47.332",
+                        "id": "3d8c3dce-0c16-4e8f-8f6e-92c1f9204845"
+                    },
+                    {
+                        "name": "Citigroup Inc",
+                        "symbol": "C",
+                        "date": "2009-12-14T00:19:10.196Z",
+                        "type": 0,
+                        "shares": "36",
+                        "isDrip": false,
+                        "price": "37.7775",
+                        "id": "3d8c3dce-0c16-4e8f-8f6e-92c1f9204846"
+                    },
+                    {
+                        "name": "Citigroup Inc",
+                        "symbol": "C",
+                        "date": "2017-11-24T00:19:10.196Z",
+                        "type": 0,
+                        "shares": "0.797",
+                        "isDrip": false,
+                        "price": "72.271",
+                        "id": "3d8c3dce-0c16-4e8f-8f6e-92c1f9204847"
                     }
                 ],
                 "latestQuote": {
-                    "last_trade_price": "98.7800",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "100.7200"
+                    "last_trade_price": "75.4100",
+                    "updated_at": "2018-01-06T00:59:57Z",
+                    "adjusted_previous_close": "75.5100"
                 }
             },
             {
-                "name": "Macys",
-                "symbol": "M",
+                "name": "Costco Wholesale Corporation",
+                "symbol": "COST",
                 "transactions": [
                     {
-                        "name": "Macys",
-                        "symbol": "M",
-                        "date": "2017-11-03T00:19:10.198Z",
+                        "name": "Costco Wholesale Corporation",
+                        "symbol": "COST",
+                        "date": "2017-10-06T00:19:10.196Z",
+                        "type": 0,
+                        "shares": "20",
+                        "isDrip": false,
+                        "price": "157.11",
+                        "id": "75504458-8d7e-401a-8366-75f61e37017f"
+                    }
+                ],
+                "latestQuote": {
+                    "last_trade_price": "187.7500",
+                    "updated_at": "2018-01-06T00:27:12Z",
+                    "adjusted_previous_close": "189.1000"
+                }
+            },
+            {
+                "name": "Rite Aid Corporation",
+                "symbol": "RAD",
+                "transactions": [
+                    {
+                        "name": "Rite Aid Corporation",
+                        "symbol": "RAD",
+                        "date": "2013-09-02T00:19:10.199Z",
+                        "type": 0,
+                        "shares": "760",
+                        "isDrip": false,
+                        "price": "7.06",
+                        "id": "5a5234cd-5847-4cc8-70f3-9ebb9e3d7418"
+                    },
+                    {
+                        "name": "Rite Aid Corporation",
+                        "symbol": "RAD",
+                        "date": "2017-12-12T00:19:10.199Z",
                         "type": 0,
                         "shares": "100",
                         "isDrip": false,
-                        "price": "18.4",
-                        "id": "925d98b6-4dcf-4fba-8456-4cc517c44dbb"
+                        "price": "1.82",
+                        "id": "5a5234cd-5847-4cc8-70f3-9ebb9e3d7414"
                     }
                 ],
+                "quote": "1.6900",
+                "adj_prev_close": "1.6400",
                 "latestQuote": {
-                    "last_trade_price": "25.3300",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "26.3100"
+                    "last_trade_price": "2.0300",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "2.0800"
                 }
             },
             {
@@ -772,7 +782,7 @@
                         "name": "Kohl's Corporation",
                         "symbol": "KSS",
                         "date": "2015-05-14T00:19:10.197Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "154",
                         "isDrip": false,
                         "price": "65",
@@ -780,9 +790,30 @@
                     }
                 ],
                 "latestQuote": {
-                    "last_trade_price": "55.6600",
-                    "updated_at": "2018-01-03T23:51:56Z",
-                    "adjusted_previous_close": "56.3500"
+                    "last_trade_price": "54.3600",
+                    "updated_at": "2018-01-05T23:00:39Z",
+                    "adjusted_previous_close": "54.6800"
+                }
+            },
+            {
+                "name": "Federal National Mortgage Association",
+                "symbol": "FNMA",
+                "transactions": [
+                    {
+                        "name": "Federal National Mortgage Association",
+                        "symbol": "FNMA",
+                        "date": "2011-10-06T00:19:10.196Z",
+                        "type": 0,
+                        "shares": "350",
+                        "isDrip": false,
+                        "price": "1.27",
+                        "id": "5bf2f765-083f-4053-66a9-ad32b3588832"
+                    }
+                ],
+                "latestQuote": {
+                    "last_trade_price": "2.2200",
+                    "updated_at": "2018-01-05T21:00:00Z",
+                    "adjusted_previous_close": "2.4400"
                 }
             }
         ]
@@ -800,7 +831,7 @@
                         "name": "Cognizant Inc.",
                         "symbol": "CTSH",
                         "date": "2017-06-30T00:19:10.194Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "93",
                         "isDrip": false,
                         "price": "52.43",
@@ -810,7 +841,7 @@
                         "name": "Cognizant Inc.",
                         "symbol": "CTSH",
                         "date": "2017-09-30T00:19:10.194Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "81",
                         "isDrip": false,
                         "price": "60.03",
@@ -830,9 +861,9 @@
                 "quote": "72.4000",
                 "adj_prev_close": "72.2700",
                 "latestQuote": {
-                    "last_trade_price": "71.5500",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "70.9500"
+                    "last_trade_price": "73.3000",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "72.6800"
                 }
             }
         ]
@@ -850,19 +881,29 @@
                         "name": "Thomson Reuters Inc.",
                         "symbol": "TRI",
                         "date": "2017-06-30T00:19:10.194Z",
-                        "type": null,
+                        "type": 0,
                         "shares": "974.88",
                         "isDrip": false,
                         "price": "34.08",
                         "id": "ef5d891e-972a-4781-6811-9f1z6e451c76"
+                    },
+                    {
+                        "name": "Thomson Reuters Corporation",
+                        "symbol": "TRI",
+                        "date": "2018-01-06T04:26:01.368Z",
+                        "type": 0,
+                        "shares": 5.783555,
+                        "isDrip": false,
+                        "price": 43.615,
+                        "id": "c29b5bc9-d922-4c54-c479-9900d0b8d85f"
                     }
                 ],
                 "quote": "44.3000",
                 "adj_prev_close": "44.2500",
                 "latestQuote": {
-                    "last_trade_price": "43.7700",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "43.7600"
+                    "last_trade_price": "44.2400",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "44.0300"
                 }
             }
         ]
@@ -888,9 +929,9 @@
                     }
                 ],
                 "latestQuote": {
-                    "last_trade_price": "68.5900",
-                    "updated_at": "2018-01-04T00:31:33Z",
-                    "adjusted_previous_close": "68.0400"
+                    "last_trade_price": "69.0400",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "68.8900"
                 }
             },
             {
@@ -909,8 +950,8 @@
                     }
                 ],
                 "latestQuote": {
-                    "last_trade_price": "18.5300",
-                    "updated_at": "2018-01-04T01:00:00Z",
+                    "last_trade_price": "18.2800",
+                    "updated_at": "2018-01-06T01:00:00Z",
                     "adjusted_previous_close": "18.2000"
                 }
             }
@@ -922,108 +963,24 @@
         "version": "1",
         "positions": [
             {
-                "name": "Sirius XM Holdings Inc. - Common Stock",
-                "symbol": "SIRI",
+                "name": "Amazon.com, Inc. - Common Stock",
+                "symbol": "AMZN",
                 "transactions": [
                     {
-                        "name": "Sirius XM Holdings Inc. - Common Stock",
-                        "symbol": "SIRI",
-                        "date": "2018-01-04T03:38:54.863Z",
+                        "name": "Amazon.com, Inc. - Common Stock",
+                        "symbol": "AMZN",
+                        "date": "2018-01-04T03:32:58.110Z",
                         "type": 0,
-                        "shares": 100,
+                        "shares": 5,
                         "isDrip": false,
-                        "price": 5.34,
-                        "id": "2ea4a29d-84cf-42b7-3c06-ef3f84bf3e6c"
+                        "price": 1004.73,
+                        "id": "a19e6bc0-b3c2-4b5c-4e93-13cc0547d52a"
                     }
                 ],
                 "latestQuote": {
-                    "last_trade_price": "5.2100",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "5.2100"
-                }
-            },
-            {
-                "name": "Tesla, Inc. Common Stock",
-                "symbol": "TSLA",
-                "transactions": [
-                    {
-                        "name": "Tesla, Inc. Common Stock",
-                        "symbol": "TSLA",
-                        "date": "2018-01-04T03:36:56.086Z",
-                        "type": 0,
-                        "shares": 1,
-                        "isDrip": false,
-                        "price": 305.27,
-                        "id": "3ad9f3f7-1293-4016-0c43-1ba54ae8009d"
-                    }
-                ],
-                "latestQuote": {
-                    "last_trade_price": "317.2500",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "320.5300"
-                }
-            },
-            {
-                "name": "Rite Aid",
-                "symbol": "RAD",
-                "transactions": [
-                    {
-                        "name": "Rite Aid",
-                        "symbol": "RAD",
-                        "date": "2018-01-04T03:38:28.469Z",
-                        "type": 0,
-                        "shares": 100,
-                        "isDrip": false,
-                        "price": 1.82,
-                        "id": "0e7dd2eb-e65b-4b4e-6c32-5aa272a98916"
-                    }
-                ],
-                "latestQuote": {
-                    "last_trade_price": "2.1100",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "2.1300"
-                }
-            },
-            {
-                "name": "Coca-cola",
-                "symbol": "KO",
-                "transactions": [
-                    {
-                        "name": "Coca-cola",
-                        "symbol": "KO",
-                        "date": "2018-01-04T03:38:10.270Z",
-                        "type": 0,
-                        "shares": 100,
-                        "isDrip": false,
-                        "price": 45.08,
-                        "id": "42d43dc6-bead-4687-e35f-2c575f6659d6"
-                    }
-                ],
-                "latestQuote": {
-                    "last_trade_price": "45.4400",
-                    "updated_at": "2018-01-04T00:59:45Z",
-                    "adjusted_previous_close": "45.5400"
-                }
-            },
-            {
-                "name": "Randgold Resources Limited American Depositary Shares",
-                "symbol": "GOLD",
-                "transactions": [
-                    {
-                        "name": "Randgold Resources Limited American Depositary Shares",
-                        "symbol": "GOLD",
-                        "date": "2018-01-04T03:36:12.173Z",
-                        "type": 0,
-                        "shares": 20,
-                        "isDrip": false,
-                        "price": 94,
-                        "id": "69da5bf6-e5e3-4a67-ace3-734cb57e5224"
-                    }
-                ],
-                "latestQuote": {
-                    "last_trade_price": "98.7800",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "100.7200"
+                    "last_trade_price": "1229.1400",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "1209.5900"
                 }
             },
             {
@@ -1042,9 +999,9 @@
                     }
                 ],
                 "latestQuote": {
-                    "last_trade_price": "12.7600",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "12.6600"
+                    "last_trade_price": "13.2000",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "12.9800"
                 }
             },
             {
@@ -1063,30 +1020,114 @@
                     }
                 ],
                 "latestQuote": {
-                    "last_trade_price": "1091.0000",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "1073.2100"
+                    "last_trade_price": "1110.2900",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "1095.7600"
                 }
             },
             {
-                "name": "Costco Wholesale Corporation Common Stock",
-                "symbol": "COST",
+                "name": "Intel Corporation - Common Stock",
+                "symbol": "INTC",
                 "transactions": [
                     {
-                        "name": "Costco Wholesale Corporation Common Stock",
-                        "symbol": "COST",
-                        "date": "2018-01-04T03:35:51.038Z",
+                        "name": "Intel Corporation - Common Stock",
+                        "symbol": "INTC",
+                        "date": "2018-01-06T00:43:02.433Z",
                         "type": 0,
                         "shares": 20,
                         "isDrip": false,
-                        "price": 157.11,
-                        "id": "730cdae2-2d3e-4ac2-980e-19328ea0530f"
+                        "price": 44.74,
+                        "id": "717a438e-eec0-4c68-6234-fce71acd938d"
                     }
                 ],
                 "latestQuote": {
-                    "last_trade_price": "190.5800",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "188.3200"
+                    "last_trade_price": "44.7400",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "44.4300"
+                }
+            },
+            {
+                "name": "Randgold Resources Limited American Depositary Shares",
+                "symbol": "GOLD",
+                "transactions": [
+                    {
+                        "name": "Randgold Resources Limited American Depositary Shares",
+                        "symbol": "GOLD",
+                        "date": "2018-01-04T03:36:12.173Z",
+                        "type": 0,
+                        "shares": 20,
+                        "isDrip": false,
+                        "price": 94,
+                        "id": "69da5bf6-e5e3-4a67-ace3-734cb57e5224"
+                    }
+                ],
+                "latestQuote": {
+                    "last_trade_price": "98.2900",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "98.0800"
+                }
+            },
+            {
+                "name": "Sirius XM Holdings Inc. - Common Stock",
+                "symbol": "SIRI",
+                "transactions": [
+                    {
+                        "name": "Sirius XM Holdings Inc. - Common Stock",
+                        "symbol": "SIRI",
+                        "date": "2018-01-04T03:38:54.863Z",
+                        "type": 0,
+                        "shares": 100,
+                        "isDrip": false,
+                        "price": 5.34,
+                        "id": "2ea4a29d-84cf-42b7-3c06-ef3f84bf3e6c"
+                    }
+                ],
+                "latestQuote": {
+                    "last_trade_price": "5.3300",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "5.3100"
+                }
+            },
+            {
+                "name": "Tesla, Inc. Common Stock",
+                "symbol": "TSLA",
+                "transactions": [
+                    {
+                        "name": "Tesla, Inc. Common Stock",
+                        "symbol": "TSLA",
+                        "date": "2018-01-04T03:36:56.086Z",
+                        "type": 0,
+                        "shares": 1,
+                        "isDrip": false,
+                        "price": 305.27,
+                        "id": "3ad9f3f7-1293-4016-0c43-1ba54ae8009d"
+                    }
+                ],
+                "latestQuote": {
+                    "last_trade_price": "316.5800",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "314.6200"
+                }
+            },
+            {
+                "name": "Coca-cola",
+                "symbol": "KO",
+                "transactions": [
+                    {
+                        "name": "Coca-cola",
+                        "symbol": "KO",
+                        "date": "2018-01-04T03:38:10.270Z",
+                        "type": 0,
+                        "shares": 100,
+                        "isDrip": false,
+                        "price": 45.08,
+                        "id": "42d43dc6-bead-4687-e35f-2c575f6659d6"
+                    }
+                ],
+                "latestQuote": {
+                    "last_trade_price": "46.0700",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "46.0800"
                 }
             },
             {
@@ -1105,30 +1146,51 @@
                     }
                 ],
                 "latestQuote": {
-                    "last_trade_price": "25.3300",
-                    "updated_at": "2018-01-04T01:00:00Z",
-                    "adjusted_previous_close": "26.3100"
+                    "last_trade_price": "24.4800",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "24.4900"
                 }
             },
             {
-                "name": "Amazon.com, Inc. - Common Stock",
-                "symbol": "AMZN",
+                "name": "Rite Aid",
+                "symbol": "RAD",
                 "transactions": [
                     {
-                        "name": "Amazon.com, Inc. - Common Stock",
-                        "symbol": "AMZN",
-                        "date": "2018-01-04T03:32:58.110Z",
+                        "name": "Rite Aid",
+                        "symbol": "RAD",
+                        "date": "2018-01-04T03:38:28.469Z",
                         "type": 0,
-                        "shares": 5,
+                        "shares": 100,
                         "isDrip": false,
-                        "price": 1004.73,
-                        "id": "a19e6bc0-b3c2-4b5c-4e93-13cc0547d52a"
+                        "price": 1.82,
+                        "id": "0e7dd2eb-e65b-4b4e-6c32-5aa272a98916"
                     }
                 ],
                 "latestQuote": {
-                    "last_trade_price": "1204.2000",
-                    "updated_at": "2018-01-04T00:59:37Z",
-                    "adjusted_previous_close": "1189.0100"
+                    "last_trade_price": "2.0300",
+                    "updated_at": "2018-01-06T01:00:00Z",
+                    "adjusted_previous_close": "2.0800"
+                }
+            },
+            {
+                "name": "Costco Wholesale Corporation Common Stock",
+                "symbol": "COST",
+                "transactions": [
+                    {
+                        "name": "Costco Wholesale Corporation Common Stock",
+                        "symbol": "COST",
+                        "date": "2018-01-04T03:35:51.038Z",
+                        "type": 0,
+                        "shares": 20,
+                        "isDrip": false,
+                        "price": 157.11,
+                        "id": "730cdae2-2d3e-4ac2-980e-19328ea0530f"
+                    }
+                ],
+                "latestQuote": {
+                    "last_trade_price": "187.7500",
+                    "updated_at": "2018-01-06T00:27:12Z",
+                    "adjusted_previous_close": "189.1000"
                 }
             }
         ]

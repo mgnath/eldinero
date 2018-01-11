@@ -125,7 +125,7 @@ export class StocksApiService implements IStocksApi {
   refreshLatestPrices() {
     if (this.cantMakeAPICall()) { return; }
     if (this.loadingLatest) { console.log('loading...'); return; }
-    //if (this.forceLoad || this.marketStatus) 
+    if (this.forceLoad || this.marketStatus) 
     { //this.marketStatus
       this.loadingLatest = true;
       this.http.get<any>("https://api.robinhood.com/quotes/?symbols=" +
