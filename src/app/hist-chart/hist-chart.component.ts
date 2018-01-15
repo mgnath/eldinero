@@ -31,10 +31,12 @@ export class HistChartComponent implements OnInit {
       this.dailyChart();
     });
   }
+
   public lineChartDataDaily: Array<any> = [
     { data: [], label: 'Intra Day Value' }
   ];
   public lineChartLabelsDaily: Array<any> = [];
+
   public lineChartOptionsDaily: any = {
     responsive: true
   };
@@ -114,17 +116,18 @@ export class HistChartComponent implements OnInit {
               Object.keys(d[timeKey]).forEach(
                 key => {
                   var results = this.histArray.find(e => e.tradeKey === key);
-                  if (!results && key != '2017-08-04') {
-                    this.histArray.push({ tradeKey: key, tradeDate: new Date(key), dailyTot: 0, costBasis: 0 });
+                  if (!results && key != '2017-08-21') {
+                    this.histArray.push({ tradeKey: key, tradeDate: new Date(key), dailyGL: 0, dailyTot: 0, costBasis: 0 });
                   }
                 });
               Object.keys(d[timeKey]).forEach(
                 key => {
 
                   var results = this.histArray.find(e => e.tradeKey === key);
-                  if (results && key != '2017-08-04') {
+                  if (results && key != '2017-08-21') {
                     if (new Date(key).valueOf() > (new Date(tran.date).valueOf() - 86400000)) {
                       results.dailyTot += d[timeKey][key][closeKey] * tran.shares;
+                      results.dailyGL += 
                       results.costBasis += tran.price * tran.shares;
                     }
                   }

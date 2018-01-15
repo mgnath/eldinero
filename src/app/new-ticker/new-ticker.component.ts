@@ -14,7 +14,7 @@ export class NewTickerComponent implements OnInit {
   @Output() add: EventEmitter<Transaction> = new EventEmitter<Transaction>();
   
   constructor(private stockService:StocksApiService ){
-    this.newT = new Transaction("", "", null, null, null, false, null);
+    this.newT = new Transaction("", "", null, 0 , null, false, null);
   }
   ngOnInit() {
   }
@@ -22,7 +22,7 @@ export class NewTickerComponent implements OnInit {
     this.newT.type = TransactionType.BUY;
     this.newT.symbol = this.newT.symbol.toUpperCase();
     this.add.emit(this.newT);
-    this.newT = new Transaction("", "", null, null, 0, false, 0);
+    this.newT = new Transaction("", "", null, 0, 0, false, 0);
   }
   validateSymbol() {
     this.newT.name = "";

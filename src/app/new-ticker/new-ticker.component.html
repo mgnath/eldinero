@@ -7,6 +7,10 @@
 <mat-form-field class="example-full-width">
   <input matInput [(ngModel)]="newT.price" type="number" placeholder="Purchase Price" value="" (keyup.enter)="addTransaction(newT)">
 </mat-form-field>
+<mat-radio-group  [(ngModel)]="newT.type">
+  <mat-radio-button value="0">Buy</mat-radio-button>
+  <mat-radio-button value="1">Sell</mat-radio-button>
+</mat-radio-group>
 <button mat-raised-button (click)="addTransaction(newT)" color="primary" [disabled]="(newT.name.length<1) || (newT.shares < 1) ">
-  Add
+  Trade
 </button>

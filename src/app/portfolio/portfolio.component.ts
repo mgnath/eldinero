@@ -55,7 +55,6 @@ export class PortfolioComponent {
     this.currPortfolio$.subscribe(
       p => {
         this.currPortfolio = p;
-        console.log(p);
         this.updateQuotes();
       }
     );
