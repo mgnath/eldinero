@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Portfolio, Transaction } from '../shared/models/entities';
+import { Portfolio, Transaction, TransactionType } from '../shared/models/entities';
 import { AlphavantageService } from '../shared/services/alphavantage.service';
 import { StocksApiService } from '../shared/services/stocksapi.service';
 import { Observable } from 'rxjs/Observable';
@@ -31,6 +31,10 @@ export class HistChartComponent implements OnInit {
       this.dailyChart();
     });
   }
+  public lineChartDataGL: Array<any> = [
+    { data: [], label: 'Gain Loss' }
+  ];
+  public lineChartLabelsGL: Array<any> = [];
 
   public lineChartDataDaily: Array<any> = [
     { data: [], label: 'Intra Day Value' }
@@ -122,13 +126,17 @@ export class HistChartComponent implements OnInit {
                 });
               Object.keys(d[timeKey]).forEach(
                 key => {
-
                   var results = this.histArray.find(e => e.tradeKey === key);
                   if (results && key != '2017-08-21') {
                     if (new Date(key).valueOf() > (new Date(tran.date).valueOf() - 86400000)) {
-                      results.dailyTot += d[timeKey][key][closeKey] * tran.shares;
-                      results.dailyGL += 
-                      results.costBasis += tran.price * tran.shares;
+                      if(tran.type == TransactionType.BUY){
+                        results.dailyTot += d[timeKey][key][closeKey] * tran.shares;
+                        results.costBasis += tran.price * tran.shares;
+                      }
+                      else{
+                        results.dailyTot -= d[timeKey][key][closeKey] * tran.shares;
+                        results.costBasis -= tran.price * tran.shares;
+                      }
                     }
                   }
                 }
@@ -137,6 +145,10 @@ export class HistChartComponent implements OnInit {
               this.lineChartData[0].data = this.histArray.map(e => e.dailyTot.toFixed(2)).reverse();//.slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
               this.lineChartData[1].data = this.histArray.map(e => e.costBasis.toFixed(2)).reverse();//.slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
               this.lineChartLabels = this.histArray.map(e => e.tradeKey).reverse();//.slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
+            
+              this.lineChartDataGL[0].data = this.histArray.map(e => (e.dailyTot - e.costBasis).toFixed(2)).reverse();//.slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
+              this.lineChartLabelsGL = this.histArray.map(e => e.tradeKey).reverse();//.slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
+            
             } catch (ex) { console.log('error in' + ex); }
           }, err => { console.log(err) });
       }, (idx + 1) * interval);
