@@ -30,7 +30,14 @@
       <tr>
         <td align="right">
           <div style="font-size:large;float:right;white-space: nowrap;">
-            <ed-colored-text [num]="portfolio.getGrandTotalGain()" title="Unrealized Gain/Loss"></ed-colored-text>
+            <ed-colored-text [num]="portfolio.getGrandCostBasis()" [noColor]="true" title="Total Cost Basis"></ed-colored-text>
+           </div>
+        </td>
+      </tr>
+      <tr>
+        <td align="right">
+          <div style="font-size:large;float:right;white-space: nowrap;">
+            <ed-colored-text [num]="portfolio.getGrandTotalGain()" no-c title="Unrealized Gain/Loss"></ed-colored-text>
             <span style="font-size:small;">
               (
               <ed-colored-text [num]="portfolio.getGrandTotalGainPer()" title="Unrealized Gain/Loss Percentage"></ed-colored-text>%)

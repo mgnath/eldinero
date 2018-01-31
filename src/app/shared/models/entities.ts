@@ -7,19 +7,12 @@ export class Portfolio {
     constructor() { }
     getGrandTotal() {
         var totSum: number = 0;
-        this.positions.forEach(
-            pos => (
-                totSum += pos.marketValue()
-            )
-        );
+        this.positions.forEach(pos => (totSum += pos.marketValue()));
         return totSum;
     }
     getGrandTotalGain() {
         var totSum: number = 0;
-        this.positions.forEach(
-            pos => (
-                totSum += pos.unrealizedGainLoss())
-        );
+        this.positions.forEach(pos => (totSum += pos.unrealizedGainLoss()));
         return totSum;
     }
     getGrandTotalGainPer() {
@@ -28,19 +21,19 @@ export class Portfolio {
     }
     getGrandCostBasis() {
         var totSum: number = 0;
-        this.positions.forEach(
-            pos => (
-                totSum += pos.totalCostBasis()
-            )
-        );
+        this.positions.forEach(pos => (totSum += pos.totalCostBasis()));
         return totSum;
     }
+    getGrandRealizedGL() {
+        var totSum: number = 0;
+        this.positions.forEach(pos => (totSum += pos.realizedGainLoss()));
+        return totSum;
+    }
+    
     getGrandTotalDayGain() {
         var totSum: number = 0;
-        this.positions.forEach(
-            pos => (
-                totSum +=
-                pos.marketValue() - (pos.latestQuote.adjusted_previous_close * pos.shares)
+        this.positions.forEach(pos => (
+                totSum +=pos.marketValue() - (pos.latestQuote.adjusted_previous_close * pos.shares)
             )
         );
         return totSum;
@@ -48,12 +41,11 @@ export class Portfolio {
     getGrandTotalDayGainPer() {
         return  (this.getGrandTotalDayGain()/this.getPrevDayCloseTotal())*100;
     }
+    
     getPrevDayCloseTotal() {
         var totSum: number = 0;
-        this.positions.forEach(
-            pos => (
-                totSum +=
-                 (pos.latestQuote.adjusted_previous_close * pos.shares)
+        this.positions.forEach(pos => (
+                totSum +=(pos.latestQuote.adjusted_previous_close * pos.shares)
             )
         );
         return totSum;
@@ -77,10 +69,14 @@ export class StockPosition {
     transactions: Transaction[];
     constructor() { }
     get shares(): number {
-        return UtilService.getSum(this.transactions, "shares");
+        let buy= UtilService.getSum(this.transactions.filter(t=>t.type==TransactionType.BUY), "shares");
+        let sell = UtilService.getSum(this.transactions.filter(t=>t.type==TransactionType.SELL), "shares");
+        return buy-sell;
     }
     get avgPrice(): number {
-        return this.totalCostBasis() / this.shares;
+        if(this.shares > 0){
+            return this.totalCostBasis() / this.shares;
+        }else{return 0;}
     }
     get dayChange():number{
         return this.latestQuote.last_trade_price - this.latestQuote.adjusted_previous_close;
@@ -92,12 +88,22 @@ export class StockPosition {
        return  this.dayChange * this.shares;
     }
     totalCostBasis(): number {
-        return this.transactions.reduce(function (p, c, i) {
+        let buyBasis =  this.transactions.filter(t=>t.type==TransactionType.BUY).reduce(function (p, c, i) {
             return p + (c.price * c.shares);
         }, 0);
+        let sellBasis =  this.transactions.filter(t=>t.type==TransactionType.SELL).reduce(function (p, c, i) {
+            return p + (c.price * c.shares);
+        }, 0);
+        return buyBasis-sellBasis;
     }
     marketValue(): number { return this.shares * this.latestQuote.last_trade_price; }
     unrealizedGainLoss(): number { return this.marketValue() - this.totalCostBasis(); }
+    realizedGainLoss(): number { 
+        let gl =  this.transactions.filter(t=>t.type==TransactionType.SELL).reduce(function (p, c, i) {
+            return p + ((c.sellprice - c.price) * c.shares);
+        }, 0);
+        return gl;
+    }
     gainLossPer() {
         var origCos = this.totalCostBasis();
         return ((this.marketValue() - origCos) / origCos) * 100;
@@ -106,6 +112,7 @@ export class StockPosition {
         t.id = UtilService.generateGUID();
         t.date = new Date();
         t.symbol = this.symbol;
+        console.log(t);
         this.transactions = this.transactions || [];
         this.transactions.push(t);
         return this;
@@ -120,6 +127,7 @@ export class Transaction {
     type: TransactionType;
     shares: number;
     price: number;
+    sellprice:number;
     isDrip: boolean;
     quote: number;
     constructor(

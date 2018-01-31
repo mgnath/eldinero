@@ -38,6 +38,8 @@ export class PortfolioService {
     return this.dataStore.portfolios;
   }
   saveData(portfolios: Portfolio[]) {
+    //portfolios.forEach(p=>{ p.positions.forEach(pos=>{ pos.latestQuote=null; }) });
+    console.log('saving...')
     localStorage.setItem("eldinero.v" + this.CURR_VER, JSON.stringify(portfolios));
   }
   getData(){
@@ -63,7 +65,7 @@ export class PortfolioService {
   addTransction(t: Transaction, portfolioId: string) {
     console.log('portfolio service adding trans');
     t.id = UtilService.generateGUID();
-    t.date = new Date();
+    //t.date = new Date();
     this.dataStore.portfolios = this.dataStore.portfolios || new Array<Portfolio>();
     this.dataStore.portfolios.forEach((element, index) => {
       if (element.id === portfolioId) {

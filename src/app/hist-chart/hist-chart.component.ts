@@ -61,7 +61,7 @@ export class HistChartComponent implements OnInit {
   dailyChart() {
     this.intraDayArray = [];
     let gap = 5;
-    let gapms = gap*60000;
+    let gapms = gap * 60000;
     let startTime = moment().startOf('day').add(9.501, 'hours');//subtract(24,'hours');//
     let temStart = startTime.clone();
     let endTime = moment().startOf('day').add(16.001, 'hours');
@@ -104,8 +104,9 @@ export class HistChartComponent implements OnInit {
     );
 
     trans.forEach((tran, idx) => {
+      //console.log(tran.date+","+tran.symbol+","+tran.shares+","+tran.price+","+tran.type);
       var sinceLastRef = this.alphSrv.sinceLastRefreshedHist(tran.symbol.replace('.', '-'));
-      var interval = (sinceLastRef > 0 && sinceLastRef < 86400000)? 50:2000;
+      var interval = (sinceLastRef > 0 && sinceLastRef < 86400000) ? 50 : 2000;
       setTimeout(() => {
         this.alphSrv.getHistoricalData(tran.symbol.replace('.', '-'), "TIME_SERIES_DAILY_ADJUSTED")
           .subscribe(d => {
@@ -120,20 +121,20 @@ export class HistChartComponent implements OnInit {
               Object.keys(d[timeKey]).forEach(
                 key => {
                   var results = this.histArray.find(e => e.tradeKey === key);
-                  if (!results && key != '2017-08-21') {
+                  if (!results && key != '2017-08-29') {
                     this.histArray.push({ tradeKey: key, tradeDate: new Date(key), dailyGL: 0, dailyTot: 0, costBasis: 0 });
                   }
                 });
               Object.keys(d[timeKey]).forEach(
                 key => {
                   var results = this.histArray.find(e => e.tradeKey === key);
-                  if (results && key != '2017-08-21') {
+                  if (results && key != '2017-08-29') {
                     if (new Date(key).valueOf() > (new Date(tran.date).valueOf() - 86400000)) {
-                      if(tran.type == TransactionType.BUY){
+                      if (tran.type == TransactionType.BUY) {
                         results.dailyTot += d[timeKey][key][closeKey] * tran.shares;
                         results.costBasis += tran.price * tran.shares;
                       }
-                      else{
+                      else {
                         results.dailyTot -= d[timeKey][key][closeKey] * tran.shares;
                         results.costBasis -= tran.price * tran.shares;
                       }
@@ -145,10 +146,10 @@ export class HistChartComponent implements OnInit {
               this.lineChartData[0].data = this.histArray.map(e => e.dailyTot.toFixed(2)).reverse();//.slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
               this.lineChartData[1].data = this.histArray.map(e => e.costBasis.toFixed(2)).reverse();//.slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
               this.lineChartLabels = this.histArray.map(e => e.tradeKey).reverse();//.slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
-            
+
               this.lineChartDataGL[0].data = this.histArray.map(e => (e.dailyTot - e.costBasis).toFixed(2)).reverse();//.slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
               this.lineChartLabelsGL = this.histArray.map(e => e.tradeKey).reverse();//.slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
-            
+
             } catch (ex) { console.log('error in' + ex); }
           }, err => { console.log(err) });
       }, (idx + 1) * interval);

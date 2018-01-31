@@ -19,8 +19,8 @@ export class NewTickerComponent implements OnInit {
   ngOnInit() {
   }
   addTransaction(trans: Transaction) {
-    this.newT.type = TransactionType.BUY;
     this.newT.symbol = this.newT.symbol.toUpperCase();
+    this.newT.date = new Date(this.newT.date);
     this.add.emit(this.newT);
     this.newT = new Transaction("", "", null, 0, 0, false, 0);
   }

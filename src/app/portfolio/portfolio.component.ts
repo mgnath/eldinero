@@ -61,6 +61,9 @@ export class PortfolioComponent {
 
 
   }
+  getCurrentPositions(positions: StockPosition[]){
+    return positions.filter(pos=> pos.shares>0);
+  }
   getTranType(typ:any){
     if(typ == 1){
       return "SELL";
@@ -108,6 +111,7 @@ export class PortfolioComponent {
     else if (colName == 'daychangeper') { retStr = "Day Change %"; }
     else if (colName == 'daygain') { retStr = "Day Gain"; }
     else if (colName == 'mktval') { retStr = "Market Value"; }
+    else if (colName == 'costbasis') { retStr = "Cost Basis"; }
     else if (colName == 'totgain') { retStr = "Gain/Loss"; }
     if (colName == this.sCol) { retStr += (this.sortDir == 1) ? "▲" : "▼"; }
     return retStr;
@@ -136,6 +140,11 @@ export class PortfolioComponent {
     else if (sortingCol == 'mktval') {
       this.currPortfolio.positions.sort((a, b) => {
         return this.sortDir * (a.marketValue() - b.marketValue());
+      })
+    }
+    else if (sortingCol == 'costbasis') {
+      this.currPortfolio.positions.sort((a, b) => {
+        return this.sortDir * (a.totalCostBasis() - b.totalCostBasis());
       })
     }
     else if (sortingCol == 'avgcost') { this.currPortfolio.positions.sort((a, b) => { return this.sortDir * (a.avgPrice - b.avgPrice); }) }
