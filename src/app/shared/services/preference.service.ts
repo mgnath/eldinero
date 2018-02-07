@@ -11,6 +11,6 @@ export  class PreferenceService {
     localStorage.setItem("eldinero.settings.v" + this.CURR_VER, JSON.stringify(settingsData));
   }
   loadData(){
-     return JSON.parse(localStorage.getItem("eldinero.settings.v1")) || {refreshrate:145000};
+     return JSON.parse(localStorage.getItem("eldinero.settings.v"+ this.CURR_VER)) || {refreshrate:15000, cloudurl:""};
   }
 }

@@ -12,6 +12,16 @@
             Refresh Rate
             <input type="range" (change)="saveRefreshRate()" min="3" max="30" [(ngModel)]="refreshRate" /> {{refreshRate}} seconds
             <span style="font-size:xx-small;">Note: Manually refresh the page after changing the rate</span>
+            <br/>
+            <br/>
+            <br/>
+            Cloud Key:
+            <input type="text" style="width:200 px" [(ngModel)]="cloudurl" placeholder="Cloud Key"/>
+            <br>
+            <br>
+            <button mat-raised-button (click)="saveSettings()" color="primary">
+                Save
+            </button>
         </mat-card-content>
     </mat-card>
 </div>

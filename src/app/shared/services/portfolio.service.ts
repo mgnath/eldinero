@@ -4,6 +4,8 @@ import { Portal } from '@angular/cdk/portal';
 import { UtilService } from './util.service';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { PreferenceService } from './preference.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class PortfolioService {
@@ -12,7 +14,7 @@ export class PortfolioService {
   private dataStore: {
     portfolios: Portfolio[]
   };
-  constructor() {
+  constructor(private prefSrv: PreferenceService, private http: HttpClient) {
     this.dataStore = { portfolios: [] };
     this._portfolios = <BehaviorSubject<Portfolio[]>>new BehaviorSubject([]);
     this.loadData();
@@ -22,27 +24,68 @@ export class PortfolioService {
   }
   loadData() {
     let tempPortfolios = new Array<Portfolio>();
-    var jsonObj: Portfolio[] = JSON.parse(localStorage.getItem("eldinero.v1")) as Portfolio[] || [];
-    jsonObj.forEach(e => {
-      let pos: StockPosition[] = [];
-      e.positions = e.positions || [];
-      e.positions.forEach(p => {
-        p.latestQuote = p.latestQuote || new quote();
-        pos.push(Object.assign(new StockPosition(), p))
+
+    var jsonObj: Portfolio[] = [];
+    //JSON.parse(localStorage.getItem("eldinero.v" + this.CURR_VER)) as Portfolio[] || [];
+    
+    let cloudUrl = this.prefSrv.appSettings.cloudurl;
+    if (cloudUrl && cloudUrl.length > 1) {
+      this.http.get(cloudUrl).subscribe(
+        resp => { 
+          jsonObj = <Portfolio[]>resp;
+          jsonObj.forEach(e => {
+            let pos: StockPosition[] = [];
+            e.positions = e.positions || [];
+            e.positions.forEach(p => {
+              p.latestQuote = new quote();
+              pos.push(Object.assign(new StockPosition(), p))
+            });
+            e.positions = pos;
+            tempPortfolios.push(Object.assign(new Portfolio(), e));
+          });
+          this.dataStore.portfolios = tempPortfolios;
+          this._portfolios.next(Object.assign({}, this.dataStore).portfolios);
+          return this.dataStore.portfolios;
+        }
+      );
+    }
+    else {
+      this.http.post<any>("https://api.myjson.com/bins",
+       JSON.parse(localStorage.getItem("eldinero.v" + this.CURR_VER)) as Portfolio[] || [])
+       .subscribe(resp => {
+        let appSettings = this.prefSrv.appSettings;
+        appSettings.cloudurl = resp.uri;
+        console.log(appSettings);
+        this.prefSrv.saveData(appSettings);
       });
-      e.positions = pos;
-      tempPortfolios.push(Object.assign(new Portfolio(), e));
-    });
-    this.dataStore.portfolios = tempPortfolios;
-    this._portfolios.next(Object.assign({}, this.dataStore).portfolios);
-    return this.dataStore.portfolios;
+      jsonObj = JSON.parse(localStorage.getItem("eldinero.v" + this.CURR_VER)) as Portfolio[] || [];
+      jsonObj.forEach(e => {
+        let pos: StockPosition[] = [];
+        e.positions = e.positions || [];
+        e.positions.forEach(p => {
+          p.latestQuote = new quote();
+          pos.push(Object.assign(new StockPosition(), p))
+        });
+        e.positions = pos;
+        tempPortfolios.push(Object.assign(new Portfolio(), e));
+      });
+      this.dataStore.portfolios = tempPortfolios;
+      this._portfolios.next(Object.assign({}, this.dataStore).portfolios);
+      return this.dataStore.portfolios;
+    }
   }
   saveData(portfolios: Portfolio[]) {
     //portfolios.forEach(p=>{ p.positions.forEach(pos=>{ pos.latestQuote=null; }) });
-    console.log('saving...')
+    console.log('saving...');
     localStorage.setItem("eldinero.v" + this.CURR_VER, JSON.stringify(portfolios));
+    this.http.put<any>(this.prefSrv.appSettings.cloudurl,
+    JSON.parse(localStorage.getItem("eldinero.v" + this.CURR_VER)) as Portfolio[] || [])
+    .subscribe(resp => {
+      this.loadData();
+   });
+
   }
-  getData(){
+  getData() {
     return this.dataStore.portfolios;
   }
   addPortfolio(name: string) {
@@ -56,7 +99,7 @@ export class PortfolioService {
     this.dataStore.portfolios = this.loadData();
     this.publishData();
   }
-  replacePortfolios(portfolios: Portfolio[]){
+  replacePortfolios(portfolios: Portfolio[]) {
     this.dataStore.portfolios = portfolios;
     this.saveData(this.dataStore.portfolios);
     this.dataStore.portfolios = this.loadData();
