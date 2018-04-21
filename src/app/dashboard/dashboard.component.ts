@@ -27,6 +27,8 @@ export class DashboardComponent implements OnInit {
     this.newPortfolioName = "";
   }
   DeletePortfolio(id: string) {
-    this.portfolioSrv.removePosition(id);
+    if(confirm("Are you sure to delete ")){
+      this.portfolioSrv.removePosition(id);
+    }
   }
 }

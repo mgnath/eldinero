@@ -75,15 +75,10 @@ export class PortfolioService {
     }
   }
   saveData(portfolios: Portfolio[]) {
-    //portfolios.forEach(p=>{ p.positions.forEach(pos=>{ pos.latestQuote=null; }) });
     console.log('saving...');
-    localStorage.setItem("eldinero.v" + this.CURR_VER, JSON.stringify(portfolios));
-    this.http.put<any>(this.prefSrv.appSettings.cloudurl,
-    JSON.parse(localStorage.getItem("eldinero.v" + this.CURR_VER)) as Portfolio[] || [])
-    .subscribe(resp => {
-      this.loadData();
-   });
-
+    //localStorage.setItem("eldinero.v" + this.CURR_VER, JSON.stringify(portfolios));
+    return this.http.put<any>(this.prefSrv.appSettings.cloudurl,
+      portfolios); //JSON.parse(localStorage.getItem("eldinero.v" + this.CURR_VER)) as Portfolio[] || [])
   }
   getData() {
     return this.dataStore.portfolios;
@@ -95,15 +90,17 @@ export class PortfolioService {
     newPortfolio.version = this.CURR_VER;
     this.dataStore.portfolios = this.dataStore.portfolios || new Array<Portfolio>();
     this.dataStore.portfolios.push(newPortfolio);
-    this.saveData(this.dataStore.portfolios);
-    this.dataStore.portfolios = this.loadData();
-    this.publishData();
+    this.saveData(this.dataStore.portfolios).subscribe(resp=>{
+      this.dataStore.portfolios = this.loadData();
+      this.publishData();
+    });
   }
   replacePortfolios(portfolios: Portfolio[]) {
     this.dataStore.portfolios = portfolios;
-    this.saveData(this.dataStore.portfolios);
-    this.dataStore.portfolios = this.loadData();
-    this.publishData();
+    this.saveData(this.dataStore.portfolios).subscribe(resp=>{
+      this.dataStore.portfolios = this.loadData();
+      this.publishData();
+    });
   }
   addTransction(t: Transaction, portfolioId: string) {
     console.log('portfolio service adding trans');
@@ -130,10 +127,10 @@ export class PortfolioService {
         this.dataStore.portfolios[index] = element;
       }
 
-      this.saveData(this.dataStore.portfolios);
-      this.dataStore.portfolios = this.loadData();
-
-      this.publishData();
+      this.saveData(this.dataStore.portfolios).subscribe(resp=>{
+        this.dataStore.portfolios = this.loadData();
+        this.publishData();
+      });
     });
   }
   private publishData() {

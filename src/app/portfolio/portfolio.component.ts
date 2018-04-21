@@ -48,8 +48,6 @@ export class PortfolioComponent {
   }
   private InitPositions() {
     console.log('initializing port comp');
-
-
     this.currPortfolio$ =
       this.portfolioSrv.portfolios.pipe().map(portfolios => portfolios.find(p => p.id === this.id));
     this.currPortfolio$.subscribe(
@@ -58,8 +56,6 @@ export class PortfolioComponent {
         this.updateQuotes();
       }
     );
-
-
   }
   getCurrentPositions(positions: StockPosition[]){
     return positions.filter(pos=> pos.shares>0);
@@ -79,6 +75,8 @@ export class PortfolioComponent {
   }
   updateQuotes() {
     var syms = [];
+    if(!this.currPortfolio) return;
+    
     this.currPortfolio.positions.forEach(e => syms.push(e.symbol));
     this.quotes$ = this.sapi.getLatestPrice(syms);// this.robinhoodRxSrv.getQuotes(syms);
     this.quotes$.subscribe(
