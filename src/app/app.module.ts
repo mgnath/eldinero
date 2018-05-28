@@ -46,7 +46,7 @@ import { DateFormatPipe } from './shared/pipes/date-format.pipe';
     SettingsComponent,
     HistChartComponent,
     DateFormatPipe
-  ], 
+  ],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
@@ -57,8 +57,8 @@ import { DateFormatPipe } from './shared/pipes/date-format.pipe';
     HttpModule,
     ChartsModule
   ],
-  providers: [UtilService,AlphavantageService, PortfolioService,
-              PreferenceService,Title,StocksApiService,StocksRepoService,MarketService,
+  providers: [UtilService, AlphavantageService, PortfolioService,
+              PreferenceService, Title, StocksApiService, StocksRepoService, MarketService,
     {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'auto'}}],
   bootstrap: [AppComponent]
 })
