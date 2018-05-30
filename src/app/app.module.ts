@@ -1,13 +1,10 @@
-import { BrowserModule, Title } from '@angular/platform-browser';
+import { BrowserModule, Title} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 import { ChartsModule } from 'ng2-charts';
-
-import {EdMaterialModule} from './edmaterial-module/edMaterial.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,7 +14,6 @@ import { MapToIterablePipe } from './shared/pipes/map-to-iterable.pipe';
 import { ChangecolorPipe } from './shared/pipes/changecolor.pipe';
 import { ColoredTextComponent } from './shared/components/colored-text/colored-text.component';
 import { NewTickerComponent } from './new-ticker/new-ticker.component';
-import { MAT_PLACEHOLDER_GLOBAL_OPTIONS } from '@angular/material';
 import { AlphavantageService } from './shared/services/alphavantage.service';
 import { PortfolioComponent } from './portfolio/portfolio.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -30,7 +26,7 @@ import { StocksApiService } from './shared/services/stocksapi.service';
 import { StocksRepoService } from './shared/services/stocks-repo.service';
 import { MarketService } from './shared/services/market.service';
 import { DateFormatPipe } from './shared/pipes/date-format.pipe';
-
+import { EdMaterialModule } from './edmaterial-module/edmaterial.module';
 
 @NgModule({
   declarations: [
@@ -54,12 +50,10 @@ import { DateFormatPipe } from './shared/pipes/date-format.pipe';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    HttpModule,
     ChartsModule
   ],
   providers: [UtilService, AlphavantageService, PortfolioService,
-              PreferenceService, Title, StocksApiService, StocksRepoService, MarketService,
-    {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'auto'}}],
+    PreferenceService, Title, StocksApiService, StocksRepoService, MarketService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

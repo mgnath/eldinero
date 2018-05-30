@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { saveAs } from 'file-saver/FileSaver';
+import { saveAs } from 'file-saver';
 
 @Injectable()
 export class UtilService {
@@ -19,31 +19,32 @@ export class UtilService {
       function (p, c, i) { return Number(p) + Number(c[propName]) }, 0);
   }
   SaveAsFile(textToBeSaved:string,filename:string) {
-    var blob = new Blob([textToBeSaved], { type: "text/plain;charset=utf-8" });
-    saveAs(blob,filename);
+    const blob = new Blob([textToBeSaved], { type: 'text/plain;charset=utf-8' });
+    saveAs(blob, filename);
   }
   /* importTransactions() { /// csv parsing function
     var transactions = this.utilService.CSVToArray(this.importText, null);
     transactions.forEach(trans => {
-      let currTrans: Transaction = new Transaction(trans[1], trans[0], new Date(trans[3]), TransactionType.BUY, <number>(trans[4]), false, <number>(trans[5]));
+      let currTrans: Transaction = new Transaction(trans[1], trans[0], new Date(trans[3]), 
+      TransactionType.BUY, <number>(trans[4]), false, <number>(trans[5]));
       this.addTrans(currTrans);
       this.positions = this.financeService.getAllPositions();
     });
   } */
   CSVToArray(strData, strDelimiter) {
-    strDelimiter = (strDelimiter || ",");
+    strDelimiter = (strDelimiter || ',');
     var objPattern = new RegExp(
       (
         "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
         // Quoted fields.
         "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
         // Standard fields.
-        "([^\"\\" + strDelimiter + "\\r\\n]*))"
+        '([^"\\' + strDelimiter + "\\r\\n]*))"
       ),
       "gi"
     );
-    var arrData = [[]];
-    var arrMatches = null;
+    let arrData = [[]];
+    let arrMatches = null;
     while (arrMatches = objPattern.exec(strData)) {
       var strMatchedDelimiter = arrMatches[1];
       if (
@@ -54,8 +55,8 @@ export class UtilService {
       }
       if (arrMatches[2]) {
         var strMatchedValue = arrMatches[2].replace(
-          new RegExp("\"\"", "g"),
-          "\""
+          new RegExp('""', 'g'),
+          '"'
         );
       } else {
         var strMatchedValue = arrMatches[3];

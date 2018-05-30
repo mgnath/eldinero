@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { Portfolio, StockPosition, Transaction, quote } from '../models/entities';
 import { Portal } from '@angular/cdk/portal';
 import { UtilService } from './util.service';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable ,  BehaviorSubject } from 'rxjs';
 import { PreferenceService } from './preference.service';
 import { HttpClient } from '@angular/common/http';
 

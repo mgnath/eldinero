@@ -1,12 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { Transaction, StockPosition, TransactionType, Portfolio, quote } from '../shared/models/entities';
-import { IntervalObservable } from "rxjs/observable/IntervalObservable";
 import { UtilService } from '../shared/services/util.service';
 import { PortfolioService } from '../shared/services/portfolio.service';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import { debounce } from 'rxjs/operator/debounce';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+
 import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { AlphavantageService } from '../shared/services/alphavantage.service';
@@ -23,9 +23,9 @@ export class PortfolioComponent {
   quotes$: Observable<StockPrice[]>;
   id: string;
   alive = true;
-  sCol: string = 'daygain';
-  sortDir: number = -1;
-  firstLoad: boolean = true;
+  sCol = 'daygain';
+  sortDir = -1;
+  firstLoad = true;
   histArray: any[] = [];
 
   private sub: any;
@@ -34,9 +34,10 @@ export class PortfolioComponent {
     private portfolioSrv: PortfolioService,
     private utilService: UtilService,
     private titleSrv: Title,
-    private sapi:StocksApiService) {
+    private sapi: StocksApiService) {
   }
-  ngOnInit() {
+  ngOnInit() 
+  {
 
     this.sub = this.route.params.subscribe(params => {
       this.id = params['id'];
@@ -49,7 +50,7 @@ export class PortfolioComponent {
   private InitPositions() {
     console.log('initializing port comp');
     this.currPortfolio$ =
-      this.portfolioSrv.portfolios.pipe().map(portfolios => portfolios.find(p => p.id === this.id));
+      this.portfolioSrv.portfolios.pipe(map(portfolios => portfolios.find(p => p.id === this.id)));
     this.currPortfolio$.subscribe(
       p => {
         this.currPortfolio = p;
@@ -143,11 +144,11 @@ export class PortfolioComponent {
     else if (sortingCol == 'costbasis') {
       this.currPortfolio.positions.sort((a, b) => {
         return this.sortDir * (a.totalCostBasis() - b.totalCostBasis());
-      })
+      });
     }
-    else if (sortingCol == 'avgcost') { this.currPortfolio.positions.sort((a, b) => { return this.sortDir * (a.avgPrice - b.avgPrice); }) }
+    else if (sortingCol == 'avgcost') { this.currPortfolio.positions.sort((a, b) => this.sortDir * (a.avgPrice - b.avgPrice)) }
     else if (sortingCol == 'quote') {
-      this.currPortfolio.positions.sort((a, b) => { return this.sortDir * (a.latestQuote.last_trade_price - b.latestQuote.last_trade_price); })
+      this.currPortfolio.positions.sort((a, b) => this.sortDir * (a.latestQuote.last_trade_price - b.latestQuote.last_trade_price))
     }
     else if (sortingCol == 'totgain') {
       this.currPortfolio.positions.sort((a, b) => {

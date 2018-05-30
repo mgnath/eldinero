@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Portfolio } from '../../models/entities';
-import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { StocksApiService } from '../../services/stocksapi.service';
 
 @Component({
@@ -11,8 +10,8 @@ import { StocksApiService } from '../../services/stocksapi.service';
 export class PortfolioCardComponent implements OnInit {
   @Input() portfolio: Portfolio;
   @Output() delete: EventEmitter<string> = new EventEmitter<string>();
-  totalValue: number = 0;
-  loading: boolean = true;
+  totalValue = 0;
+  loading = true;
 
 
   constructor(private stockService: StocksApiService) { }
@@ -23,11 +22,11 @@ export class PortfolioCardComponent implements OnInit {
     this.delete.emit(this.portfolio.id);
   }
   loadLastTradedValues(portfolio: Portfolio) {
-    var syms = [];
+    let syms = [];
     portfolio.positions.forEach(e => syms.push(e.symbol));
     if (syms.length > 0) {
       this.stockService.getLatestPrice(syms).subscribe(data => {
-        //console.log("new data")
+        // console.log("new data")
         data.forEach(k => {
           if (this.portfolio.positions.find(e => e.symbol === k.sym)) {
             this.loading = false;

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Portfolio } from '../shared/models/entities';
 import { PortfolioService } from '../shared/services/portfolio.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { StocksApiService } from '../shared/services/stocksapi.service';
 
 @Component({
@@ -10,24 +10,24 @@ import { StocksApiService } from '../shared/services/stocksapi.service';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  portfolios:Observable<Portfolio[]>;
-  newPortfolioName:string="";
-  constructor(private portfolioSrv:PortfolioService,private sapi:StocksApiService) {
+  portfolios: Observable<Portfolio[]>;
+  newPortfolioName = '';
+  constructor(private portfolioSrv: PortfolioService, private sapi: StocksApiService) {
   }
   ngOnInit() {
     this.InitPositions();
-    //this.sapi.getLatestPrice(['AAPL','MSFT','IBM','RAD','FB','AMZN','TECK','C','P','T']).subscribe(r=>{ });
-    //this.sapi.getHistory('AAPL',new Date(),new Date()).subscribe(r=>{console.log(r.filter( sp=> sp.sym=='AMZN' ))})
+    // this.sapi.getLatestPrice(['AAPL','MSFT','IBM','RAD','FB','AMZN','TECK','C','P','T']).subscribe(r=>{ });
+    // this.sapi.getHistory('AAPL',new Date(),new Date()).subscribe(r=>{console.log(r.filter( sp=> sp.sym=='AMZN' ))})
   }
   InitPositions() {
     this.portfolios = this.portfolioSrv.portfolios;
   }
-  createNewPortfolio(name:string){
+  createNewPortfolio(name: string){
     this.portfolioSrv.addPortfolio(name);
-    this.newPortfolioName = "";
+    this.newPortfolioName = '';
   }
   DeletePortfolio(id: string) {
-    if(confirm("Are you sure to delete ")){
+    if ( confirm('Are you sure to delete') ){
       this.portfolioSrv.removePosition(id);
     }
   }
