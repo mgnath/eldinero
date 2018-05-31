@@ -5,7 +5,7 @@ indigo-pink
 deeppurple-amber
 purple-green
 */
-@import "@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import "@angular/material/prebuilt-themes/pink-bluegrey.css";
 @import url("https://fonts.googleapis.com/css?family=Material+Icons");
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,300");
 
@@ -37,7 +37,7 @@ html,body{
   filter: alpha(opacity=4);
   opacity: 0;
   outline: none;
-  background: white;
+  background: grey;
   cursor: inherit;
   display: block;
 }
