@@ -44,7 +44,7 @@ html,body{
 .red {color:red;font-weight:bold; }
 .green{color:green;font-weight:bold;}
 .right{text-align:right;}
-.sorted{color: rgb(63, 81, 181)}
+.sorted{color: #c2185b}
 .light{opacity: .50}
 .w3-table,.w3-table-all{border-collapse:collapse;border-spacing:0;width:100%;display:table; font-size: 14px;}.w3-table-all{border:1px solid #ccc}
 .w3-bordered tr,.w3-table-all tr{border-bottom:1px solid #ddd}.w3-striped tbody tr:nth-child(even){background-color:#f1f1f1}
@@ -56,20 +56,20 @@ html,body{
 
 /* unvisited link */
 a:link {
-  color:rgb(63, 81, 181);
+  color:#c2185b;
 }
 
 /* visited link */
 a:visited {
-  color: rgb(63, 81, 181);
+  color: #c2185b;
 }
 
 /* mouse over link */
 a:hover {
-  color: rgb(63, 81, 181);
+  color: #c2185b;
 }
 
 /* selected link */
 a:active {
-  color: rgb(63, 81, 181);
+  color: #c2185b;
 }

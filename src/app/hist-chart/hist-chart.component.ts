@@ -45,19 +45,7 @@ export class HistChartComponent implements OnInit {
   };
   public lineChartLegendDaily: boolean = true;
   public lineChartTypeDaily: string = 'line';
-  // tslint:disable-next-line:member-ordering
-  public lineChartColorsDaily: Array<any> = [
-    { // dark grey
-      backgroundColor: 'rgba(77,83,96,0.2)',
-      borderColor: 'rgba(77,83,96,1)',
-      pointBackgroundColor: 'rgba(77,83,96,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(77,83,96,1)'
-    }
-  ];
-
-
+ 
   dailyChart() {
     this.intraDayArray = [];
     const gap = 5;
@@ -112,10 +100,10 @@ export class HistChartComponent implements OnInit {
           .subscribe(d => {
             try {
               if (!(d["isCache"] && d["isCache"] == true)) {
-                d["Meta Data"]["3. Last Refreshed"] = new Date();
+                d['Meta Data']["3. Last Refreshed"] = new Date();
               }
               localStorage.setItem(tran.symbol.replace('.', '-') + '_Hist', JSON.stringify(d));
-              let timeKey: string = "Time Series (Daily)";// "Monthly Time Series";
+              let timeKey = "Time Series (Daily)";// "Monthly Time Series";
               // let timeKey: string = "Monthly Adjusted Time Series";
               const closeKey = "4. close";
               Object.keys(d[timeKey]).forEach(
@@ -133,8 +121,7 @@ export class HistChartComponent implements OnInit {
                       if (tran.type == TransactionType.BUY) {
                         results.dailyTot += d[timeKey][key][closeKey] * tran.shares;
                         results.costBasis += tran.price * tran.shares;
-                      }
-                      else {
+                      } else {
                         results.dailyTot -= d[timeKey][key][closeKey] * tran.shares;
                         results.costBasis -= tran.price * tran.shares;
                       }
@@ -143,34 +130,42 @@ export class HistChartComponent implements OnInit {
                 }
               );
 
-              this.lineChartData[0].data = this.histArray.map(e => e.dailyTot.toFixed(2)).reverse();// .slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
-              this.lineChartData[1].data = this.histArray.map(e => e.costBasis.toFixed(2)).reverse();// .slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
-              this.lineChartLabels = this.histArray.map(e => e.tradeKey).reverse();// .slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
+              // tslint:disable-next-line:max-line-length
+              this.lineChartData[0].data = this.histArray.map(e => e.dailyTot.toFixed(2)).reverse(); // .slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
+              // tslint:disable-next-line:max-line-length
+              this.lineChartData[1].data = this.histArray.map(e => e.costBasis.toFixed(2)).reverse(); // .slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
+              // tslint:disable-next-line:max-line-length
+              this.lineChartLabels = this.histArray.map(e => e.tradeKey).reverse(); // .slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
 
-              this.lineChartDataGL[0].data = this.histArray.map(e => (e.dailyTot - e.costBasis).toFixed(2)).reverse();// .slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
-              this.lineChartLabelsGL = this.histArray.map(e => e.tradeKey).reverse();// .slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
+              // tslint:disable-next-line:max-line-length
+              this.lineChartDataGL[0].data = this.histArray.map(e => (e.dailyTot - e.costBasis).toFixed(2)).reverse(); // .slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
+              this.lineChartLabelsGL = this.histArray.map(e => e.tradeKey).reverse(); // .slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
 
             } catch (ex) { console.log('error in' + ex); }
           }, err => { console.log(err); });
       }, (idx + 1) * interval);
     });
   }
+  // tslint:disable-next-line:member-ordering
   public lineChartData: Array<any> = [
     { data: [], label: 'Market Value' }
     , { data: [], label: 'Cost Basis' }
   ];
+  // tslint:disable-next-line:member-ordering
   public lineChartLabels: Array<any> = [];
+  // tslint:disable-next-line:member-ordering
   public lineChartOptions: any = {
     responsive: true
   };
   public lineChartLegend = true;
   public lineChartType = 'line';
+  // tslint:disable-next-line:member-ordering
   public lineChartColors: Array<any> = [
     { // dark grey
       backgroundColor: 'rgba(77,83,96,0.2)',
       borderColor: 'rgba(77,83,96,1)',
       pointBackgroundColor: 'rgba(77,83,96,1)',
-      pointBorderColor: '#fff',
+      pointBorderColor: '#aaa',
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgba(77,83,96,1)'
     },
@@ -178,7 +173,7 @@ export class HistChartComponent implements OnInit {
       backgroundColor: 'rgba(148,159,177,0.2)',
       borderColor: 'rgba(148,159,177,1)',
       pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
+      pointBorderColor: '#aaa',
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgba(148,159,177,0.8)'
     }
