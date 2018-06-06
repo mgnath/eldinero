@@ -14,7 +14,7 @@ export class NewTickerComponent implements OnInit {
   @Output() add: EventEmitter<Transaction> = new EventEmitter<Transaction>();
 
   constructor(private stockService: StocksApiService) {
-    this.newT = new Transaction('', '', null, 0 , null, false, null);
+    this.newT = new Transaction('', '', null, TransactionType.BUY , null, false, null);
   }
   ngOnInit() {
   }
@@ -32,24 +32,6 @@ export class NewTickerComponent implements OnInit {
         this.newT.name = r.name || '';
         console.log(r);
       });
-
-     /*  this.stockService.checkSymbols(new Array(this.newT.symbol.toUpperCase()))
-      .subscribe(syms=> {
-        let res = syms.filter(s=>s.sym == this.newT.symbol)
-        if(res)
-          this.newT.name = res[0].name || "";
-      }); */
-
     }
   }
 }
-
-
-/* this.stockService.GetStockQuotes(new Array(this.newT.symbol.toUpperCase())).subscribe(quotes => {
-  if (quotes.length > 0) {
-    this.stockService.getSymbolName(quotes[0].instrument).subscribe(r => {
-      this.newT.name = r.simple_name;
-    })
-  }
-  else { alert('Not a valid symbol'); }
-}, err => { alert('Not a valid symbol'); }); */
