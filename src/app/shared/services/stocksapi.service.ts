@@ -41,16 +41,15 @@ export class StocksApiService implements IStocksApi {
     this.LoadData();
     this.subscribeMktService();
   }
-  subscribeMktService()
-  {
+  subscribeMktService() {
     this.mktSrv.getMarketStatus().subscribe(status => { this.marketStatus = status.isOpen; } );
   }
   getHistoryInterval(symbol: string, start: Date, end: Date, intervalInMins: number): StockPrice[] {
     const resp: StockPrice[] = [];
     if (start <= end && intervalInMins > 0 && this.dataStore.history) {
       let tempstart = moment(start);
-      let tempEnd = moment(start).add(intervalInMins,'m');
-      while ( tempEnd <= moment(end)){
+      let tempEnd = moment(start).add(intervalInMins, 'm');
+      while ( tempEnd <= moment(end)) {
         resp.push(
           this.dataStore.history.find(sp => {
           return sp.sym === symbol
@@ -127,8 +126,7 @@ export class StocksApiService implements IStocksApi {
   refreshLatestPrices() {
     if (this.cantMakeAPICall()) { return; }
     if (this.loadingLatest) { console.log('loading...'); return; }
-    if (this.forceLoad || this.marketStatus)
-    { // this.marketStatus
+    if (this.forceLoad || this.marketStatus) { // this.marketStatus
       this.loadingLatest = true;
       this.http.get<any>('https://api.robinhood.com/quotes/?symbols=' +
         this.dataStore.stocks.map(q => q.sym).join(','))
@@ -140,7 +138,7 @@ export class StocksApiService implements IStocksApi {
             // console.log(this.dataStore.latestPrices);
             if (res) {
               res = StockPrice.convert(q);
-            }else { this.dataStore.latestPrices.push(StockPrice.convert(q)); }
+            } else { this.dataStore.latestPrices.push(StockPrice.convert(q)); }
             this.addToHistory(StockPrice.convert(q));
             this.updateStockInfo(q);
           });

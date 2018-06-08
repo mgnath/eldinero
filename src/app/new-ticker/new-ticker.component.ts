@@ -18,6 +18,12 @@ export class NewTickerComponent implements OnInit {
   }
   ngOnInit() {
   }
+  setCurrentTime() {
+    this.newT.date = new Date(
+    (new Date().getMonth() + 1) + '/'
+    + new Date().getDay() + '/' + new Date().getFullYear() + ' '
+    + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds());
+  }
   addTransaction(trans: Transaction) {
     this.newT.symbol = this.newT.symbol.toUpperCase();
     this.newT.date = new Date(this.newT.date);

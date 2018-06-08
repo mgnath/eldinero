@@ -27,6 +27,7 @@ export class PortfolioComponent {
   sortDir = -1;
   firstLoad = true;
   histArray: any[] = [];
+  showAll = false;
 
   private sub: any;
   constructor(private route: ActivatedRoute,
@@ -36,14 +37,14 @@ export class PortfolioComponent {
     private titleSrv: Title,
     private sapi: StocksApiService) {
   }
-  ngOnInit() 
-  {
-
+  // tslint:disable-next-line:use-life-cycle-interface
+  ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       this.id = params['id'];
       this.InitPositions();
     });
   }
+  // tslint:disable-next-line:use-life-cycle-interface
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
@@ -62,27 +63,23 @@ export class PortfolioComponent {
     return positions.filter(pos=> pos.shares>0);
   }
   getTranType(typ:any){
-    if(typ == 1){
-      return "SELL";
-    }
-    else if(typ == 0){
-      return "BUY";
-    }
-    else{return "tbd"};
+    if(typ === 1){
+      return 'SELL';
+    } else if( typ === 0) {
+      return 'BUY';
+    } else{return 'tbd'; }
   }
   getTtl() {
     this.titleSrv.setTitle('El Dinero>' + this.currPortfolio.getGrandTotalDayGain().toFixed(2).toString());
     return this.currPortfolio.getGrandTotalDayGain();
   }
   updateQuotes() {
-    var syms = [];
-    if(!this.currPortfolio) return;
-    
+    let syms = [];
+    if (!this.currPortfolio) { return; }
     this.currPortfolio.positions.forEach(e => syms.push(e.symbol));
-    this.quotes$ = this.sapi.getLatestPrice(syms);// this.robinhoodRxSrv.getQuotes(syms);
+    this.quotes$ = this.sapi.getLatestPrice(syms); // this.robinhoodRxSrv.getQuotes(syms);
     this.quotes$.subscribe(
       q => {
-        //console.log(q);
         q.forEach(k => {
           if (this.currPortfolio.positions.find(e => e.symbol === k.sym)) {
             this.currPortfolio.positions
@@ -100,60 +97,58 @@ export class PortfolioComponent {
     this.portfolioSrv.addTransction(newTrans, this.id);
   }
   getTitle(colName: string) {
-    let retStr = "";
-    if (colName == 'name') { retStr = "Name"; }
-    else if (colName == 'symbol') { retStr = "Symbol"; }
-    else if (colName == 'shares') { retStr = "Shares"; }
-    else if (colName == 'avgcost') { retStr = "Avg.Cost"; }
-    else if (colName == 'quote') { retStr = "Price"; }
-    else if (colName == 'daychange') { retStr = "Day Change"; }
-    else if (colName == 'daychangeper') { retStr = "Day Change %"; }
-    else if (colName == 'daygain') { retStr = "Day Gain"; }
-    else if (colName == 'mktval') { retStr = "Market Value"; }
-    else if (colName == 'costbasis') { retStr = "Cost Basis"; }
-    else if (colName == 'totgain') { retStr = "Gain/Loss"; }
-    if (colName == this.sCol) { retStr += (this.sortDir == 1) ? "▲" : "▼"; }
+    let retStr = '';
+    if (colName === 'name') { retStr = 'Name'; }
+    else if (colName === 'symbol') { retStr = 'Symbol'; }
+    else if (colName === 'shares') { retStr = 'Shares'; }
+    else if (colName === 'avgcost') { retStr = 'Avg.Cost'; }
+    else if (colName === 'quote') { retStr = 'Price'; }
+    else if (colName === 'daychange') { retStr = 'Day Change'; }
+    else if (colName === 'daychangeper') { retStr = 'Day Change %'; }
+    else if (colName === 'daygain') { retStr = 'Day Gain'; } else if (colName === 'mktval') { retStr = 'Market Value'; }
+    else if (colName === 'costbasis') { retStr = 'Cost Basis'; }
+    else if (colName === 'totgain') { retStr = 'Gain/Loss'; }
+    if (colName === this.sCol) { retStr += (this.sortDir === 1) ? '▲' : '▼'; }
     return retStr;
   }
   sortData(sortingCol: string, refreshCall:boolean = false) {
-    if (sortingCol === this.sCol && !refreshCall) this.sortDir *= -1;
-    if (sortingCol == 'name' || sortingCol == 'symbol') { this.currPortfolio.positions.sort((a, b) => { return this.sortDir * a[sortingCol].localeCompare(b[sortingCol]); }) }
-    else if (sortingCol == 'shares') { this.currPortfolio.positions.sort((a, b) => { return this.sortDir * (a.shares - b.shares) }) }
-    else if (sortingCol == 'avgcost') { this.currPortfolio.positions.sort((a, b) => { return this.sortDir * (a.avgPrice - b.avgPrice) }) }
-    else if (sortingCol == 'daychange') {
+    if (sortingCol === this.sCol && !refreshCall) { this.sortDir *= -1; }
+    if (sortingCol === 'name' || sortingCol === 'symbol') {
+      this.currPortfolio.positions.sort((a, b) => this.sortDir * a[sortingCol].localeCompare(b[sortingCol]));
+    }
+    else if (sortingCol === 'shares') {
+      this.currPortfolio.positions.sort((a, b) => this.sortDir * (a.shares - b.shares));
+    } else if (sortingCol === 'avgcost') {
+    this.currPortfolio.positions.sort((a, b) => this.sortDir * (a.avgPrice - b.avgPrice)); }
+    else if (sortingCol === 'daychange') {
       this.currPortfolio.positions.sort((a, b) => {
         return this.sortDir *
           (a.dayChange - b.dayChange);
-      })
-    }
-    else if (sortingCol == 'daychangeper') {
+      });
+    } else if (sortingCol === 'daychangeper') {
       this.currPortfolio.positions.sort((a, b) => {
         return this.sortDir * (a.dayChangePer - b.dayChangePer);
-      })
-    }
-    else if (sortingCol == 'daygain') {
-      this.currPortfolio.positions.sort((a, b) => {
-        return this.sortDir * (a.dayGain - b.dayGain)
       });
-    }
-    else if (sortingCol == 'mktval') {
+    } else if (sortingCol === 'daygain') {
+      this.currPortfolio.positions.sort((a, b) => {
+        return this.sortDir * (a.dayGain - b.dayGain);
+      });
+    } else if (sortingCol === 'mktval') {
       this.currPortfolio.positions.sort((a, b) => {
         return this.sortDir * (a.marketValue() - b.marketValue());
-      })
-    }
-    else if (sortingCol == 'costbasis') {
+      });
+    } else if (sortingCol === 'costbasis') {
       this.currPortfolio.positions.sort((a, b) => {
         return this.sortDir * (a.totalCostBasis() - b.totalCostBasis());
       });
-    }
-    else if (sortingCol == 'avgcost') { this.currPortfolio.positions.sort((a, b) => this.sortDir * (a.avgPrice - b.avgPrice)) }
-    else if (sortingCol == 'quote') {
-      this.currPortfolio.positions.sort((a, b) => this.sortDir * (a.latestQuote.last_trade_price - b.latestQuote.last_trade_price))
-    }
-    else if (sortingCol == 'totgain') {
+    } else if (sortingCol === 'avgcost') {
+      this.currPortfolio.positions.sort((a, b) => this.sortDir * (a.avgPrice - b.avgPrice));
+    } else if (sortingCol === 'quote') {
+      this.currPortfolio.positions.sort((a, b) => this.sortDir * (a.latestQuote.last_trade_price - b.latestQuote.last_trade_price));
+    } else if (sortingCol === 'totgain') {
       this.currPortfolio.positions.sort((a, b) => {
         return this.sortDir * (a.unrealizedGainLoss() - b.unrealizedGainLoss());
-      })
+      });
     }
     this.sCol = sortingCol;
   }

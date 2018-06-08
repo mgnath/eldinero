@@ -4,9 +4,9 @@
     <!-- Market Status:<label [ngClass]="{'green':alive, 'red':!alive}">{{ alive?"Online":"Offline" }}</label> -->
     <label style="font-size:x-large;width:100%;">{{currPortfolio.portfolioName}}</label>
     <button mat-button color="primary" (click)="showAll=!showAll" title="Show All Transactions">
-      {{ showAll?"Collapse All":"Show All"}}
+      {{ showAll ? "Collapse All":"Show All"}}
     </button>
-    <span style="font-size:large; float:right; margin-right:20px;">
+    <span style="font-size:large; float:right;">
        
       <span style="font-size:x-large;">
         <ed-colored-text  [num]="getTtl()" title="Day Gain/Loss"></ed-colored-text>

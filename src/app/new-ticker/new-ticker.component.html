@@ -17,7 +17,7 @@
   </mat-form-field>
 </ng-container>
 <mat-form-field class="example-full-width">
-  <input matInput [(ngModel)]="newT.date" placeholder="MM/DD/YYYY hh:mm:ss" value="">
+  <input matInput [(ngModel)]="newT.date" (focus)="setCurrentTime()" placeholder="MM/DD/YYYY hh:mm:ss" value="">
 </mat-form-field>
 <button mat-raised-button (click)="addTransaction(newT)" color="primary" [disabled]="(newT.name.length<1) || (newT.shares < 1) ">
   Trade
