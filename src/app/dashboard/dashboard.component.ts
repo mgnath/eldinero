@@ -16,13 +16,11 @@ export class DashboardComponent implements OnInit {
   }
   ngOnInit() {
     this.InitPositions();
-    // this.sapi.getLatestPrice(['AAPL','MSFT','IBM','RAD','FB','AMZN','TECK','C','P','T']).subscribe(r=>{ });
-    // this.sapi.getHistory('AAPL',new Date(),new Date()).subscribe(r=>{console.log(r.filter( sp=> sp.sym=='AMZN' ))})
   }
   InitPositions() {
     this.portfolios = this.portfolioSrv.portfolios;
   }
-  createNewPortfolio(name: string){
+  createNewPortfolio(name: string) {
     this.portfolioSrv.addPortfolio(name);
     this.newPortfolioName = '';
   }

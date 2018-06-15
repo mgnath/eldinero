@@ -27,6 +27,7 @@ import { StocksRepoService } from './shared/services/stocks-repo.service';
 import { MarketService } from './shared/services/market.service';
 import { DateFormatPipe } from './shared/pipes/date-format.pipe';
 import { EdMaterialModule } from './edmaterial-module/edmaterial.module';
+import { IexService } from './shared/services/iex.service';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,7 @@ import { EdMaterialModule } from './edmaterial-module/edmaterial.module';
     ChartsModule
   ],
   providers: [UtilService, AlphavantageService, PortfolioService,
-    PreferenceService, Title, StocksApiService, StocksRepoService, MarketService],
+    PreferenceService, Title, StocksApiService, StocksRepoService, MarketService, IexService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

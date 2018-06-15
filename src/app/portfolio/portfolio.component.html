@@ -34,9 +34,9 @@
       <tr>
         <th></th>
         <th [ngClass]="{'sorted':sCol == 'name'}" (click)="sortData('name')">{{getTitle('name')}}</th>
-        <!-- <th [ngClass]="{'sorted':sCol == 'symbol','light':true}" (click)="sortData('symbol')">{{getTitle('symbol')}}</th> -->
         <th [ngClass]="{'sorted':sCol == 'shares','light':true}" (click)="sortData('shares')" class="right">{{getTitle('shares')}}</th>
         <th [ngClass]="{'sorted':sCol == 'avgcost','light':true}" (click)="sortData('avgcost')" class="right">{{getTitle('avgcost')}}</th>
+        <th [ngClass]="{'sorted':sCol == 'div','light':true}" (click)="sortData('div')" class="right">{{getTitle('div')}}</th>
         <th [ngClass]="{'sorted':sCol == 'quote'}" (click)="sortData('quote')" class="right">{{getTitle('quote')}}</th>
         <th [ngClass]="{'sorted':sCol == 'daychange'}" (click)="sortData('daychange')" class="right">{{getTitle('daychange')}}</th>
         <th [ngClass]="{'sorted':sCol == 'daychangeper'}" (click)="sortData('daychangeper')" class="right">{{getTitle('daychangeper')}}</th>
@@ -59,7 +59,8 @@
           </td>
           <!-- <td class="light">{{ p.symbol }}</td> -->
           <td class="right light">{{ p.shares | number:'1.0-3'}} </td>
-          <td class="right light">{{ p.avgPrice | number:'1.2-2'}} </td>
+          <td class="right light">{{ p.avgPrice | number:'1.2-2'}}</td>
+          <td class="right light">{{ p.totDivEarned | number:'1.2-2'}}</td>
           <td class="right">{{ p.latestQuote.last_trade_price | number:'1.2-2'}}</td>
           <td class="right">
             <ed-colored-text [num]="(p.dayChange)"></ed-colored-text>

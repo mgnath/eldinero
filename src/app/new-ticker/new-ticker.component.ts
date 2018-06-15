@@ -11,10 +11,12 @@ import { StocksApiService } from '../shared/services/stocksapi.service';
 })
 export class NewTickerComponent implements OnInit {
   newT: Transaction;
-  @Output() add: EventEmitter<Transaction> = new EventEmitter<Transaction>();
+  stockName = '';
+
+  @Output() add: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private stockService: StocksApiService) {
-    this.newT = new Transaction('', '', null, TransactionType.BUY , null, false, null);
+    this.newT = new Transaction('', null, TransactionType.BUY , null, false, null);
   }
   ngOnInit() {
   }
@@ -27,15 +29,17 @@ export class NewTickerComponent implements OnInit {
   addTransaction(trans: Transaction) {
     this.newT.symbol = this.newT.symbol.toUpperCase();
     this.newT.date = new Date(this.newT.date);
-    this.add.emit(this.newT);
-    this.newT = new Transaction('', '', null, 0, 0, false, 0);
+    this.newT.type =  <TransactionType>this.newT.type;
+    this.add.emit( { trans: this.newT, symName: this.stockName } );
+
+    this.newT = new Transaction( '', null, TransactionType.BUY , null, false, null);
+    this.stockName = '';
   }
   validateSymbol() {
-    this.newT.name = '';
     this.newT.symbol = this.newT.symbol.toUpperCase();
     if (this.newT.symbol.length > 0) {
       this.stockService.validateSymbol(this.newT.symbol).subscribe(r => {
-        this.newT.name = r.name || '';
+        this.stockName = r.name || '';
         console.log(r);
       });
     }

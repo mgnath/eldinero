@@ -10,7 +10,7 @@ export class AlphavantageService {
   constructor(private http: HttpClient) { }
 
   getStockSME(symbol: string): Observable<any> {
-    let params = new HttpParams()
+    const params = new HttpParams()
       .set('function', 'SMA')
       .set('symbol', symbol)
       .set('interval', '15min')

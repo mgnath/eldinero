@@ -1,3 +1,4 @@
+/* tslint:disable */
 import { Component, OnInit, Input } from '@angular/core';
 import { Portfolio, Transaction, TransactionType } from '../shared/models/entities';
 import { AlphavantageService } from '../shared/services/alphavantage.service';
@@ -26,7 +27,7 @@ export class HistChartComponent implements OnInit {
   ngOnInit() {
     this.historicalData();
     this.dailyChart();
-    interval(60001).subscribe( () => { this.dailyChart(); } );
+    interval(60001).subscribe(() => { this.dailyChart(); });
 
   }
   // tslint:disable-next-line:member-ordering
@@ -36,8 +37,7 @@ export class HistChartComponent implements OnInit {
   // tslint:disable-next-line:member-ordering
   public lineChartLabelsGL: Array<any> = [];
 
-  public lineChartDataDaily: Array<any> = 
-  [{ data: [], label: 'Intra Day Value' }];
+  public lineChartDataDaily: Array<any> = [{ data: [], label: 'Intra Day Value' }];
   public lineChartLabelsDaily: Array<any> = [];
 
   public lineChartOptionsDaily: any = {
@@ -45,7 +45,7 @@ export class HistChartComponent implements OnInit {
   };
   public lineChartLegendDaily: boolean = true;
   public lineChartTypeDaily: string = 'line';
- 
+
   dailyChart() {
     this.intraDayArray = [];
     const gap = 5;
@@ -58,11 +58,9 @@ export class HistChartComponent implements OnInit {
       temStart = temStart.add(gap, 'm');
     }
     this.currPortfolio.positions.forEach((tran, idx) => {
-    // let newsps = this.sapi.getHistoryInterval(tran.symbol, startTime.toDate(), endTime.toDate(), 1);
-    //console.log(newsps);
-      let sps = this.sapi.getHistory(tran.symbol, startTime.toDate(), endTime.toDate(), 1);
+      const sps = this.sapi.getHistory(tran.symbol, startTime.toDate(), endTime.toDate(), 1);
       this.intraDayArray.forEach(i => {
-        let intSps = sps.filter(sp => {
+        const intSps = sps.filter(sp => {
           return new Date(sp.t).valueOf() >= i.time.valueOf()
             && new Date(sp.t).valueOf() < (i.time.valueOf() + gapms)
         });
@@ -74,11 +72,11 @@ export class HistChartComponent implements OnInit {
       });
     });
     this.lineChartDataDaily[0].data = this.intraDayArray
-      .filter(e => { return e.poscount == this.currPortfolio.positions.length })
+      .filter(e => e.poscount === this.currPortfolio.positions.length)
       .map(e => e.intrdayTot.toFixed(2));
 
     this.lineChartLabelsDaily = this.intraDayArray
-      .filter(e => e.poscount == this.currPortfolio.positions.length)
+      .filter(e => e.poscount === this.currPortfolio.positions.length)
       .map(e => moment(e.time).format('h:mm:ss a'));
 
   }
@@ -92,9 +90,8 @@ export class HistChartComponent implements OnInit {
     );
 
     trans.forEach((tran, idx) => {
-      //console.log(tran.date+","+tran.symbol+","+tran.shares+","+tran.price+","+tran.type);
-      var sinceLastRef = this.alphSrv.sinceLastRefreshedHist(tran.symbol.replace('.', '-'));
-      var interval = (sinceLastRef > 0 && sinceLastRef < 86400000) ? 50 : 2000;
+      const sinceLastRef = this.alphSrv.sinceLastRefreshedHist(tran.symbol.replace('.', '-'));
+      const lazyInterval = (sinceLastRef > 0 && sinceLastRef < 86400000) ? 50 : 2000;
       setTimeout(() => {
         this.alphSrv.getHistoricalData(tran.symbol.replace('.', '-'), 'TIME_SERIES_DAILY_ADJUSTED')
           .subscribe(d => {
@@ -139,11 +136,12 @@ export class HistChartComponent implements OnInit {
 
               // tslint:disable-next-line:max-line-length
               this.lineChartDataGL[0].data = this.histArray.map(e => (e.dailyTot - e.costBasis).toFixed(2)).reverse(); // .slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
+              // tslint:disable-next-line:max-line-length
               this.lineChartLabelsGL = this.histArray.map(e => e.tradeKey).reverse(); // .slice(0,99);//.slice(Math.max(totLen - this.graphDuration, 1));
 
             } catch (ex) { console.log('error in' + ex); }
           }, err => { console.log(err); });
-      }, (idx + 1) * interval);
+      }, (idx + 1) * lazyInterval);
     });
   }
   // tslint:disable-next-line:member-ordering

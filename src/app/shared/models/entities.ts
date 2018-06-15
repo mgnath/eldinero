@@ -1,4 +1,7 @@
+/* tslint:disable */
 import { UtilService } from "../services/util.service";
+import { PortfolioService } from "../services/portfolio.service";
+import { IexService } from "../services/iex.service";
 export class Portfolio {
     id: string;
     portfolioName: string;
@@ -66,6 +69,7 @@ export class StockPosition {
     name: string;
     symbol: string;
     latestQuote: quote;
+    totDivEarned: number;
     transactions: Transaction[];
     constructor() { }
     get shares(): number {
@@ -73,6 +77,7 @@ export class StockPosition {
         let sell = UtilService.getSum(this.transactions.filter(t=>t.type==TransactionType.SELL), "shares");
         return buy-sell;
     }
+   
     get avgPrice(): number {
         if(this.shares > 0){
             return this.totalCostBasis() / this.shares;
@@ -121,7 +126,6 @@ export class StockPosition {
 
 export class Transaction {
     id: string;
-    name: string;
     symbol: string;
     date: Date;
     type: TransactionType;
@@ -131,14 +135,13 @@ export class Transaction {
     isDrip: boolean;
     quote: number;
     constructor(
-        name: string,
         symbol: string,
         date: Date,
         type: TransactionType,
         shares: number,
         isDrip: boolean,
         price: number) {
-        this.name = name; this.symbol = symbol; this.date = date;
+        this.symbol = symbol; this.date = date;
         this.type = type; this.shares = shares; this.isDrip = isDrip;
         this.price = price;
     }

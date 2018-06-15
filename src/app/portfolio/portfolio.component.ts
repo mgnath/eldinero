@@ -1,3 +1,4 @@
+/* tslint:disable */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { Transaction, StockPosition, TransactionType, Portfolio, quote } from '../shared/models/entities';
@@ -11,6 +12,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { AlphavantageService } from '../shared/services/alphavantage.service';
 import { StocksApiService, StockPrice } from '../shared/services/stocksapi.service';
+import { IexService } from '../shared/services/iex.service';
 
 @Component({
   selector: 'app-portfolio',
@@ -35,16 +37,16 @@ export class PortfolioComponent {
     private portfolioSrv: PortfolioService,
     private utilService: UtilService,
     private titleSrv: Title,
-    private sapi: StocksApiService) {
+    private sapi: StocksApiService,
+    private iexSrv:IexService) {
   }
-  // tslint:disable-next-line:use-life-cycle-interface
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       this.id = params['id'];
       this.InitPositions();
     });
   }
-  // tslint:disable-next-line:use-life-cycle-interface
+  
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
@@ -73,15 +75,36 @@ export class PortfolioComponent {
     this.titleSrv.setTitle('El Dinero>' + this.currPortfolio.getGrandTotalDayGain().toFixed(2).toString());
     return this.currPortfolio.getGrandTotalDayGain();
   }
+ /*  updateTotalDividends(){
+    this.currPortfolio.positions.forEach(p=>{
+      this.currPortfolio.positions.find(e => e.symbol === p.symbol).latestQuote this.portfolioSrv.stockEquityInTransactionsAt(new Date(),p.transactions)
+      }
+    )
+  } */
+  async calculateDividendEarned(pos:StockPosition):Promise<number>{
+    const divs:any[] = await this.iexSrv.getAdjustedDividends(pos.symbol);
+    const first:Date = pos.transactions.sort((a, b)=>{return new Date(a.date).valueOf() - new Date(b.date).valueOf()})[0].date;
+    const filteredDivs = divs.filter(div=>div.exDate >= first);
+    let divTot = 0;
+    filteredDivs.reverse().forEach(div=>{ 
+      divTot +=  (this.portfolioSrv.stockEquityInTransactionsAt(new Date(div.exDate), pos.transactions) * div.amount); 
+       });
+    return divTot;
+  }
   updateQuotes() {
     let syms = [];
     if (!this.currPortfolio) { return; }
     this.currPortfolio.positions.forEach(e => syms.push(e.symbol));
-    this.quotes$ = this.sapi.getLatestPrice(syms); // this.robinhoodRxSrv.getQuotes(syms);
+    this.quotes$ = this.sapi.getLatestPrice(syms);
+
+    this.currPortfolio.positions.forEach(async pos => 
+       pos.totDivEarned = await this.calculateDividendEarned(pos));
+   
     this.quotes$.subscribe(
       q => {
         q.forEach(k => {
           if (this.currPortfolio.positions.find(e => e.symbol === k.sym)) {
+
             this.currPortfolio.positions
             .find(e => e.symbol === k.sym).latestQuote.last_trade_price = k.price;
             this.currPortfolio.positions
@@ -90,16 +113,17 @@ export class PortfolioComponent {
             .find(e => e.symbol === k.sym).latestQuote.adjusted_previous_close = k.prev_close;
           }
         });
-        this.sortData(this.sCol,true);
+        this.sortData(this.sCol, true);
       });
   }
-  handleAddTrans(newTrans: Transaction) {
-    this.portfolioSrv.addTransction(newTrans, this.id);
+  handleAddTrans(newTrans: any) {
+    this.portfolioSrv.addTransction(newTrans.trans, this.id, newTrans.symName );
   }
   getTitle(colName: string) {
     let retStr = '';
     if (colName === 'name') { retStr = 'Name'; }
     else if (colName === 'symbol') { retStr = 'Symbol'; }
+    else if (colName === 'div') { retStr = 'Dividend'; }
     else if (colName === 'shares') { retStr = 'Shares'; }
     else if (colName === 'avgcost') { retStr = 'Avg.Cost'; }
     else if (colName === 'quote') { retStr = 'Price'; }
@@ -120,6 +144,8 @@ export class PortfolioComponent {
       this.currPortfolio.positions.sort((a, b) => this.sortDir * (a.shares - b.shares));
     } else if (sortingCol === 'avgcost') {
     this.currPortfolio.positions.sort((a, b) => this.sortDir * (a.avgPrice - b.avgPrice)); }
+    else if (sortingCol === 'div') {
+      this.currPortfolio.positions.sort((a, b) => this.sortDir * (a.totDivEarned - b.totDivEarned)); }
     else if (sortingCol === 'daychange') {
       this.currPortfolio.positions.sort((a, b) => {
         return this.sortDir *

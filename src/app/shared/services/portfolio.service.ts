@@ -1,5 +1,6 @@
+/* tslint:disable */
 import { Injectable } from '@angular/core';
-import { Portfolio, StockPosition, Transaction, quote } from '../models/entities';
+import { Portfolio, StockPosition, Transaction, quote, TransactionType } from '../models/entities';
 import { Portal } from '@angular/cdk/portal';
 import { UtilService } from './util.service';
 import { Observable ,  BehaviorSubject } from 'rxjs';
@@ -20,6 +21,27 @@ export class PortfolioService {
   }
   get portfolios() {
     return this._portfolios.asObservable();
+  }
+  stockEquityAt(atDate:Date, symbol: string, portfolio: Portfolio){
+    let position = portfolio.positions
+                    .find(s=>s.symbol==symbol);
+    if(position){
+      return this.stockEquityInTransactionsAt(atDate,position.transactions);
+    }
+    return 0;
+  }
+  stockEquityInTransactionsAt(atDate:Date, transactions: Transaction[]){
+    let equity = 0;
+    if(transactions){
+      //console.log(atDate);
+      //console.log( transactions.filter((t)=> new Date(t.date) <= atDate));
+      transactions.filter((t)=> new Date(t.date) <= atDate).forEach(
+        (t)=>{ 
+            equity = equity + Number(t.shares) * ((Number(t.type) == TransactionType.SELL)?-1:1);
+         }
+      )
+    }
+    return equity;
   }
   loadData() {
     let tempPortfolios = new Array<Portfolio>();
@@ -49,15 +71,15 @@ export class PortfolioService {
       );
     }
     else {
-      this.http.post<any>("https://api.myjson.com/bins",
-       JSON.parse(localStorage.getItem("eldinero.v" + this.CURR_VER)) as Portfolio[] || [])
+      this.http.post<any>('https://api.myjson.com/bins',
+       JSON.parse(localStorage.getItem('eldinero.v' + this.CURR_VER)) as Portfolio[] || [])
        .subscribe(resp => {
         let appSettings = this.prefSrv.appSettings;
         appSettings.cloudurl = resp.uri;
         console.log(appSettings);
         this.prefSrv.saveData(appSettings);
       });
-      jsonObj = JSON.parse(localStorage.getItem("eldinero.v" + this.CURR_VER)) as Portfolio[] || [];
+      jsonObj = JSON.parse(localStorage.getItem('eldinero.v' + this.CURR_VER)) as Portfolio[] || [];
       jsonObj.forEach(e => {
         let pos: StockPosition[] = [];
         e.positions = e.positions || [];
@@ -101,7 +123,7 @@ export class PortfolioService {
       this.publishData();
     });
   }
-  addTransction(t: Transaction, portfolioId: string) {
+  addTransction(t: Transaction, portfolioId: string, symbolName: string) {
     console.log('portfolio service adding trans');
     t.id = UtilService.generateGUID();
     //t.date = new Date();
@@ -111,13 +133,14 @@ export class PortfolioService {
 
         element.positions = element.positions || [];
         if (element.positions.find(e => e.symbol === t.symbol)) {
+          element.positions.find(e => e.symbol === t.symbol).name = symbolName;
           element.positions.find(e => e.symbol === t.symbol).transactions =
             element.positions.find(e => e.symbol === t.symbol).transactions || [];
           element.positions.find(e => e.symbol === t.symbol).transactions.push(t);
         }
         else {
           var stockPos: StockPosition = new StockPosition();
-          stockPos.name = t.name;
+          stockPos.name = symbolName;
           stockPos.symbol = t.symbol;
           stockPos.transactions = [];
           stockPos.transactions.push(t);
