@@ -89,7 +89,7 @@ export class PortfolioComponent {
     filteredDivs.reverse().forEach(div=>{ 
       divTot +=  (this.portfolioSrv.stockEquityInTransactionsAt(new Date(div.exDate), pos.transactions) * div.amount); 
        });
-    return divTot;
+    return divTot | 0;
   }
   updateQuotes() {
     let syms = [];
@@ -104,7 +104,6 @@ export class PortfolioComponent {
       q => {
         q.forEach(k => {
           if (this.currPortfolio.positions.find(e => e.symbol === k.sym)) {
-
             this.currPortfolio.positions
             .find(e => e.symbol === k.sym).latestQuote.last_trade_price = k.price;
             this.currPortfolio.positions
@@ -145,7 +144,7 @@ export class PortfolioComponent {
     } else if (sortingCol === 'avgcost') {
     this.currPortfolio.positions.sort((a, b) => this.sortDir * (a.avgPrice - b.avgPrice)); }
     else if (sortingCol === 'div') {
-      this.currPortfolio.positions.sort((a, b) => this.sortDir * (a.totDivEarned - b.totDivEarned)); }
+      this.currPortfolio.positions.sort((a, b) => this.sortDir * ( (a.totDivEarned | 0) - (b.totDivEarned | 0) )); }
     else if (sortingCol === 'daychange') {
       this.currPortfolio.positions.sort((a, b) => {
         return this.sortDir *

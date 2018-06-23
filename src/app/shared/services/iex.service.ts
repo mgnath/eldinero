@@ -22,8 +22,11 @@ export class IexService {
     if (this.cacheSrv.getCache(symbol + '_Div')) {
       return this.cacheSrv.getCache(symbol + '_Div');
     }
-    const resp = await this.http.get<Array<any>>(this.IEX_BASE_URL + symbol + '/dividends/5y').toPromise();
+    let resp = [];
+    try {
+     resp = await this.http.get<Array<any>>(this.IEX_BASE_URL + symbol + '/dividends/5y').toPromise();
     this.cacheSrv.setCache(symbol + '_Div', new Date(new Date().getTime() + 86400000), resp);
+    } catch (e) { }
     return resp;
   }
 
