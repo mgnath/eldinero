@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { of, Observable } from 'rxjs';
 import { CacheService } from './cache.service';
+import { syntaxError } from '@angular/compiler';
 @Injectable({
   providedIn: 'root'
 })
@@ -9,12 +10,12 @@ export class IexService {
   readonly IEX_BASE_URL = 'https://api.iextrading.com/1.0/stock/';
   constructor(private http: HttpClient, private cacheSrv: CacheService) { }
   async getAdjustedDividends(symbol: string): Promise<any[]> {
-    let divs = await this.getDividends(symbol);
-    let divs2 = await Promise.all(divs.map(async e => {
-                                              const mult = await this.getSplitMultiplier(symbol, e.exDate);
-                                              e.amount =  e.amount * mult;
-                                              return e;
-                                            }
+    const divs = await this.getDividends(symbol);
+    const divs2 = await Promise.all(divs.map(async e => {
+                            const mult = await this.getSplitMultiplier(symbol, e.exDate);
+                                e.amount =  e.amount * mult;
+                                return e;
+                             }
                         ));
     return divs2;
   }
