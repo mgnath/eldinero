@@ -12,7 +12,7 @@ import { StocksApiService } from '../shared/services/stocksapi.service';
 export class NewTickerComponent implements OnInit {
   newT: Transaction;
   stockName = '';
-
+  transType = '0';
   @Output() add: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private stockService: StocksApiService) {
@@ -29,7 +29,11 @@ export class NewTickerComponent implements OnInit {
   addTransaction(trans: Transaction) {
     this.newT.symbol = this.newT.symbol.toUpperCase();
     this.newT.date = new Date(this.newT.date);
-    this.newT.type =  <TransactionType>this.newT.type;
+    if (this.transType === '0') {
+      this.newT.type = TransactionType.BUY;
+    } else {
+      this.newT.type = TransactionType.SELL;
+    }
     this.add.emit( { trans: this.newT, symName: this.stockName } );
 
     this.newT = new Transaction( '', null, TransactionType.BUY , null, false, null);
