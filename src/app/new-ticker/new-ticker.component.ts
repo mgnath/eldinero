@@ -1,4 +1,4 @@
-import { Component, OnInit,EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import {MatFormFieldModule} from '@angular/material';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import { Transaction, TransactionType, StockPosition } from '../shared/models/entities';
@@ -21,10 +21,10 @@ export class NewTickerComponent implements OnInit {
   ngOnInit() {
   }
   setCurrentTime() {
-    this.newT.date = new Date(
-    (new Date().getMonth() + 1) + '/'
-    + new Date().getDay() + '/' + new Date().getFullYear() + ' '
-    + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds());
+    const tmp = (new Date().getMonth() + 1) + '/'
+    + new Date().getDate() + '/' + new Date().getFullYear() + ' '
+    + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds();
+    this.newT.date = new Date(tmp);
   }
   addTransaction(trans: Transaction) {
     this.newT.symbol = this.newT.symbol.toUpperCase();

@@ -17,6 +17,11 @@
   </mat-form-field>
 </ng-container>
 <mat-form-field class="example-full-width">
+   
+        <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+     
   <input matInput [(ngModel)]="newT.date" (focus)="setCurrentTime()" placeholder="MM/DD/YYYY hh:mm:ss" value="">
 </mat-form-field>
 <button mat-raised-button (click)="addTransaction(newT)" color="primary" [disabled]="(stockName.length<1) || !(newT.shares > 0 ) ">
