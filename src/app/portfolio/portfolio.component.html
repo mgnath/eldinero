@@ -82,10 +82,10 @@
             <ed-colored-text [num]="p.realizedGainLoss()"></ed-colored-text>
           </td>
         </tr>
-        <ng-container *ngIf="p.transactions.length > 1 && showAll">
+        <ng-container *ngIf="showAll">
             <tr *ngFor="let t of p.transactions">
                 <td></td>
-                <td>{{ t.date | dateFormat:'YYYY-MM-DD'}}</td>
+                <td>{{ t.date | dateFormat:'YYYY-MM-DD hh:mm'}}</td>
                 <td class="right">{{ t.shares }} </td>
                 <td class="right">{{ t.price }}</td>
                 <td class="right">{{ t.sellprice }}</td>

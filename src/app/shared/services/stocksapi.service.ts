@@ -6,8 +6,8 @@ import { StocksRepoService } from './stocks-repo.service';
 import * as moment from 'moment';
 import { MarketService } from './market.service';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { Observable, interval} from 'rxjs';
-import {mergeMap} from 'rxjs/operators';
+import { Observable, interval } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 
 @Injectable()
 export class StocksApiService implements IStocksApi {
@@ -42,20 +42,20 @@ export class StocksApiService implements IStocksApi {
     this.subscribeMktService();
   }
   subscribeMktService() {
-    this.mktSrv.getMarketStatus().subscribe(status => { this.marketStatus = status.isOpen; } );
+    this.mktSrv.getMarketStatus().subscribe(status => { this.marketStatus = status.isOpen; });
   }
   getHistoryInterval(symbol: string, start: Date, end: Date, intervalInMins: number): StockPrice[] {
     const resp: StockPrice[] = [];
     if (start <= end && intervalInMins > 0 && this.dataStore.history) {
       let tempstart = moment(start);
       let tempEnd = moment(start).add(intervalInMins, 'm');
-      while ( tempEnd <= moment(end)) {
+      while (tempEnd <= moment(end)) {
         resp.push(
           this.dataStore.history.find(sp => {
-          return sp.sym === symbol
-            && moment(sp.t) >= tempstart
-            && moment(sp.t) < tempEnd;
-        }));
+            return sp.sym === symbol
+              && moment(sp.t) >= tempstart
+              && moment(sp.t) < tempEnd;
+          }));
         tempstart = tempEnd;
         tempEnd = tempEnd.add(intervalInMins, 'm');
       }
@@ -116,7 +116,7 @@ export class StocksApiService implements IStocksApi {
     this._history.next(dataStoreCopy.history); // copy is to avoid direct reference of dataStore to subs
   }
   LoadData() {
-     interval(this.prefSrv.appSettings.refreshRate || 6000)// get our data every subsequent 10 seconds
+    interval(this.prefSrv.appSettings.refreshRate || 6000)// get our data every subsequent 10 seconds
       .subscribe(() => {
         if (this.hasStocksinStore) {
           this.refreshLatestPrices();
@@ -132,22 +132,24 @@ export class StocksApiService implements IStocksApi {
         this.dataStore.stocks.map(q => q.sym).join(','))
         .subscribe(data => {
           this.loadingLatest = false;
-          this.dataStore.latestPrices = [];
+          //this.dataStore.latestPrices = [];
           data.results.forEach(q => {
-            let res = this.dataStore.latestPrices.find(lp => lp.sym === q.symbol);
-            // console.log(this.dataStore.latestPrices);
-            if (res) {
-              res = StockPrice.convert(q);
-            } else { this.dataStore.latestPrices.push(StockPrice.convert(q)); }
-            this.addToHistory(StockPrice.convert(q));
-            this.updateStockInfo(q);
+            if (q != null) {
+              let res = this.dataStore.latestPrices.find(lp => lp.sym === q.symbol);
+              // console.log(this.dataStore.latestPrices);
+              if (res) {
+                res = StockPrice.convert(q);
+              } else { this.dataStore.latestPrices.push(StockPrice.convert(q)); }
+              this.addToHistory(StockPrice.convert(q));
+              this.updateStockInfo(q);
+            }
           });
           // console.log(this.dataStore.latestPrices);
           this.publishLatestPrices();
 
           this.forceLoad = false;
         },
-        error => { console.log('Could not load quotes.'); this.loadingLatest = false; }, () => { this.loadingLatest = false; });
+          error => { console.log('Could not load quotes.'); this.loadingLatest = false; }, () => { this.loadingLatest = false; });
     }
   }
   private addToHistory(sp: StockPrice) {
@@ -161,15 +163,15 @@ export class StocksApiService implements IStocksApi {
     if (stk.name) { return; }
     this.http.get<any>('https://cors-anywhere.herokuapp.com/' + quote.instrument)
       .subscribe(
-      data => {
-        stk.name = data.simple_name || data.name;
-        localStorage.setItem('eld_stocksInfo', JSON.stringify(this.dataStore.stocks));
+        data => {
+          stk.name = data.simple_name || data.name;
+          localStorage.setItem('eld_stocksInfo', JSON.stringify(this.dataStore.stocks));
 
-        const dataStoreCopy = Object.assign({}, this.dataStore); // Create a dataStore copy
-        this._stocks.next(dataStoreCopy.stocks); // copy is to avoid direct reference of dataStore to subs
+          const dataStoreCopy = Object.assign({}, this.dataStore); // Create a dataStore copy
+          this._stocks.next(dataStoreCopy.stocks); // copy is to avoid direct reference of dataStore to subs
 
-      },
-      e => { console.log(e); }
+        },
+        e => { console.log(e); }
       );
   }
 
